@@ -27,7 +27,7 @@ create table if not exists scr_page (
 
 -- Link page results with a lead. 
 -- Note that the same lead may be found by more than 1 search.
-create table if not  exists scr_result (
+create table if not exists scr_result (
     id uuid not null primary key,
     create_time timestamp not null,
     id_page uuid not null references scr_page(id),
@@ -35,7 +35,7 @@ create table if not  exists scr_result (
 );
 
 -- Trace when a user has its extension ACTIVE.
-create scr_user_activity (
+create table if not exists scr_activity (
     id uuid not null primary key,
     create_time timestamp not null,
     id_user uuid not null references "user"(id),
