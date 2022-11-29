@@ -13,7 +13,7 @@ create table if not exists scr_order (
 create table if not exists scr_page (
     id uuid not null primary key,
     create_time timestamp not null,
-    id_order uuid not null references scr_job(id),
+    id_order uuid not null references scr_order(id),
     "number" bigint not null, -- page number
     -- pampa fields for parsing
     parse_reservation_id varchar(500) null,
