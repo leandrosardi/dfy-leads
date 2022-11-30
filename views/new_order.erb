@@ -4,7 +4,11 @@ account = BlackStack::Leads::Account.where(:id=>@login.user.id_account).first
 # getting the user preferences
 name = @login.user.preference("dfy-leads.orders.new.name", '', nil)
 id_export = @login.user.preference("dfy-leads.orders.new.id_export", '', nil)
-
+# choose link or filters
+link_or_filters = @login.user.preference("dfy-leads.orders.new.link_or_filters", 'link', nil)
+# sns url
+url = @login.user.preference("dfy-leads.orders.new.url", '', nil)
+# positive filter values
 positive_keywords = @login.user.preference('dfy-leads.orders.new.positive_keywords', '', nil)
 positive_positions = @login.user.preference('dfy-leads.orders.new.positive_positions', '', nil)
 positive_industries = @login.user.preference('dfy-leads.orders.new.positive_industries', '', nil)
@@ -12,7 +16,7 @@ positive_locations = @login.user.preference('dfy-leads.orders.new.positive_locat
 positive_revenues = @login.user.preference('dfy-leads.orders.new.positive_revenues', '', nil)
 positive_headcounts = @login.user.preference('dfy-leads.orders.new.positive_headcounts', '', nil)      
 positive_engagements = @login.user.preference('dfy-leads.orders.new.positive_engagements', '', nil)
-
+# negative filter values
 negative_keywords = @login.user.preference('dfy-leads.orders.new.negative_keywords', '', nil)
 negative_positions = @login.user.preference('dfy-leads.orders.new.negative_positions', '', nil)
 negative_industries = @login.user.preference('dfy-leads.orders.new.negative_industries', '', nil)
@@ -35,47 +39,67 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
     <div class="span12 box">
         <div class='span6'>
             <div class="form-horizontal">
-                <div class="control-group">
-                    <label class="control-label" for="name">Name</label>
-                    <div class="controls">
-                        <input type="text" id="name" name='name' class='input-block-level' placeholder="Write a descriptive name for your order." value='<%=name.to_s.encode_html%>' />
+                <form action="/dfy-leads/filter_new_order" method="post">
+                    <div class="control-group">
+                        <label class="control-label" for="name">Name</label>
+                        <div class="controls">name
+                            <input type="text" id="name" name='name' class='input-block-level selected' placeholder="Write a descriptive name for your order." value='<%=name.to_s.encode_html%>' />
+                        </div>
                     </div>
-                </div>
+                    
+                    <div class="control-group">
+                        <input type="hidden" class="positive_keywords" name="positive_keywords" id='positive_keywords' value="<%= positive_keywords.to_s.encode_html%>" />
+                        <input type="hidden" class="positive_positions" name="positive_positions" id='positive_positions' value="<%= positive_positions.to_s.encode_html%>" />
+                        <input type="hidden" class="positive_industries" name="positive_industries" id='positive_industries' value="<%= positive_industries.to_s.encode_html%>" />
+                        <input type="hidden" class="positive_locations" name="positive_locations" id='positive_locations' value="<%=positive_locations.to_s.encode_html%>" />
+                        <input type="hidden" class="positive_revenues" name="positive_revenues" id='positive_revenues' values="<%=positive_revenues.to_s.encode_html%>" />
+                        <input type="hidden" class="positive_headcounts" name="positive_headcounts" id='positive_headcounts' values="<%=positive_headcounts.to_s.encode_html%>" />
+                        <input type="hidden" class="positive_engagements" name="positive_engagements" id='positive_engagements' values="<%=positive_engagements.to_s.encode_html%>" />
+                
+                        <input type="hidden" class="negative_keywords" name="negative_keywords" id='negative_keywords' value="<%= negative_keywords.to_s.encode_html%>" />
+                        <input type="hidden" class="negative_positions" name="negative_positions" id='negative_positions' value="<%= negative_positions.to_s.encode_html%>" />
+                        <input type="hidden" class="negative_industries" name="negative_industries" id='negative_industries' value="<%= negative_industries.to_s.encode_html%>" />
+                        <input type="hidden" class="negative_locations" name="negative_locations" id='negative_locations' value="<%=negative_locations.to_s.encode_html%>" />
+                        <input type="hidden" class="negative_revenues" name="negative_revenues" id='negative_revenues' values="<%=negative_revenues.to_s.encode_html%>" />
+                        <input type="hidden" class="negative_headcounts" name="negative_headcounts" id='negative_headcounts' values="<%=negative_headcounts.to_s.encode_html%>" />
+                        <input type="hidden" class="negative_engagements" name="negative_engagements" id='negative_engagements' values="<%=negative_engagements.to_s.encode_html%>" />
 
-                <div class="control-group">
-                    <label class="radio">
-                        <input type="radio" id="link_or_filters" name="link_or_filters" class='link_or_filters' value="link" checked="">
-                        I already <b>have Sales Navigator</b> Search Link.
-                    </label>
-                    <label class="radio">
-                        <input type="radio" id="link_or_filters" name="link_or_filters" class='link_or_filters' value="filters">
-                        I <b>don't have Sales Navigator</b> Search Link.
-                    </label>
-                </div>
-            
-                <div class="control-group" id='link' name='link'>
-                    <label class="control-label" for="name">Sales Navigator<br/>Search URL</label>
-                    <div class="controls">
-                        <input type="text" id="name" name='name' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=name.to_s.encode_html%>' />
+                        <label class="control-label" for="export">Export List</label>
+                        <div class="controls">
+                            <p>Choose an Export List to Upload your Leads</p>
+                            <select id="id_export" name="id_export" class='input input-block-level'>
+                                <option value="" <%=id_export.to_s.empty? ? 'selected' : ''%>>(Create New Export List)</option>
+                                <%
+                                account.exports.sort_by { |e| e.filename }.each do |export|
+                                    %>
+                                    <option value="<%=export.id%>" <%=id_export.to_s==export.id.to_guid ? 'selected' : ''%>><%=export.filename.encode_html%></option>
+                                    <%
+                                end
+                                %>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div id='filters' name='filters'>
-                    <input type="hidden" class="positive_keywords" name="positive_keywords" id='positive_keywords' value="<%= positive_keywords.to_s.encode_html%>" />
-                    <input type="hidden" class="positive_positions" name="positive_positions" id='positive_positions' value="<%= positive_positions.to_s.encode_html%>" />
-                    <input type="hidden" class="positive_industries" name="positive_industries" id='positive_industries' value="<%= positive_industries.to_s.encode_html%>" />
-                    <input type="hidden" class="positive_locations" name="positive_locations" id='positive_locations' value="<%=positive_locations.to_s.encode_html%>" />
-                    <input type="hidden" class="positive_revenues" name="positive_revenues" id='positive_revenues' values="<%=positive_revenues.to_s.encode_html%>" />
-                    <input type="hidden" class="positive_headcounts" name="positive_headcounts" id='positive_headcounts' values="<%=positive_headcounts.to_s.encode_html%>" />
-                    <input type="hidden" class="positive_engagements" name="positive_engagements" id='positive_engagements' values="<%=positive_engagements.to_s.encode_html%>" />
-            
-                    <input type="hidden" class="negative_keywords" name="negative_keywords" id='negative_keywords' value="<%= negative_keywords.to_s.encode_html%>" />
-                    <input type="hidden" class="negative_positions" name="negative_positions" id='negative_positions' value="<%= negative_positions.to_s.encode_html%>" />
-                    <input type="hidden" class="negative_industries" name="negative_industries" id='negative_industries' value="<%= negative_industries.to_s.encode_html%>" />
-                    <input type="hidden" class="negative_locations" name="negative_locations" id='negative_locations' value="<%=negative_locations.to_s.encode_html%>" />
-                    <input type="hidden" class="negative_revenues" name="negative_revenues" id='negative_revenues' values="<%=negative_revenues.to_s.encode_html%>" />
-                    <input type="hidden" class="negative_engagements" name="negative_engagements" id='negative_engagements' values="<%=negative_engagements.to_s.encode_html%>" />
-        
+                    <div class="control-group">
+                        <label class="radio">
+                            <input type="radio" id="link_or_filters" name="link_or_filters" class='link_or_filters' value="link">
+                            I already <b>have Sales Navigator</b> Search Link.
+                        </label>
+                        <label class="radio">
+                            <input type="radio" id="link_or_filters" name="link_or_filters" class='link_or_filters' value="filters">
+                            I <b>don't have Sales Navigator</b> Search Link.
+                        </label>
+                    </div>
+                
+                    <div class="control-group" id='link' name='link'>
+                        <label class="control-label" for="name">Sales Navigator<br/>Search URL</label>
+                        <div class="controls">
+                            <input type="text" id="name" name='name' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=url.to_s.encode_html%>' />
+                        </div>
+                    </div>
+                </form>
+
+                <div id='filters' name='filters'>        
                     <div id='keywords'></div>
                     <div id='positions'></div>
                     <div id='industries'></div>
@@ -85,26 +109,6 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
                     <div id='engagements'></div>
                 </div>
 
-                <div class="control-group">
-                    <b>Advanced Settings</b>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label" for="export">Export List</label>
-                    <div class="controls">
-                        <p>Choose an Export List to Upload your Leads</p>
-                        <select id="id_export" name="id_export" class='input input-block-level'>
-                            <option value="" <%=id_export.to_s.empty? ? 'selected' : ''%>>(Create New Export List)</option>
-                            <%
-                            account.exports.sort_by { |e| e.filename }.each do |export|
-                                %>
-                                <option value="<%=export.id%>" <%=id_export.to_s==export.id.to_guid ? 'selected' : ''%>><%=export.filename.encode_html%></option>
-                                <%
-                            end
-                            %>
-                        </select>
-                    </div>
-                </div>
                 <div class="control-group">
                     <div class="controls">
                         <button type="submit" class="btn btn-blue">Create</button>
@@ -130,8 +134,13 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
     }
 
     $(document).ready(function() {
+        // TODO: this is not working
+        $('#link_or_filters').val('link').change();
+
+        // show the correct form, depending on the radio button
         switch_link_or_filters($('input[name=link_or_filters]:checked'));
 
+        // she the right form when 
         $('.link_or_filters').click(function() {
             switch_link_or_filters(this);
         });
@@ -143,7 +152,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
         var revenues = document.getElementById('revenues');
         var headcounts = document.getElementById('headcounts');      
         var engagements = document.getElementById('engagements');
-
+        /*
         var positive_keywords = document.getElementById('positive_keywords');
         var positive_positions = document.getElementById('positive_positions');
         var positive_industries = document.getElementById('positive_industries');
@@ -159,10 +168,141 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
         var negative_revenues = document.getElementById('negative_revenues');
         var negative_headcounts = document.getElementById('negative_headcounts');      
         var negative_engagements = document.getElementById('negative_engagements');
-
+        */
         // update the hidden textfields with the values of the filters
         function update_hidden_fields() {
-            // TODO
+
+            let i = 0;
+            let s = '';        
+            filtersJs.getPositiveValues(keywords).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.positive_keywords').val(s);
+        
+            i = 0;
+            s = '';
+            filtersJs.getNegativeValues(keywords).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.negative_keywords').val(s);
+
+            
+            let i = 0;
+            let s = '';        
+            filtersJs.getPositiveValues(positions).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.positive_positions').val(s);
+        
+            i = 0;
+            s = '';
+            filtersJs.getNegativeValues(positions).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.negative_positions').val(s);
+        
+
+            i = 0;
+            s = '';
+            filtersJs.getPositiveValues(industries).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.positive_industries').val(s);
+        
+            i = 0;
+            s = '';
+            filtersJs.getNegativeValues(industries).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.negative_industries').val(s);
+
+            
+            i = 0;
+            s = '';
+            filtersJs.getPositiveValues(locations).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.positive_locations').val(s);
+        
+            i = 0;
+            s = '';
+            filtersJs.getNegativeValues(locations).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.negative_locations').val(s);
+        
+        
+            i = 0;
+            s = '';
+            filtersJs.getPositiveValues(revenues).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.positive_revenues').val(s);
+        
+            i = 0;
+            s = '';
+            filtersJs.getNegativeValues(revenues).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.negative_revenues').val(s);
+        
+
+            i = 0;
+            s = '';
+            filtersJs.getPositiveValues(headcounts).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.positive_headcounts').val(s);
+        
+            i = 0;
+            s = '';
+            filtersJs.getNegativeValues(headcounts).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.negative_headcounts').val(s);
+        
+
+            let i = 0;
+            let s = '';        
+            filtersJs.getPositiveValues(engagements).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.positive_engagements').val(s);
+        
+            i = 0;
+            s = '';
+            filtersJs.getNegativeValues(engagements).forEach(function(value) {
+              if (i>0) { s += ','; }
+              s += value.trim();
+              i++;
+            });
+            $('.negative_engagements').val(s);
         }
 
         // draw filters
