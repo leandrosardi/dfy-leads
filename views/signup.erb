@@ -1,0 +1,123 @@
+<%
+companyname = session[:companyname].to_s
+username = session['username'].to_s
+email = session['email'].to_s
+phone = session['phone'].to_s
+err = params[:err]
+%>
+	
+<div style='position:absolute;left:50px;top:25px;height:90px;'>
+	<a href='/'><img src="/core/images/logo/logo-16-01.png" height="90px" title="ConnectionSphere Logo"></a>
+	<p>DFY Leads</p>
+</div>
+
+<br/>
+<br/>
+<br/>
+
+<section class='row-fluid'>
+	<div class='span5'>
+		<h1 style='font-weight: normal; font-weight: bold;alignment:right;'>
+			Sales Nav. Scraping<br/>
+			+<br/>
+			Email Appending<br/>
+			+<br/>
+			Verification 
+		</h1>
+
+		<br/>
+
+		<h3 style='font-weight: normal;'>
+			As Low As 1&cent; Per Record.
+		</h3>
+	
+		<br/>
+		<br/>
+
+
+		<center>
+			<h2 style='font-weight: normal;'>
+				How It Works?
+			</h2>
+
+			<br/>
+
+			<ul style='text-align: left;font-size: 18px;'>
+				<li>Submit an Order With Your Target Market.</li>
+				<br/>
+				<li>Wait for Us to Build Your List.</li>
+				<br/>
+				<li>Download. That's all!</li>
+				<br/>
+			</ul>						
+		</center>					
+	</div>
+	<div class='span1'></div>
+
+	<div id='signup-container' class='span5 signin-page'>
+		<span align='right'><h3 class='landing'>Sign up</b></h3></span>	
+		<%
+		if err!=nil
+		%>
+		<div class="alert alert-error">
+		<%=err.to_s.encode_html%>
+		</div>
+		<%
+		end # err
+		%>
+			
+		<form action="/signup" method="post" style='background-color: white;'>
+			<fieldset>
+				<div class="fields">
+					<!--
+					<input type="text" name="firstname" id="id_firstname" placeholder="First Name" tabindex="1" value="">
+					-->
+					<p class='text-left btn-mini'>Company Name &ast;</p>
+					<input type="text" name="companyname" id="id_companyname" placeholder="Company Name" tabindex="3" value="<%=companyname.encode_html%>" onfocus="$(this).select();" />
+		
+					<p class='text-left btn-mini'>User Name &ast;</p>
+					<input type="text" name="username" id="id_username" placeholder="Your User Name" tabindex="4" value="<%=username.encode_html%>" onfocus="$(this).select();" />
+
+					<p class='text-left btn-mini'>Email &ast;</p>	
+					<input type="text" name="email" id="id_email" placeholder="Your Primary Email Address" tabindex="5" value="<%=email.encode_html%>" onfocus="$(this).select();" />
+		
+					<p class='text-left btn-mini'>Password &ast;</p>
+					<input type="password" name="password" id="id_password" placeholder="Password" tabindex="6" value="" onfocus="$(this).select();" />
+
+					<p class='text-left btn-mini'>Phone Number</p>
+					<input type="text" name="phone" id="id_phone" placeholder="You Direct Phone for Better Support" tabindex="7" value="<%=phone.encode_html%>" onfocus="$(this).select();" />
+
+				</div>
+				<button type="submit" class="btn btn-blue btn-block" tabindex="8">
+					<%
+					if !notrial?
+					%>
+					Start a 15-Day Trial &ast;
+					<%
+					else # if !notrial?
+					%>
+					Sign Up! &ast;
+					<%
+					end # if !notrial?
+					%>
+				</button>
+			</fieldset>
+				
+			<div>
+				<a href='./login'>Login to an existing <%=APP_NAME%> account</a><br/>
+				<br/>
+				<p style='font-size: 11px;'>
+					&ast; Mandatory fields.
+					<br/>
+					&ast; By signing up you accept our <a href='<%=TERMS_URL%>' target='_window'>Service Terms</a>.
+				</p>
+			</div>
+		</form>
+	</div>		
+</section>
+
+<script>
+	$(document).ready(function() {
+		document.getElementById("id_companyname").focus();
+	});
+</script>

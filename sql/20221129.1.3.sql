@@ -9,6 +9,13 @@ create table if not exists scr_order (
     "url" text /*not*/ null -- the user don't have to provide it. It is added later by automation or manually.
 );
 
+alter table scr_order add column if not exists "name" int not null;
+alter table scr_order add column if not exists delete_time timestamp null;
+alter table scr_order add column if not exists "status" boolean not null;
+
+-- after processing, the same process add all the leads to an export list for automated CSV file generation.
+alter table scr_order add column if not exists id_export uuid /*not*/ null references fl_export("id");
+
 -- HTML downloaded from the browser, and uploaded to CS, by the extension.
 create table if not exists scr_page (
     id uuid not null primary key,
