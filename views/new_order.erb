@@ -1,0 +1,274 @@
+<%
+# getting the account of the user
+account = BlackStack::Leads::Account.where(:id=>@login.user.id_account).first
+# getting the user preferences
+name = @login.user.preference("dfy-leads.orders.new.name", '', nil)
+id_export = @login.user.preference("dfy-leads.orders.new.id_export", '', nil)
+
+positive_keywords = @login.user.preference('dfy-leads.orders.new.positive_keywords', '', nil)
+positive_positions = @login.user.preference('dfy-leads.orders.new.positive_positions', '', nil)
+positive_industries = @login.user.preference('dfy-leads.orders.new.positive_industries', '', nil)
+positive_locations = @login.user.preference('dfy-leads.orders.new.positive_locations', '', nil)
+positive_revenues = @login.user.preference('dfy-leads.orders.new.positive_revenues', '', nil)
+positive_headcounts = @login.user.preference('dfy-leads.orders.new.positive_headcounts', '', nil)      
+positive_engagements = @login.user.preference('dfy-leads.orders.new.positive_engagements', '', nil)
+
+negative_keywords = @login.user.preference('dfy-leads.orders.new.negative_keywords', '', nil)
+negative_positions = @login.user.preference('dfy-leads.orders.new.negative_positions', '', nil)
+negative_industries = @login.user.preference('dfy-leads.orders.new.negative_industries', '', nil)
+negative_locations = @login.user.preference('dfy-leads.orders.new.negative_locations', '', nil)
+negative_revenues = @login.user.preference('dfy-leads.orders.new.negative_revenues', '', nil)
+negative_headcounts = @login.user.preference('dfy-leads.orders.new.negative_headcounts', '', nil)      
+negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_engagements', '', nil)
+%>
+
+<!-- NavBar -->
+<div class="mynavbar mysticky">
+	<section class="row-fluid">	
+		<div class="span12">
+		    <%=nav3("DFY Leads", "/dfy-leads", "Orders", "/dfy-leads/orders", "New")%>
+		</div>
+	</section>
+</div>
+
+<section class="row-fluid">
+    <div class="span12 box">
+        <div class='span6'>
+            <div class="form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" for="name">Name</label>
+                    <div class="controls">
+                        <input type="text" id="name" name='name' class='input-block-level' placeholder="Write a descriptive name for your order." value='<%=name.to_s.encode_html%>' />
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="radio">
+                        <input type="radio" id="link_or_filters" name="link_or_filters" class='link_or_filters' value="link" checked="">
+                        I already <b>have Sales Navigator</b> Search Link.
+                    </label>
+                    <label class="radio">
+                        <input type="radio" id="link_or_filters" name="link_or_filters" class='link_or_filters' value="filters">
+                        I <b>don't have Sales Navigator</b> Search Link.
+                    </label>
+                </div>
+            
+                <div class="control-group" id='link' name='link'>
+                    <label class="control-label" for="name">Sales Navigator<br/>Search URL</label>
+                    <div class="controls">
+                        <input type="text" id="name" name='name' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=name.to_s.encode_html%>' />
+                    </div>
+                </div>
+
+                <div id='filters' name='filters'>
+                    <input type="hidden" class="positive_keywords" name="positive_keywords" id='positive_keywords' value="<%= positive_keywords.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_positions" name="positive_positions" id='positive_positions' value="<%= positive_positions.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_industries" name="positive_industries" id='positive_industries' value="<%= positive_industries.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_locations" name="positive_locations" id='positive_locations' value="<%=positive_locations.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_revenues" name="positive_revenues" id='positive_revenues' values="<%=positive_revenues.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_headcounts" name="positive_headcounts" id='positive_headcounts' values="<%=positive_headcounts.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_engagements" name="positive_engagements" id='positive_engagements' values="<%=positive_engagements.to_s.encode_html%>" />
+            
+                    <input type="hidden" class="negative_keywords" name="negative_keywords" id='negative_keywords' value="<%= negative_keywords.to_s.encode_html%>" />
+                    <input type="hidden" class="negative_positions" name="negative_positions" id='negative_positions' value="<%= negative_positions.to_s.encode_html%>" />
+                    <input type="hidden" class="negative_industries" name="negative_industries" id='negative_industries' value="<%= negative_industries.to_s.encode_html%>" />
+                    <input type="hidden" class="negative_locations" name="negative_locations" id='negative_locations' value="<%=negative_locations.to_s.encode_html%>" />
+                    <input type="hidden" class="negative_revenues" name="negative_revenues" id='negative_revenues' values="<%=negative_revenues.to_s.encode_html%>" />
+                    <input type="hidden" class="negative_engagements" name="negative_engagements" id='negative_engagements' values="<%=negative_engagements.to_s.encode_html%>" />
+        
+                    <div id='keywords'></div>
+                    <div id='positions'></div>
+                    <div id='industries'></div>
+                    <div id='locations'></div>
+                    <div id='revenues'></div>
+                    <div id='headcounts'></div>    
+                    <div id='engagements'></div>
+                </div>
+
+                <div class="control-group">
+                    <b>Advanced Settings</b>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="export">Export List</label>
+                    <div class="controls">
+                        <p>Choose an Export List to Upload your Leads</p>
+                        <select id="id_export" name="id_export" class='input input-block-level'>
+                            <option value="" <%=id_export.to_s.empty? ? 'selected' : ''%>>(Create New Export List)</option>
+                            <%
+                            account.exports.sort_by { |e| e.filename }.each do |export|
+                                %>
+                                <option value="<%=export.id%>" <%=id_export.to_s==export.id.to_guid ? 'selected' : ''%>><%=export.filename.encode_html%></option>
+                                <%
+                            end
+                            %>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="submit" class="btn btn-blue">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='span6'>
+            <!-- TODO: Place instructions here -->
+        </div>
+    </div>
+</section>
+
+<script>
+    function switch_link_or_filters(o) {
+        if ( $(o).val() == 'link' ) {
+            $('#link').show();
+            $('#filters').hide();
+        } else {
+            $('#link').hide();
+            $('#filters').show();
+        }
+    }
+
+    $(document).ready(function() {
+        switch_link_or_filters($('input[name=link_or_filters]:checked'));
+
+        $('.link_or_filters').click(function() {
+            switch_link_or_filters(this);
+        });
+
+        var keywords = document.getElementById('keywords');
+        var positions = document.getElementById('positions');
+        var industries = document.getElementById('industries');
+        var locations = document.getElementById('locations');
+        var revenues = document.getElementById('revenues');
+        var headcounts = document.getElementById('headcounts');      
+        var engagements = document.getElementById('engagements');
+
+        var positive_keywords = document.getElementById('positive_keywords');
+        var positive_positions = document.getElementById('positive_positions');
+        var positive_industries = document.getElementById('positive_industries');
+        var positive_locations = document.getElementById('positive_locations');
+        var positive_revenues = document.getElementById('positive_revenues');
+        var positive_headcounts = document.getElementById('positive_headcounts');      
+        var positive_engagements = document.getElementById('positive_engagements');
+
+        var negative_keywords = document.getElementById('negative_keywords');
+        var negative_positions = document.getElementById('negative_positions');
+        var negative_industries = document.getElementById('negative_industries');
+        var negative_locations = document.getElementById('negative_locations');
+        var negative_revenues = document.getElementById('negative_revenues');
+        var negative_headcounts = document.getElementById('negative_headcounts');      
+        var negative_engagements = document.getElementById('negative_engagements');
+
+        // update the hidden textfields with the values of the filters
+        function update_hidden_fields() {
+            // TODO
+        }
+
+        // draw filters
+        filtersJs.draw(keywords, {
+          label: 'Keywords',
+          allowed_positive_keywords: true, // default value: true
+          allowed_negative_keywords: true, // default value: false
+          // catch event: update hidden textfield when filter is changed    
+          on_add_value: function (value) {
+            update_hidden_fields();
+          },
+          // catch event: update hidden textfield when filter is changed    
+          on_remove_value: function (value) {
+            update_hidden_fields();
+          },
+        });
+
+        filtersJs.draw(positions, {
+          label: 'Positions',
+          allowed_positive_keywords: true, // default value: true
+          allowed_negative_keywords: true, // default value: false
+          // catch event: update hidden textfield when filter is changed    
+          on_add_value: function (value) {
+            update_hidden_fields();
+          },
+          // catch event: update hidden textfield when filter is changed    
+          on_remove_value: function (value) {
+            update_hidden_fields();
+          },
+        });
+    
+        filtersJs.draw(industries, {
+          label: 'Industries',
+          allowed_positive_keywords: true, // default value: true
+          allowed_negative_keywords: true, // default value: false
+          allowed_values: ['<%=BlackStack::Leads::Industry.order(:name).all.map { |o| o.name.encode_html }.join("', '")%>'],      
+          // catch event: update hidden textfield when filter is changed    
+          on_add_value: function (value) {
+            update_hidden_fields();
+          },
+          // catch event: update hidden textfield when filter is changed    
+          on_remove_value: function (value) {
+            update_hidden_fields();
+          },
+        });
+    
+        filtersJs.draw(locations, {
+          label: 'Locations',
+          allowed_positive_keywords: true, // default value: true
+          allowed_negative_keywords: true, // default value: false
+          allowed_values: [
+            '<%=BlackStack::MySaaS::Country.order(:name).all.map { |o| o.name.encode_html }.join("', '")%>',
+            '<%=BlackStack::MySaaS::State.order(:name).all.map { |o| o.name.encode_html }.join("', '")%>'
+          ],
+          // catch event: update hidden textfield when filter is changed    
+          on_add_value: function (value) {
+            update_hidden_fields();
+          },
+          // catch event: update hidden textfield when filter is changed    
+          on_remove_value: function (value) {
+            update_hidden_fields();
+          },
+        });
+
+        filtersJs.draw(headcounts, {
+            label: 'Headcounts',
+            allowed_positive_keywords: true, // default value: true
+            allowed_negative_keywords: true, // default value: false
+            allowed_values: ['<%=BlackStack::Leads::Headcount.order(:name).all.map { |o| o.name.encode_html }.join("', '")%>'],      
+            // catch event: update hidden textfield when filter is changed    
+            on_add_value: function (value) {
+              update_hidden_fields();
+            },
+            // catch event: update hidden textfield when filter is changed    
+            on_remove_value: function (value) {
+              update_hidden_fields();
+            },
+        });
+
+        filtersJs.draw(revenues, {
+            label: 'Revenues',
+            allowed_positive_keywords: true, // default value: true
+            allowed_negative_keywords: true, // default value: false
+            allowed_values: ['<%=BlackStack::Leads::Revenue.order(:name).all.map { |o| o.name.encode_html }.join("', '")%>'],      
+            // catch event: update hidden textfield when filter is changed    
+            on_add_value: function (value) {
+              update_hidden_fields();
+            },
+            // catch event: update hidden textfield when filter is changed    
+            on_remove_value: function (value) {
+              update_hidden_fields();
+            },
+        });
+
+        filtersJs.draw(engagements, {
+          label: 'Engagements',
+          allowed_positive_keywords: true, // default value: true
+          allowed_negative_keywords: true, // default value: false
+          // catch event: update hidden textfield when filter is changed    
+          on_add_value: function (value) {
+            update_hidden_fields();
+          },
+          // catch event: update hidden textfield when filter is changed    
+          on_remove_value: function (value) {
+            update_hidden_fields();
+          },
+        });
+    });
+</script>
