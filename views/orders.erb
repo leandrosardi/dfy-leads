@@ -64,24 +64,24 @@ q = "
 <!-- NavBar -->
 <div class="mynavbar mysticky">
 	<section class="row-fluid">	
-		<div class="span6">
+		<div class="span4">
 		    <%=nav2("DFY Leads", "/dfy-leads", "Orders")%>
 		</div>
-		<div class="span6" style='text-align:right;'>
+		<div class="span8" style='text-align:right;'>
             <form action="/dfy-leads/orders" method="get">
                 <input type='hidden' name='ids' id='ids' value='' />
                 <div class="pull-right">
                     <div class="span8">
                         <input type='text' class='input-block-level select-all-on-focus' id='search_keyword' name='search_keyword' value='<%=search_keyword.encode_html%>' />
                     </div>
-                    <button class="btn btn-blue btn-medium btn-submit" style="margin-left: 2px;" type="submit" onclick="">
+                    <button class="btn btn-gray btn-medium btn-submit" style="margin-left: 2px;" type="submit" onclick="">
                         <i class='icon-search'></i> Search
                     </button>
                 </div>    
 
-                <a class='btn btn-blue' href='/dfy-leads/orders/new' title='New Order'><i class='icon-plus'></i> New</a>
-                <button type="button" class="btn btn-blue" data-toggle="modal" id='play-order' name='play-order' data-rows-group-id='orders' title='Resume Order'><i class='icon-play'></i> Play</button>
-                <button type="button" class="btn btn-blue" data-toggle="modal" id='pause-order' name='pause-order' data-rows-group-id='orders' title='Pause Order'><i class='icon-pause'></i> Pause</button>
+                <a class='btn btn-blue' href='/dfy-leads/orders/new' title='Plance an Order'><i class='icon-plus'></i> Place an Order</a>
+                <button type="button" class="btn btn-gray" data-toggle="modal" id='play-order' name='play-order' data-rows-group-id='orders' title='Resume Order'><i class='icon-play'></i> Play</button>
+                <button type="button" class="btn btn-gray" data-toggle="modal" id='pause-order' name='pause-order' data-rows-group-id='orders' title='Pause Order'><i class='icon-pause'></i> Pause</button>
             </form>
         </div>
 	</section>

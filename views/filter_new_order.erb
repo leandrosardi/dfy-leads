@@ -1,99 +1,129 @@
 <%
 begin
-    name = params[:name]
-    id_export = params[:id_export]
-    url = params[:url]
+    # getting the parameters
+    # save the parameters into the user preferences
 
-    # getting the search filters
-    positive_keywords = params[:positive_keywords]
-    positive_positions = params[:positive_positions]
-    positive_industries = params[:positive_industries]
-    positive_locations = params[:positive_locations]
-    positive_revenues = params[:positive_revenues]
-    positive_headcounts = params[:positive_headcounts]
-    positive_engagements = params[:positive_engagements]
+    # getting the user preferences
+    name = @login.user.preference("dfy-leads.orders.new.name", '', params[:name])
+    # choose link or filters
+    link_or_filters = @login.user.preference("dfy-leads.orders.new.link_or_filters", 'link', params[:link_or_filters])
+    # sns url
+    url = @login.user.preference("dfy-leads.orders.new.url", '', params[:url])
+    # positive filter values
+    positive_keywords = @login.user.preference('dfy-leads.orders.new.positive_keywords', '', params[:positive_keywords])
+    positive_positions = @login.user.preference('dfy-leads.orders.new.positive_positions', '', params[:positive_positions])
+    positive_industries = @login.user.preference('dfy-leads.orders.new.positive_industries', '', params[:positive_industries])
+    positive_locations = @login.user.preference('dfy-leads.orders.new.positive_locations', '', params[:positive_locations])
+    positive_revenues = @login.user.preference('dfy-leads.orders.new.positive_revenues', '', params[:positive_revenues])
+    positive_headcounts = @login.user.preference('dfy-leads.orders.new.positive_headcounts', '', params[:positive_headcounts]))      
+    positive_engagements = @login.user.preference('dfy-leads.orders.new.positive_engagements', '', params[:positive_engagements])
+    # negative filter values
+    negative_keywords = @login.user.preference('dfy-leads.orders.new.negative_keywords', '', params[:negative_keywords])
+    negative_positions = @login.user.preference('dfy-leads.orders.new.negative_positions', '', params[:negative_positions])
+    negative_industries = @login.user.preference('dfy-leads.orders.new.negative_industries', '', params[:negative_industries])
+    negative_locations = @login.user.preference('dfy-leads.orders.new.negative_locations', '', params[:negative_locations])
+    negative_revenues = @login.user.preference('dfy-leads.orders.new.negative_revenues', '', params[:negative_revenues])
+    negative_headcounts = @login.user.preference('dfy-leads.orders.new.negative_headcounts', '', params[:negative_headcounts]))      
+    negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_engagements', '', params[:negative_engagements])
 
-    negative_keywords = params[:negative_keywords]
-    negative_positions = params[:negative_positions]
-    negative_industries = params[:negative_industries]
-    negative_locations = params[:negative_locations]
-    negative_revenues = params[:negative_revenues]
-    negative_headcounts = params[:negative_headcounts]
-    negative_engagements = params[:negative_engagements]
-  
-    # writing the hash descriptor for the new search
-    h = {
-        'name' => name,
-        'description' => 'Ghost search for user profiling.',
-        'id_user' => @login.id_user,
-        'saved' => false,
-        'no_of_results' => -1, # unknown - no matters
-        'no_of_companies' => -1, # unknown - no matters
-        'keywords' => [],
-        'positions' => [],
-        'locations' => [],
-        'industries' => [],
-        'revenues' => [],
-        'headcounts' => [],
-        'engagements' => [],
-    }
+    s = nil
+    if link_or_filters != 'link' # 'filters'
+        # writing the hash descriptor for the new search
+        h = {
+            'name' => "dfy-leads.#{name}",
+            'description' => 'Ghost search for user profiling.',
+            'id_user' => @login.id_user,
+            'saved' => false,
+            'no_of_results' => -1, # unknown - no matters
+            'no_of_companies' => -1, # unknown - no matters
+            'keywords' => [],
+            'positions' => [],
+            'locations' => [],
+            'industries' => [],
+            'revenues' => [],
+            'headcounts' => [],
+            'engagements' => [],
+        }
 
-    # adding the positive job engagements to the hash
-    h['keywords'] += positive_keywords.split(/,/).map { |p| { 'value' => p.strip, 'positive' => true } } if positive_keywords.strip.length > 0
+        # adding the positive job engagements to the hash
+        h['keywords'] += positive_keywords.split(/,/).map { |p| { 'value' => p.strip, 'positive' => true } } if positive_keywords.strip.length > 0
 
-    # adding the negative job engagements to the hash
-    h['keywords'] += negative_keywords.split(/,/).map { |p| { 'value' => p.strip, 'positive' => false } } if negative_keywords.strip.length > 0
+        # adding the negative job engagements to the hash
+        h['keywords'] += negative_keywords.split(/,/).map { |p| { 'value' => p.strip, 'positive' => false } } if negative_keywords.strip.length > 0
 
-    # adding the positive job positions to the hash
-    h['positions'] += positive_positions.split(/,/).map { |p| { 'value' => p.strip, 'positive' => true } } if positive_positions.strip.length > 0
+        # adding the positive job positions to the hash
+        h['positions'] += positive_positions.split(/,/).map { |p| { 'value' => p.strip, 'positive' => true } } if positive_positions.strip.length > 0
 
-    # adding the negative job positions to the hash
-    h['positions'] += negative_positions.split(/,/).map { |p| { 'value' => p.strip, 'positive' => false } } if negative_positions.strip.length > 0
+        # adding the negative job positions to the hash
+        h['positions'] += negative_positions.split(/,/).map { |p| { 'value' => p.strip, 'positive' => false } } if negative_positions.strip.length > 0
 
-    # adding the positive industries to the hash
-    h['industries'] += positive_industries.split(/,/).map { |i| { 'name' => i.strip, 'positive' => true } } if positive_industries.strip.length > 0
+        # adding the positive industries to the hash
+        h['industries'] += positive_industries.split(/,/).map { |i| { 'name' => i.strip, 'positive' => true } } if positive_industries.strip.length > 0
 
-    # adding the negative industries to the hash
-    h['industries'] += negative_industries.split(/,/).map { |i| { 'name' => i.strip, 'positive' => false } } if negative_industries.strip.length > 0
+        # adding the negative industries to the hash
+        h['industries'] += negative_industries.split(/,/).map { |i| { 'name' => i.strip, 'positive' => false } } if negative_industries.strip.length > 0
 
-    # adding hte positive locations to the hash
-    h['locations'] += positive_locations.split(/,/).map { |l| { 'value' => l.strip, 'positive' => true } } if positive_locations.strip.length > 0
+        # adding hte positive locations to the hash
+        h['locations'] += positive_locations.split(/,/).map { |l| { 'value' => l.strip, 'positive' => true } } if positive_locations.strip.length > 0
 
-    # adding the negative locations to the hash
-    h['locations'] += negative_locations.split(/,/).map { |l| { 'value' => l.strip, 'positive' => false } } if negative_locations.strip.length > 0
+        # adding the negative locations to the hash
+        h['locations'] += negative_locations.split(/,/).map { |l| { 'value' => l.strip, 'positive' => false } } if negative_locations.strip.length > 0
 
-    # adding the positive revenues to the hash
-    h['revenues'] += positive_revenues.split(/,/).map { |r| { 'name' => r.strip, 'positive' => true } } if positive_revenues.strip.length > 0
+        # adding the positive revenues to the hash
+        h['revenues'] += positive_revenues.split(/,/).map { |r| { 'name' => r.strip, 'positive' => true } } if positive_revenues.strip.length > 0
 
-    # adding the negative revenues to the hash
-    h['revenues'] += negative_revenues.split(/,/).map { |r| { 'name' => r.strip, 'positive' => false } } if negative_revenues.strip.length > 0
+        # adding the negative revenues to the hash
+        h['revenues'] += negative_revenues.split(/,/).map { |r| { 'name' => r.strip, 'positive' => false } } if negative_revenues.strip.length > 0
 
-    # adding the positive headcounts to the hash
-    h['headcounts'] += positive_headcounts.split(/,/).map { |h| { 'name' => h.strip, 'positive' => true } } if positive_headcounts.strip.length > 0
+        # adding the positive headcounts to the hash
+        h['headcounts'] += positive_headcounts.split(/,/).map { |h| { 'name' => h.strip, 'positive' => true } } if positive_headcounts.strip.length > 0
 
-    # adding the negative headcounts to the hash
-    h['headcounts'] += negative_headcounts.split(/,/).map { |h| { 'name' => h.strip, 'positive' => false } } if negative_headcounts.strip.length > 0
+        # adding the negative headcounts to the hash
+        h['headcounts'] += negative_headcounts.split(/,/).map { |h| { 'name' => h.strip, 'positive' => false } } if negative_headcounts.strip.length > 0
 
-    # adding the positive job engagements to the hash
-    h['engagements'] += positive_engagements.split(/,/).map { |p| { 'value' => p.strip, 'positive' => true } } if positive_engagements.strip.length > 0
+        # adding the positive job engagements to the hash
+        h['engagements'] += positive_engagements.split(/,/).map { |p| { 'value' => p.strip, 'positive' => true } } if positive_engagements.strip.length > 0
 
-    # adding the negative job engagements to the hash
-    h['engagements'] += negative_engagements.split(/,/).map { |p| { 'value' => p.strip, 'positive' => false } } if negative_engagements.strip.length > 0
+        # adding the negative job engagements to the hash
+        h['engagements'] += negative_engagements.split(/,/).map { |p| { 'value' => p.strip, 'positive' => false } } if negative_engagements.strip.length > 0
 
-    # register the search performed by the user, even it the user didn't request to save the search.
-    # we do this in order to profile each user, to know his/her preferences, and offer more data later.
-    s = BlackStack::Leads::Search.new(h)
-    #s.no_of_results = s.count
-    #s.no_of_companies = s.count_companies
-    s.save
+        # register the search performed by the user, even it the user didn't request to save the search.
+        # we do this in order to profile each user, to know his/her preferences, and offer more data later.
+        s = BlackStack::Leads::Search.new(h)
+        #s.no_of_results = s.count
+        #s.no_of_companies = s.count_companies
+        s.save
+    end # if link_or_filters != 'link'
+
+    # create the export
+    e = BlackStack::Leads::Export.new()
+    e.id = guid
+    e.create_time = now
+    e.id_user = @login.id_user
+    e.id_search = s ? s.id : nil
+    e.allow_multiple_contacts_per_company = true
+    e.filename = "dfy-leads.#{name}"
+    e.save
+
+    # register the order
+    o = BlackStack::Leads::Order.new()
+    o.id = guid
+    o.create_time = now
+    o.id_user = @login.id_user
+    o.name = name
+    o.status = true
+    o.type = BlackStack::DfyLeads::Order::TYPE_SNS # this is the only type of scraping we support so far
+    o.id_search = s ? s.id : nil
+    o.id_export = e.id
+    o.url = url
+    o.save
 
     # return 
     # on a new search, return the paginatin to the page 1.
     # don't show any success message in this case. Just the results of the search.
-    redirect "/leads/results/#{s.id.to_guid}?number=1" 
-    
+    redirect "/dfy-leads/orders/new?msg=Done." 
 rescue => e
     # return errors
-    redirect "/leads/results?err=#{CGI::escape(e.message)}"
+    redirect "/dfy-leads/orders/new?err=#{CGI::escape(e.message)}"
 end
 %>

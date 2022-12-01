@@ -5,7 +5,7 @@ create table if not exists scr_order (
     create_time timestamp not null,
     id_user uuid not null references "user"(id),
     "type" int not null, -- 0: sales navigator (use a fl_search object to save its filters).
-    id_search uuid not null references fl_search(id),
+    id_search uuid /*not*/ null references fl_search(id),
     "url" text /*not*/ null -- the user don't have to provide it. It is added later by automation or manually.
 );
 
@@ -69,3 +69,6 @@ alter table scr_order add column if not exists stat_sns_scraped_pages bigint nul
 alter table scr_order add column if not exists stat_sns_scraped_leads bigint null;
 alter table scr_order add column if not exists stat_sns_leads_appended bigint null;
 alter table scr_order add column if not exists stat_sns_leads_verified bigint null;
+
+-- the leads module will allow to filter by dfy_leads orders.
+--alter table fl_search add column if not exists id_order uuid references scr_order(id) null;

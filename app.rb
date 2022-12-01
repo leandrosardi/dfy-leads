@@ -1,9 +1,9 @@
 # default screen
 get "/dfy-leads", :agent => /(.*)/ do
-    redirect2 "/dfy-leads/signup", params
+    redirect2 "/dfy-leads/orders", params
 end
 get "/dfy-leads/", :agent => /(.*)/ do
-    redirect2 "/dfy-leads/signup", params
+    redirect2 "/dfy-leads/orders", params
 end
 get "/dfy-leads/login", :agent => /(.*)/ do
     redirect2 "/login", params

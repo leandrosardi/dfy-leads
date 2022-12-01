@@ -2,28 +2,27 @@
 # getting the account of the user
 account = BlackStack::Leads::Account.where(:id=>@login.user.id_account).first
 # getting the user preferences
-name = @login.user.preference("dfy-leads.orders.new.name", '', nil)
-id_export = @login.user.preference("dfy-leads.orders.new.id_export", '', nil)
+name = @login.user.preference("dfy-leads.orders.new.name", '')
 # choose link or filters
-link_or_filters = @login.user.preference("dfy-leads.orders.new.link_or_filters", 'link', nil)
+link_or_filters = @login.user.preference("dfy-leads.orders.new.link_or_filters", 'link')
 # sns url
-url = @login.user.preference("dfy-leads.orders.new.url", '', nil)
+url = @login.user.preference("dfy-leads.orders.new.url", '')
 # positive filter values
-positive_keywords = @login.user.preference('dfy-leads.orders.new.positive_keywords', '', nil)
-positive_positions = @login.user.preference('dfy-leads.orders.new.positive_positions', '', nil)
-positive_industries = @login.user.preference('dfy-leads.orders.new.positive_industries', '', nil)
-positive_locations = @login.user.preference('dfy-leads.orders.new.positive_locations', '', nil)
-positive_revenues = @login.user.preference('dfy-leads.orders.new.positive_revenues', '', nil)
-positive_headcounts = @login.user.preference('dfy-leads.orders.new.positive_headcounts', '', nil)      
-positive_engagements = @login.user.preference('dfy-leads.orders.new.positive_engagements', '', nil)
+positive_keywords = @login.user.preference('dfy-leads.orders.new.positive_keywords', '')
+positive_positions = @login.user.preference('dfy-leads.orders.new.positive_positions', '')
+positive_industries = @login.user.preference('dfy-leads.orders.new.positive_industries', '')
+positive_locations = @login.user.preference('dfy-leads.orders.new.positive_locations', '')
+positive_revenues = @login.user.preference('dfy-leads.orders.new.positive_revenues', '')
+positive_headcounts = @login.user.preference('dfy-leads.orders.new.positive_headcounts', '')      
+positive_engagements = @login.user.preference('dfy-leads.orders.new.positive_engagements', '')
 # negative filter values
-negative_keywords = @login.user.preference('dfy-leads.orders.new.negative_keywords', '', nil)
-negative_positions = @login.user.preference('dfy-leads.orders.new.negative_positions', '', nil)
-negative_industries = @login.user.preference('dfy-leads.orders.new.negative_industries', '', nil)
-negative_locations = @login.user.preference('dfy-leads.orders.new.negative_locations', '', nil)
-negative_revenues = @login.user.preference('dfy-leads.orders.new.negative_revenues', '', nil)
-negative_headcounts = @login.user.preference('dfy-leads.orders.new.negative_headcounts', '', nil)      
-negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_engagements', '', nil)
+negative_keywords = @login.user.preference('dfy-leads.orders.new.negative_keywords', '')
+negative_positions = @login.user.preference('dfy-leads.orders.new.negative_positions', '')
+negative_industries = @login.user.preference('dfy-leads.orders.new.negative_industries', '')
+negative_locations = @login.user.preference('dfy-leads.orders.new.negative_locations', '')
+negative_revenues = @login.user.preference('dfy-leads.orders.new.negative_revenues', '')
+negative_headcounts = @login.user.preference('dfy-leads.orders.new.negative_headcounts', '')      
+negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_engagements', '')
 %>
 
 <!-- NavBar -->
@@ -63,21 +62,6 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
                         <input type="hidden" class="negative_revenues" name="negative_revenues" id='negative_revenues' values="<%=negative_revenues.to_s.encode_html%>" />
                         <input type="hidden" class="negative_headcounts" name="negative_headcounts" id='negative_headcounts' values="<%=negative_headcounts.to_s.encode_html%>" />
                         <input type="hidden" class="negative_engagements" name="negative_engagements" id='negative_engagements' values="<%=negative_engagements.to_s.encode_html%>" />
-
-                        <label class="control-label" for="export">Export List</label>
-                        <div class="controls">
-                            <p>Choose an Export List to Upload your Leads</p>
-                            <select id="id_export" name="id_export" class='input input-block-level'>
-                                <option value="" <%=id_export.to_s.empty? ? 'selected' : ''%>>(Create New Export List)</option>
-                                <%
-                                account.exports.sort_by { |e| e.filename }.each do |export|
-                                    %>
-                                    <option value="<%=export.id%>" <%=id_export.to_s==export.id.to_guid ? 'selected' : ''%>><%=export.filename.encode_html%></option>
-                                    <%
-                                end
-                                %>
-                            </select>
-                        </div>
                     </div>
 
                     <div class="control-group">
@@ -116,9 +100,24 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
                 </div>
             </div>
         </div>
+
         <div class='span6'>
-            <!-- TODO: Place instructions here -->
+            <h3>Benefits of Using DFY-Leads</h3>
+            <br/>
+            <h4>
+              <i class='icon-ok' style='color:green;'></i> DFY Leads not only allows you <br/> 
+              to create your own leads,... <br/>
+            </h4>
+            <i>(not shared and burned by others)</i><br/>
+            <br/>
+            <h4>
+            <i class='icon-ok' style='color:green;'></i> But also to find them by recent <br/>
+              engagement keyowords.
+            </h4>
+            <i>for improve your personalizaton and increase your conversion.</i><br/>
+            <br/>
         </div>
+
     </div>
 </section>
 
@@ -172,8 +171,8 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
         // update the hidden textfields with the values of the filters
         function update_hidden_fields() {
 
-            let i = 0;
-            let s = '';        
+            i = 0;
+            s = '';        
             filtersJs.getPositiveValues(keywords).forEach(function(value) {
               if (i>0) { s += ','; }
               s += value.trim();
@@ -191,8 +190,8 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
             $('.negative_keywords').val(s);
 
             
-            let i = 0;
-            let s = '';        
+            i = 0;
+            s = '';        
             filtersJs.getPositiveValues(positions).forEach(function(value) {
               if (i>0) { s += ','; }
               s += value.trim();
@@ -286,8 +285,8 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
             $('.negative_headcounts').val(s);
         
 
-            let i = 0;
-            let s = '';        
+            i = 0;
+            s = '';        
             filtersJs.getPositiveValues(engagements).forEach(function(value) {
               if (i>0) { s += ','; }
               s += value.trim();
