@@ -18,6 +18,14 @@ module BlackStack
                     'Sales Navigator Search'
                 end
             end
+
+            def status_label
+                if self.
+            end
+
+            def status_color
+            end
+
         end # class Order
     end # DfyLeads
 end # BlackStack
