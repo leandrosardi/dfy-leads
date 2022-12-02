@@ -12,6 +12,7 @@ all = "
         u.id as id_user,
         u.name as user_name,
         e.filename as filename,
+        coalesce(e.create_file_success,false) as create_file_success,
         coalesce(o.stat_sns_search_leads, 0) as stat_sns_search_leads,
         coalesce(o.stat_sns_scraped_pages, 0) as stat_sns_scraped_pages,
         coalesce(o.stat_sns_scraped_leads, 0) as stat_sns_scraped_leads,
@@ -37,7 +38,7 @@ all += "
 page_size = 25
 total_rows = DB[all].count
 if total_rows>0
-  total_pages = (total_rows.to_f/page_size.to_f).ceil
+  total_pages = (total_rows.to_f/page_size.to_f).round().to_i
   # if there is a GET parameters `number` on the URL, update the user preference regarding the page number on this screen
   # then, get user preferences regarding the page number on this screen
   page_number = @login.user.preference("dfy-leads.orders.pagination.page", 1, params[:number].nil? ? nil : params[:number].to_i)
@@ -59,6 +60,8 @@ q = "
   LIMIT #{page_size.to_s}
   OFFSET #{((page_number.to_i - 1) * page_size.to_i).to_s}
 "
+
+q = all
 %>
 
 <!-- NavBar -->
@@ -95,13 +98,14 @@ q = "
             <thead>
                 <th style="width:24px;"><input type='checkbox' class='select-all-rows' data-rows-group-id='orders' data-input-id='ids' /></th>
                 <th style="width:auto;">Name</th>
-                <th style="width:150px;">Assignee</th>
+                <th style="width:75px;">Creation</th>
+                <th style="width:75px;">Created By</th>
                 <th style="width:24px;">Status</th> <!-- idle, working, failed -->
                 <th style="width:75px;text-align:right;">LinkedIn<br/>Results</th>
                 <th style="width:75px;text-align:right;">Scraped<br/>Results</th>
                 <th style="width:75px;text-align:right;">Appended<br/>Results</th>
                 <th style="width:75px;text-align:right;">Verified<br/>Results</th>
-                <th style="width:14px;"><!-- download --></th>
+                <th style="width:75px;"><!-- download --></th>
                 <th style="width:14px;"><!-- edit --></th>
                 <th style="width:14px;"><!-- delete --></th>
             </thead>
@@ -109,27 +113,29 @@ q = "
                 <%
                 i = 0
                 DB[q].all do |row|
-                    i += 1                    
-                    a = row[:stat_sns_search_leads].nil ? 0.to_f : row[:stat_sns_scraped_leads].to_f / row[:stat_sns_search_leads].to_f
-                    b = row[:stat_sns_scraped_leads].nil ? 0.to_f : row[:stat_sns_leads_appended].to_f / row[:stat_sns_scraped_leads].to_f
-                    c = row[:stat_sns_leads_appended].nil ? 0.to_f : row[:stat_sns_leads_verified].to_f / row[:stat_sns_leads_appended].to_f
+                    i += 1
+                    o = BlackStack::DfyList.where(:id=>row[:id]).first               
+                    a = (row[:stat_sns_search_leads].to_i == 0 ? 0.to_f : row[:stat_sns_scraped_leads].to_f / row[:stat_sns_search_leads].to_f).round(0).to_i
+                    b = (row[:stat_sns_scraped_leads].to_i == 0 ? 0.to_f : row[:stat_sns_leads_appended].to_f / row[:stat_sns_scraped_leads].to_f).round(0).to_i
+                    c = (row[:stat_sns_leads_appended].to_i == 0 ? 0.to_f : row[:stat_sns_leads_verified].to_f / row[:stat_sns_leads_appended].to_f).round(0).to_i
                 %>
                 <tr>
                     <th><input type='checkbox' class='select-row' data-id='<%=row[:id].to_guid%>' data-rows-group-id='orders' <%=ids.include?(row[:id].to_guid) ? 'checked' : ''%> /></th>
                     <td class="fix" title="<%=row[:name].to_s.encode_html%>"><a href='/dfy-leads/orders/<%=row[:id].to_guid%>/edit'><%=row[:name].to_s.encode_html%></a></td>
+                    <td class="fix" title="<%=row[:create_time].to_s.encode_html%>"><%=row[:create_time].to_s[0..9]%></td>
                     <td class="fix" title="<%=row[:user_name].to_s.encode_html%>"><%=row[:user_name].to_s.encode_html%></td>
-                    <td class="fix" title="<%=row[:status] ? 'ON' : 'OFF'%>"><i class='icon-circle' style='color:<%=row[:status] ? 'green' : 'red'%>'></i></td>
+                    <td class="fix" title="<%=o.status_label.encode_html%>"><i class='icon-circle' style='color:<%=o.status_color%>'></i></td>
 
                     <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_search_leads].to_label%>"><%=row[:stat_sns_search_leads].to_label%><br/></td>
-                    <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_scraped_leads].to_label%>"><%=row[:stat_sns_scraped_leads].to_label%><br/><span style='color:gray;'><%=a.ceil%>%</span></td>
-                    <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_leads_appended].to_label%>"><%=row[:stat_sns_leads_appended].to_label%><br/><span style='color:gray;'><%=b.ceil%>%</span></td>
-                    <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_leads_verified].to_label%>"><%=row[:stat_sns_leads_verified].to_label%><br/><span style='color:gray;'><%=c.ceil%>%</span></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_scraped_leads].to_label%>"><%=row[:stat_sns_scraped_leads].to_s%><br/><span style='color:gray;'><%=a.to_s%>%</span></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_leads_appended].to_label%>"><%=row[:stat_sns_leads_appended].to_label%><br/><span style='color:gray;'><%=b.to_s%>%</span></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_leads_verified].to_label%>"><%=row[:stat_sns_leads_verified].to_label%><br/><span style='color:gray;'><%=c.to_s%>%</span></td>
                     
                     <td class="fix" style="text-align:right;">
                         <%
-                        if row[:filename]
+                        if !row[:filename].to_s.empty? && row[:create_file_success]
                         %>
-                        <a href="/clients/<%=@login.user.id_account.to_guid%>/leads.exports/<%=row[:filename].to_s.encode_html%>.csv" class="btn btn-link"><i class='icon-cloud-download'></i></a>
+                        <a href="/clients/<%=@login.user.id_account.to_guid%>/leads.exports/<%=row[:filename].to_s.encode_html%>.csv"><i class='icon-cloud-download'></i></a>
                         <%
                         else #if row[:filename]
                         %>

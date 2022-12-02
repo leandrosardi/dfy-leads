@@ -38,7 +38,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
     <div class="span12 box">
         <div class='span6'>
             <div class="form-horizontal">
-                <form action="/dfy-leads/filter_new_order" method="post">
+                <form action="/dfy-leads/filter_new_order" method="post" id='new_order' name='new_order'>
                     <div class="control-group">
                         <label class="control-label" for="name">Name</label>
                         <div class="controls">name
@@ -95,7 +95,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
 
                 <div class="control-group">
                     <div class="controls">
-                        <button type="submit" class="btn btn-blue">Create</button>
+                        <button type="submit" class="btn btn-blue" id='create' name='create'>Create</button>
                     </div>
                 </div>
             </div>
@@ -144,6 +144,12 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
             switch_link_or_filters(this);
         });
 
+        // submit the form #new_order when clock on the button #create
+        $('#create').click(function() {
+            $('#new_order').submit();
+        });
+
+        // get the search parameters from the filterjs controls
         var keywords = document.getElementById('keywords');
         var positions = document.getElementById('positions');
         var industries = document.getElementById('industries');
@@ -151,23 +157,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
         var revenues = document.getElementById('revenues');
         var headcounts = document.getElementById('headcounts');      
         var engagements = document.getElementById('engagements');
-        /*
-        var positive_keywords = document.getElementById('positive_keywords');
-        var positive_positions = document.getElementById('positive_positions');
-        var positive_industries = document.getElementById('positive_industries');
-        var positive_locations = document.getElementById('positive_locations');
-        var positive_revenues = document.getElementById('positive_revenues');
-        var positive_headcounts = document.getElementById('positive_headcounts');      
-        var positive_engagements = document.getElementById('positive_engagements');
 
-        var negative_keywords = document.getElementById('negative_keywords');
-        var negative_positions = document.getElementById('negative_positions');
-        var negative_industries = document.getElementById('negative_industries');
-        var negative_locations = document.getElementById('negative_locations');
-        var negative_revenues = document.getElementById('negative_revenues');
-        var negative_headcounts = document.getElementById('negative_headcounts');      
-        var negative_engagements = document.getElementById('negative_engagements');
-        */
         // update the hidden textfields with the values of the filters
         function update_hidden_fields() {
 

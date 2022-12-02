@@ -15,7 +15,7 @@ begin
     positive_industries = @login.user.preference('dfy-leads.orders.new.positive_industries', '', params[:positive_industries])
     positive_locations = @login.user.preference('dfy-leads.orders.new.positive_locations', '', params[:positive_locations])
     positive_revenues = @login.user.preference('dfy-leads.orders.new.positive_revenues', '', params[:positive_revenues])
-    positive_headcounts = @login.user.preference('dfy-leads.orders.new.positive_headcounts', '', params[:positive_headcounts]))      
+    positive_headcounts = @login.user.preference('dfy-leads.orders.new.positive_headcounts', '', params[:positive_headcounts])      
     positive_engagements = @login.user.preference('dfy-leads.orders.new.positive_engagements', '', params[:positive_engagements])
     # negative filter values
     negative_keywords = @login.user.preference('dfy-leads.orders.new.negative_keywords', '', params[:negative_keywords])
@@ -23,7 +23,7 @@ begin
     negative_industries = @login.user.preference('dfy-leads.orders.new.negative_industries', '', params[:negative_industries])
     negative_locations = @login.user.preference('dfy-leads.orders.new.negative_locations', '', params[:negative_locations])
     negative_revenues = @login.user.preference('dfy-leads.orders.new.negative_revenues', '', params[:negative_revenues])
-    negative_headcounts = @login.user.preference('dfy-leads.orders.new.negative_headcounts', '', params[:negative_headcounts]))      
+    negative_headcounts = @login.user.preference('dfy-leads.orders.new.negative_headcounts', '', params[:negative_headcounts])
     negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_engagements', '', params[:negative_engagements])
 
     s = nil
@@ -106,7 +106,7 @@ begin
     e.save
 
     # register the order
-    o = BlackStack::Leads::Order.new()
+    o = BlackStack::DfyLeads::Order.new()
     o.id = guid
     o.create_time = now
     o.id_user = @login.id_user
