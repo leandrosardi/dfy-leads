@@ -115,7 +115,7 @@ begin
     o.type = BlackStack::DfyLeads::Order::TYPE_SNS # this is the only type of scraping we support so far
     o.id_search = s ? s.id : nil
     o.id_export = e.id
-    o.url = url
+    o.url = link_or_filters == 'link' ? url : nil
     o.save
 
     # return 

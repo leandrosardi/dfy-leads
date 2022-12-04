@@ -65,14 +65,13 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
                     </div>
 
                     <div class="control-group">
-                        <label class="radio">
-                            <input type="radio" id="link_or_filters" name="link_or_filters" class='link_or_filters' value="link">
-                            I already <b>have Sales Navigator</b> Search Link.
-                        </label>
-                        <label class="radio">
-                            <input type="radio" id="link_or_filters" name="link_or_filters" class='link_or_filters' value="filters">
-                            I <b>don't have Sales Navigator</b> Search Link.
-                        </label>
+                        <label class="control-label" for="link_or_filters">How You Define<br/>Your Target?</label>
+                        <div class="controls">
+                          <select id="link_or_filters" name="link_or_filters" class='input-block-level selected'>
+                            <option value="link" <%=link_or_filters == 'link' ? 'selected' : ''%>>Link</option>
+                            <option value="filters" <%=link_or_filters == 'filters' ? 'selected' : ''%>>Filters</option>
+                          </select>
+                        </div>
                     </div>
                 
                     <div class="control-group" id='link' name='link'>
@@ -122,8 +121,11 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
 </section>
 
 <script>
-    function switch_link_or_filters(o) {
-        if ( $(o).val() == 'link' ) {
+    // show or hide #link or #filters, depending the selected optin in #link_or_filters
+    function switch_link_or_filters() {
+        // get the selected option in the select tag #link_or_filters
+        var link_or_filters = $('#link_or_filters').val();
+        if (link_or_filters == 'link') {
             $('#link').show();
             $('#filters').hide();
         } else {
@@ -133,15 +135,16 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
     }
 
     $(document).ready(function() {
-        // TODO: this is not working
-        $('#link_or_filters').val('link').change();
+        // choose the option box
+        //$('#link_or_filters').val('link').change();
 
         // show the correct form, depending on the radio button
-        switch_link_or_filters($('input[name=link_or_filters]:checked'));
+        switch_link_or_filters();
 
-        // she the right form when 
-        $('.link_or_filters').click(function() {
-            switch_link_or_filters(this);
+        // when choose an option of the select #link_or_filters
+        $('#link_or_filters').change(function() {
+            // show the correct form, depending on the radio button
+            switch_link_or_filters();
         });
 
         // submit the form #new_order when clock on the button #create
@@ -292,7 +295,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
               i++;
             });
             $('.negative_engagements').val(s);
-        }
+        } // function update_hidden_fields()
 
         // draw filters
         filtersJs.draw(keywords, {
@@ -399,5 +402,92 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
             update_hidden_fields();
           },
         });
+
+        // set filter values
+        <%
+        positive_keywords.split(',').each { |s|
+          %>
+          filtersJs.addValue(keywords, '<%=s%>', true);
+          <%
+        }
+
+        negative_keywords.split(',').each { |s|
+          %>
+          filtersJs.addValue(keywords, '<%=s%>', false);
+          <%
+        }
+
+        positive_positions.split(',').each { |s|
+          %>
+          filtersJs.addValue(positions, '<%=s%>', true);
+          <%
+        }
+
+        negative_positions.split(',').each { |s|
+          %>
+          filtersJs.addValue(positions, '<%=s%>', false);
+          <%
+        }
+
+        positive_industries.split(',').each { |s|
+          %>
+          filtersJs.addValue(industries, '<%=s%>', true);
+          <%
+        }
+
+        negative_industries.split(',').each { |s|
+          %>
+          filtersJs.addValue(industries, '<%=s%>', false);
+          <%
+        }
+
+        positive_locations.split(',').each { |s|
+          %>
+          filtersJs.addValue(locations, '<%=s%>', true);
+          <%
+        }
+
+        negative_locations.split(',').each { |s|
+          %>
+          filtersJs.addValue(locations, '<%=s%>', false);
+          <%
+        }
+
+        positive_revenues.split(',').each { |s|
+          %>
+          filtersJs.addValue(revenues, '<%=s%>', true);
+          <%
+        }
+
+        negative_revenues.split(',').each { |s|
+          %>
+          filtersJs.addValue(revenues, '<%=s%>', false);
+          <%
+        }
+
+        positive_headcounts.split(',').each { |s|
+          %>
+          filtersJs.addValue(headcounts, '<%=s%>', true);
+          <%
+        }
+
+        negative_headcounts.split(',').each { |s|
+          %>
+          filtersJs.addValue(headcounts, '<%=s%>', false);
+          <%
+        }
+
+        positive_engagements.split(',').each { |s|
+          %>
+          filtersJs.addValue(engagements, '<%=s%>', true);
+          <%
+        }
+
+        negative_engagements.split(',').each { |s|
+          %>
+          filtersJs.addValue(engagements, '<%=s%>', false);
+          <%
+        }
+        %>
     });
 </script>

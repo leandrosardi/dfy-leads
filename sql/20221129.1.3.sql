@@ -9,7 +9,7 @@ create table if not exists scr_order (
     "url" text /*not*/ null -- the user don't have to provide it. It is added later by automation or manually.
 );
 
-alter table scr_order add column if not exists "name" int not null;
+alter table scr_order add column if not exists "name" varchar(500) not null;
 alter table scr_order add column if not exists delete_time timestamp null;
 alter table scr_order add column if not exists "status" boolean not null;
 
