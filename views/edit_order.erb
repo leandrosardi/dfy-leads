@@ -8,21 +8,21 @@ name = @login.user.preference("dfy-leads.orders.edit.name", o.name.to_i)
 # sns url
 url = @login.user.preference("dfy-leads.orders.edit.url", o.url.to_s)
 # positive filter values
-positive_keywords = o.search ? o.search.keywords.map { |k| k.value && k.positive }.join(',') : ''
-positive_positions = o.search ? o.search.positions.map { |p| p.value && p.positive }.join(',') : ''
-positive_industries = o.search ? o.search.industries.map { |i| i.fl_industry.name && i.positive }.join(',') : ''
-positive_locations = o.search ? o.search.locations.map { |l| l.value && l.positive }.join(',') : ''
-positive_revenues = o.search ? o.search.revenues.map { |r| r.fl_revenue.name && r.positive }.join(',') : ''
-positive_headcounts = o.search ? o.search.headcounts.map { |h| h.fl_headcount.name && h.positive }.join(',') : ''    
-positive_engagements = o.search ? o.search.engagements.map { |e| e.fl_engagement.name && e.positive }.join(',') : ''
+positive_keywords = o.search ? o.search.keywords.select { |o| o.positive }.map { |k| k.value }.join(',') : ''
+positive_positions = o.search ? o.search.positions.select { |o| o.positive }.map { |p| p.value }.join(',') : ''
+positive_industries = o.search ? o.search.industries.select { |o| o.positive }.map { |i| i.fl_industry.name }.join(',') : ''
+positive_locations = o.search ? o.search.locations.select { |o| o.positive }.map { |l| l.value }.join(',') : ''
+positive_revenues = o.search ? o.search.revenues.select { |o| o.positive }.map { |r| r.fl_revenue.name }.join(',') : ''
+positive_headcounts = o.search ? o.search.headcounts.select { |o| o.positive }.map { |h| h.fl_headcount.name }.join(',') : ''    
+positive_engagements = o.search ? o.search.engagements.select { |o| o.positive }.map { |e| e.fl_engagement.name }.join(',') : ''
 # negative filter values
-negative_keywords = o.search ? o.search.keywords.map { |k| k.value && !k.positive }.join(',') : ''
-negative_positions = o.search ? o.search.positions.map { |p| p.value && !p.positive }.join(',') : ''
-negative_industries = o.search ? o.search.industries.map { |i| i.fl_industry.name && !i.positive }.join(',') : ''
-negative_locations = o.search ? o.search.locations.map { |l| l.value && !l.positive }.join(',') : ''
-negative_revenues = o.search ? o.search.revenues.map { |r| r.fl_revenue.name && !r.positive }.join(',') : ''
-negative_headcounts = o.search ? o.search.headcounts.map { |h| h.fl_headcount.name && !h.positive }.join(',') : ''
-negative_engagements = o.search ? o.search.engagements.map { |e| e.fl_engagement.name && !e.positive }.join(',') : ''
+negative_keywords = o.search ? o.search.keywords.select { |o| !o.positive }.map { |k| k.value }.join(',') : ''
+negative_positions = o.search ? o.search.positions.select { |o| !o.positive }.map { |p| p.value }.join(',') : ''
+negative_industries = o.search ? o.search.industries.select { |o| !o.positive }.map { |i| i.fl_industry.name }.join(',') : ''
+negative_locations = o.search ? o.search.locations.select { |o| !o.positive }.map { |l| l.value }.join(',') : ''
+negative_revenues = o.search ? o.search.revenues.select { |o| !o.positive }.map { |r| r.fl_revenue.name }.join(',') : ''
+negative_headcounts = o.search ? o.search.headcounts.select { |o| !o.positive }.map { |h| h.fl_headcount.name }.join(',') : ''
+negative_engagements = o.search ? o.search.engagements.select { |o| !o.positive }.map { |e| e.fl_engagement.name }.join(',') : ''
 %>
 
 <!-- NavBar -->
