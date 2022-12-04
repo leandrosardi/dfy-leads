@@ -41,7 +41,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
                 <form action="/dfy-leads/filter_new_order" method="post" id='new_order' name='new_order'>
                     <div class="control-group">
                         <label class="control-label" for="name">Name</label>
-                        <div class="controls">name
+                        <div class="controls">
                             <input type="text" id="name" name='name' class='input-block-level selected' placeholder="Write a descriptive name for your order." value='<%=name.to_s.encode_html%>' />
                         </div>
                     </div>
@@ -78,7 +78,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
                     <div class="control-group" id='link' name='link'>
                         <label class="control-label" for="name">Sales Navigator<br/>Search URL</label>
                         <div class="controls">
-                            <input type="text" id="name" name='name' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=url.to_s.encode_html%>' />
+                            <input type="text" id="url" name='url' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=url.to_s.encode_html%>' />
                         </div>
                     </div>
                 </form>

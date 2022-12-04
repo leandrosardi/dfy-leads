@@ -83,8 +83,9 @@ q = all
                 </div>    
 
                 <a class='btn btn-blue' href='/dfy-leads/orders/new' title='Plance an Order'><i class='icon-plus'></i> Place an Order</a>
-                <button type="button" class="btn btn-gray" data-toggle="modal" id='play-order' name='play-order' data-rows-group-id='orders' title='Resume Order'><i class='icon-play'></i> Play</button>
-                <button type="button" class="btn btn-gray" data-toggle="modal" id='pause-order' name='pause-order' data-rows-group-id='orders' title='Pause Order'><i class='icon-pause'></i> Pause</button>
+                <button type="button" class="btn btn-gray" data-toggle="modal" id='delete_orders' name='delete_orders' data-rows-group-id='orders' title='Delete Orders'><i class='icon-trash'></i> Delete</button>
+                <button type="button" class="btn btn-gray" data-toggle="modal" id='play_orders' name='play_orders' data-rows-group-id='orders' title='Resume Orders'><i class='icon-play'></i> Play</button>
+                <button type="button" class="btn btn-gray" data-toggle="modal" id='pause_orders' name='pause_orders' data-rows-group-id='orders' title='Pause Orders'><i class='icon-pause'></i> Pause</button>
             </form>
         </div>
 	</section>
@@ -100,7 +101,8 @@ q = all
                 <th style="width:auto;">Name</th>
                 <th style="width:75px;">Creation</th>
                 <th style="width:75px;">Created By</th>
-                <th style="width:24px;">Status</th> <!-- idle, working, failed -->
+                <th style="width:45px;">Status</th>
+                <th style="width:45px;">Stage</th>
                 <th style="width:75px;text-align:right;">LinkedIn<br/>Results</th>
                 <th style="width:75px;text-align:right;">Scraped<br/>Results</th>
                 <th style="width:75px;text-align:right;">Appended<br/>Results</th>
@@ -114,7 +116,7 @@ q = all
                 i = 0
                 DB[q].all do |row|
                     i += 1
-                    o = BlackStack::DfyList.where(:id=>row[:id]).first               
+                    o = BlackStack::DfyLeads::Order.where(:id=>row[:id]).first               
                     a = (row[:stat_sns_search_leads].to_i == 0 ? 0.to_f : row[:stat_sns_scraped_leads].to_f / row[:stat_sns_search_leads].to_f).round(0).to_i
                     b = (row[:stat_sns_scraped_leads].to_i == 0 ? 0.to_f : row[:stat_sns_leads_appended].to_f / row[:stat_sns_scraped_leads].to_f).round(0).to_i
                     c = (row[:stat_sns_leads_appended].to_i == 0 ? 0.to_f : row[:stat_sns_leads_verified].to_f / row[:stat_sns_leads_appended].to_f).round(0).to_i
@@ -124,7 +126,8 @@ q = all
                     <td class="fix" title="<%=row[:name].to_s.encode_html%>"><a href='/dfy-leads/orders/<%=row[:id].to_guid%>/edit'><%=row[:name].to_s.encode_html%></a></td>
                     <td class="fix" title="<%=row[:create_time].to_s.encode_html%>"><%=row[:create_time].to_s[0..9]%></td>
                     <td class="fix" title="<%=row[:user_name].to_s.encode_html%>"><%=row[:user_name].to_s.encode_html%></td>
-                    <td class="fix" title="<%=o.status_label.encode_html%>"><i class='icon-circle' style='color:<%=o.status_color%>'></i></td>
+                    <td class="fix" title="<%=o.status_name.encode_html%>"><i class='icon-circle' style='color:<%=o.status_color%>'></i></td>
+                    <td class="fix" title="<%=o.stage_name.encode_html%>"><i class='icon-circle' style='color:<%=o.stage_color%>'></i></td>
 
                     <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_search_leads].to_label%>"><%=row[:stat_sns_search_leads].to_label%><br/></td>
                     <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_scraped_leads].to_label%>"><%=row[:stat_sns_scraped_leads].to_s%><br/><span style='color:gray;'><%=a.to_s%>%</span></td>
@@ -145,7 +148,7 @@ q = all
                         %>
                     </td>
                     <td class="fix" style="text-align:right;"><a title='Edit' href='/dfy-leads/orders/<%=row[:id].to_guid%>/edit'><i class='icon-pencil'></i></a></td>
-                    <td class="fix" style="text-align:right;"><a title='Delete' href='/dfy-leads/filter_delete_order?id=<%=row[:id].to_guid%>'><i class='icon-trash'></i></a></td>
+                    <td class="fix" style="text-align:right;"><a title='Delete' href='/dfy-leads/filter_delete_orders?ids=<%=row[:id].to_guid%>'><i class='icon-trash'></i></a></td>
                 </tr>
                 <%
                 end
@@ -153,7 +156,7 @@ q = all
                 if i==0
                 %>
                 <tr>
-                    <td colspan="8" class="fix" align='center' style='text-align:center;'>
+                    <td colspan="13" class="fix" align='center' style='text-align:center;'>
                         <br/>
                         No orders found.</br>
                         <a href='/dfy-leads/orders/new'>Place a new order here.</a>
@@ -172,5 +175,28 @@ q = all
     $(document).ready(function() {
         drawPagination($(".pagination"), <%=page_number%>, <%=total_pages%>);
         selectRowsJs.init();
+
+        $('#delete_orders').click(function() {
+            var ids = $('#ids').val();
+            if (ids.length > 0) {
+                if (confirm("Are you sure you want to delete the selected orders?")) {
+                    window.location = '/dfy-leads/filter_delete_orders?ids=' + ids;
+                }
+            }
+        });
+
+        $('#play_orders').click(function() {
+            var ids = $('#ids').val();
+            if (ids.length > 0) {
+                window.location = '/dfy-leads/filter_play_orders?ids=' + ids;
+            }
+        });
+
+        $('#pause_orders').click(function() {
+            var ids = $('#ids').val();
+            if (ids.length > 0) {
+                window.location = '/dfy-leads/filter_pause_orders?ids=' + ids;
+            }
+        });
     });
 </script>

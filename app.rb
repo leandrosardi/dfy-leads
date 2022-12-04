@@ -44,14 +44,23 @@ post "/dfy-leads/filter_edit_order", :auth => true, :agent => /(.*)/ do
     erb :"/extensions/dfy-leads/views/filter_new_order"
 end
 
-post "/dfy-leads/filter_delete_order", :auth => true, :agent => /(.*)/ do
-    erb :"/extensions/dfy-leads/views/filter_new_order"
+post "/dfy-leads/filter_delete_orders", :auth => true, :agent => /(.*)/ do
+    erb :"/extensions/dfy-leads/views/filter_delete_orders"
+end
+get "/dfy-leads/filter_delete_orders", :auth => true, :agent => /(.*)/ do
+    erb :"/extensions/dfy-leads/views/filter_delete_orders"
 end
 
-post "/dfy-leads/filter_pause_order", :auth => true, :agent => /(.*)/ do
-    erb :"/extensions/dfy-leads/views/filter_new_order"
+post "/dfy-leads/filter_pause_orders", :auth => true, :agent => /(.*)/ do
+    erb :"/extensions/dfy-leads/views/filter_pause_orders"
+end
+get "/dfy-leads/filter_pause_orders", :auth => true, :agent => /(.*)/ do
+    erb :"/extensions/dfy-leads/views/filter_pause_orders"
 end
 
-post "/dfy-leads/filter_play_order", :auth => true, :agent => /(.*)/ do
-    erb :"/extensions/dfy-leads/views/filter_new_order"
+post "/dfy-leads/filter_play_orders", :auth => true, :agent => /(.*)/ do
+    erb :"/extensions/dfy-leads/views/filter_play_orders"
+end
+get "/dfy-leads/filter_play_orders", :auth => true, :agent => /(.*)/ do
+    erb :"/extensions/dfy-leads/views/filter_play_orders"
 end

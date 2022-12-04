@@ -1,0 +1,13 @@
+<%
+begin
+    ids = params[:ids].split(/,/).reject { |id| !id.to_s.guid? }
+    DB.execute("UPDATE scr_order SET status=TRUE WHERE id IN ('#{ids.join("','")}')")
+    # return 
+    # on a new search, return the paginatin to the page 1.
+    # don't show any success message in this case. Just the results of the search.
+    redirect "/dfy-leads/orders?msg=Done." 
+rescue => e
+    # return errors
+    redirect "/dfy-leads/orders?err=#{CGI::escape(e.to_console[0..1000])}"
+end
+%>
