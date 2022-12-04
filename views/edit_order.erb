@@ -4,9 +4,9 @@ o = BlackStack::DfyLeads::Order.where(:id=>oid).first
 # getting the account of the user
 account = BlackStack::Leads::Account.where(:id=>@login.user.id_account).first
 # getting the user preferences
-name = @login.user.preference("dfy-leads.orders.edit.name", o.name.to_i)
+name = o.name #@login.user.preference("dfy-leads.orders.edit.name", o.name.to_i)
 # sns url
-url = @login.user.preference("dfy-leads.orders.edit.url", o.url.to_s)
+url = o.url #@login.user.preference("dfy-leads.orders.edit.url", o.url.to_s)
 # positive filter values
 positive_keywords = o.search ? o.search.keywords.select { |o| o.positive }.map { |k| k.value }.join(',') : ''
 positive_positions = o.search ? o.search.positions.select { |o| o.positive }.map { |p| p.value }.join(',') : ''
