@@ -1,0 +1,244 @@
+<%
+oid = params[:oid]
+o = BlackStack::DfyLeads::Order.where(:id=>oid).first
+# getting the account of the user
+account = BlackStack::Leads::Account.where(:id=>@login.user.id_account).first
+# getting the user preferences
+name = @login.user.preference("dfy-leads.orders.edit.name", o.name.to_i)
+# sns url
+url = @login.user.preference("dfy-leads.orders.edit.url", o.url.to_s)
+# positive filter values
+positive_keywords = o.search ? o.search.keywords.map { |k| k.value && k.positive }.join(',') : ''
+positive_positions = o.search ? o.search.positions.map { |p| p.value && p.positive }.join(',') : ''
+positive_industries = o.search ? o.search.industries.map { |i| i.fl_industry.name && i.positive }.join(',') : ''
+positive_locations = o.search ? o.search.locations.map { |l| l.value && l.positive }.join(',') : ''
+positive_revenues = o.search ? o.search.revenues.map { |r| r.fl_revenue.name && r.positive }.join(',') : ''
+positive_headcounts = o.search ? o.search.headcounts.map { |h| h.fl_headcount.name && h.positive }.join(',') : ''    
+positive_engagements = o.search ? o.search.engagements.map { |e| e.fl_engagement.name && e.positive }.join(',') : ''
+# negative filter values
+negative_keywords = o.search ? o.search.keywords.map { |k| k.value && !k.positive }.join(',') : ''
+negative_positions = o.search ? o.search.positions.map { |p| p.value && !p.positive }.join(',') : ''
+negative_industries = o.search ? o.search.industries.map { |i| i.fl_industry.name && !i.positive }.join(',') : ''
+negative_locations = o.search ? o.search.locations.map { |l| l.value && !l.positive }.join(',') : ''
+negative_revenues = o.search ? o.search.revenues.map { |r| r.fl_revenue.name && !r.positive }.join(',') : ''
+negative_headcounts = o.search ? o.search.headcounts.map { |h| h.fl_headcount.name && !h.positive }.join(',') : ''
+negative_engagements = o.search ? o.search.engagements.map { |e| e.fl_engagement.name && !e.positive }.join(',') : ''
+%>
+
+<!-- NavBar -->
+<div class="mynavbar mysticky">
+	<section class="row-fluid">	
+		<div class="span12">
+		    <%=nav3("DFY Leads", "/dfy-leads", "Orders", "/dfy-leads/orders", "New")%>
+		</div>
+	</section>
+</div>
+
+<section class="row-fluid">
+    <div class="span12 box">
+        <div class='span6'>
+            <div class="form-horizontal">
+                <form action="/dfy-leads/filter_edit_order" method="post" id='edit_order' name='edit_order'>
+                    <input type="hidden" name="oid" value="<%=oid%>">
+
+                    <div class="control-group">
+                        <label class="control-label" for="name">Name</label>
+                        <div class="controls">
+                            <input type="text" id="name" name='name' class='input-block-level selected' placeholder="Write a descriptive name for your order." value='<%=name.to_s.encode_html%>' />
+                        </div>
+                    </div>
+                    
+                    <div class="control-group" id='link' name='link'>
+                        <label class="control-label" for="name">Sales Navigator<br/>Search URL</label>
+                        <div class="controls">
+                            <input type="text" id="url" name='url' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=url.to_s.encode_html%>' />
+                        </div>
+                    </div>
+                </form>
+
+                <div id='filters' name='filters'>        
+                    <div id='keywords'></div>
+                    <div id='positions'></div>
+                    <div id='industries'></div>
+                    <div id='locations'></div>
+                    <div id='revenues'></div>
+                    <div id='headcounts'></div>    
+                    <div id='engagements'></div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="submit" class="btn btn-blue" id='create' name='create'>Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='span6'>
+            <h3>Benefits of Using DFY-Leads</h3>
+            <br/>
+            <h4>
+              <i class='icon-ok' style='color:green;'></i> DFY Leads not only allows you <br/> 
+              to create your own leads,... <br/>
+            </h4>
+            <i>(not shared and burned by others)</i><br/>
+            <br/>
+            <h4>
+            <i class='icon-ok' style='color:green;'></i> But also to find them by recent <br/>
+              engagement keyowords.
+            </h4>
+            <i>for improve your personalizaton and increase your conversion.</i><br/>
+            <br/>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    $(document).ready(function() {
+        // submit the form #edit_order when clock on the button #create
+        $('#create').click(function() {
+            $('#edit_order').submit();
+        });
+
+        // get the search parameters from the filterjs controls
+        var keywords = document.getElementById('keywords');
+        var positions = document.getElementById('positions');
+        var industries = document.getElementById('industries');
+        var locations = document.getElementById('locations');
+        var revenues = document.getElementById('revenues');
+        var headcounts = document.getElementById('headcounts');      
+        var engagements = document.getElementById('engagements');
+
+        // draw filters
+        filtersJs.draw(keywords, {
+          label: 'Keywords',
+          allowed_positive_keywords: true, // default value: true
+          allowed_negative_keywords: true, // default value: false
+        });
+
+        filtersJs.draw(positions, {
+          label: 'Positions',
+          allowed_positive_keywords: true, // default value: true
+          allowed_negative_keywords: true, // default value: false
+        });
+    
+        filtersJs.draw(industries, {
+          label: 'Industries',
+          allowed_positive_keywords: true, // default value: true
+          allowed_negative_keywords: true, // default value: false
+          allowed_values: ['<%=BlackStack::Leads::Industry.order(:name).all.map { |o| o.name.encode_html }.join("', '")%>'],      
+        });
+    
+        filtersJs.draw(locations, {
+          label: 'Locations',
+          allowed_positive_keywords: true, // default value: true
+          allowed_negative_keywords: true, // default value: false
+        });
+
+        filtersJs.draw(headcounts, {
+            label: 'Headcounts',
+            allowed_positive_keywords: true, // default value: true
+            allowed_negative_keywords: true, // default value: false
+        });
+
+        filtersJs.draw(revenues, {
+            label: 'Revenues',
+            allowed_positive_keywords: true, // default value: true
+            allowed_negative_keywords: true, // default value: false
+        });
+
+        filtersJs.draw(engagements, {
+          label: 'Engagements',
+          allowed_positive_keywords: true, // default value: true
+          allowed_negative_keywords: true, // default value: false
+        });
+
+        // set filter values
+        <%
+        positive_keywords.split(',').each { |s|
+          %>
+          filtersJs.addValue(keywords, '<%=s%>', true);
+          <%
+        }
+
+        negative_keywords.split(',').each { |s|
+          %>
+          filtersJs.addValue(keywords, '<%=s%>', false);
+          <%
+        }
+
+        positive_positions.split(',').each { |s|
+          %>
+          filtersJs.addValue(positions, '<%=s%>', true);
+          <%
+        }
+
+        negative_positions.split(',').each { |s|
+          %>
+          filtersJs.addValue(positions, '<%=s%>', false);
+          <%
+        }
+
+        positive_industries.split(',').each { |s|
+          %>
+          filtersJs.addValue(industries, '<%=s%>', true);
+          <%
+        }
+
+        negative_industries.split(',').each { |s|
+          %>
+          filtersJs.addValue(industries, '<%=s%>', false);
+          <%
+        }
+
+        positive_locations.split(',').each { |s|
+          %>
+          filtersJs.addValue(locations, '<%=s%>', true);
+          <%
+        }
+
+        negative_locations.split(',').each { |s|
+          %>
+          filtersJs.addValue(locations, '<%=s%>', false);
+          <%
+        }
+
+        positive_revenues.split(',').each { |s|
+          %>
+          filtersJs.addValue(revenues, '<%=s%>', true);
+          <%
+        }
+
+        negative_revenues.split(',').each { |s|
+          %>
+          filtersJs.addValue(revenues, '<%=s%>', false);
+          <%
+        }
+
+        positive_headcounts.split(',').each { |s|
+          %>
+          filtersJs.addValue(headcounts, '<%=s%>', true);
+          <%
+        }
+
+        negative_headcounts.split(',').each { |s|
+          %>
+          filtersJs.addValue(headcounts, '<%=s%>', false);
+          <%
+        }
+
+        positive_engagements.split(',').each { |s|
+          %>
+          filtersJs.addValue(engagements, '<%=s%>', true);
+          <%
+        }
+
+        negative_engagements.split(',').each { |s|
+          %>
+          filtersJs.addValue(engagements, '<%=s%>', false);
+          <%
+        }
+        %>
+    });
+</script>
