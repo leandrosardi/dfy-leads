@@ -1,4 +1,7 @@
 <%
+# load the real user logged into
+real_account = @login.whois.account
+# load the order
 oid = params[:oid]
 o = BlackStack::DfyLeads::Order.where(:id=>oid).first
 # getting the account of the user
@@ -51,7 +54,8 @@ negative_engagements = o.search ? o.search.engagements.select { |o| !o.positive 
                     <div class="control-group" id='link' name='link'>
                         <label class="control-label" for="name">Sales Navigator<br/>Search URL</label>
                         <div class="controls">
-                            <input type="text" id="url" name='url' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=url.to_s.encode_html%>' />
+                            <input type="text" id="url" name='url' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=url.to_s.encode_html%>' <%=real_account.sysowner? ? '' : 'disabled'%> />
+                            <p class=''>SysOwner only can edit this field.</p>
                         </div>
                     </div>
                 </form>
