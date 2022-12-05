@@ -29,7 +29,7 @@ negative_engagements = o.search ? o.search.engagements.select { |o| !o.positive 
 <div class="mynavbar mysticky">
 	<section class="row-fluid">	
 		<div class="span12">
-		    <%=nav4("DFY Leads", "/dfy-leads", "Orders", "/dfy-leads/orders", o.name, "/dfy-leads/orders/#{o.name.to_s}/edit", "Edit")%>
+		    <%=nav4("DFY Leads", "/dfy-leads", "Orders", "/dfy-leads/orders", o.name, "/dfy-leads/orders/#{o.id.to_guid}/edit", "Edit")%>
 		</div>
 	</section>
 </div>

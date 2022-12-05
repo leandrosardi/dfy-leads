@@ -41,7 +41,7 @@ post "/dfy-leads/filter_new_order", :auth => true, :agent => /(.*)/ do
 end
 
 post "/dfy-leads/filter_edit_order", :auth => true, :agent => /(.*)/ do
-    erb :"/extensions/dfy-leads/views/filter_new_order"
+    erb :"/extensions/dfy-leads/views/filter_edit_order"
 end
 
 post "/dfy-leads/filter_delete_orders", :auth => true, :agent => /(.*)/ do

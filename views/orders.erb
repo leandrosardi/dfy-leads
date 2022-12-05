@@ -73,19 +73,21 @@ q = all
 		<div class="span8" style='text-align:right;'>
             <form action="/dfy-leads/orders" method="get">
                 <input type='hidden' name='ids' id='ids' value='' />
-                <div class="pull-right">
-                    <div class="span8">
-                        <input type='text' class='input-block-level select-all-on-focus' id='search_keyword' name='search_keyword' value='<%=search_keyword.encode_html%>' />
-                    </div>
-                    <button class="btn btn-gray btn-medium btn-submit" style="margin-left: 2px;" type="submit" onclick="">
-                        <i class='icon-search'></i> Search
-                    </button>
-                </div>    
-
+                
                 <a class='btn btn-blue' href='/dfy-leads/orders/new' title='Plance an Order'><i class='icon-plus'></i> Place an Order</a>
-                <button type="button" class="btn btn-gray" data-toggle="modal" id='delete_orders' name='delete_orders' data-rows-group-id='orders' title='Delete Orders'><i class='icon-trash'></i> Delete</button>
-                <button type="button" class="btn btn-gray" data-toggle="modal" id='play_orders' name='play_orders' data-rows-group-id='orders' title='Resume Orders'><i class='icon-play'></i> Play</button>
-                <button type="button" class="btn btn-gray" data-toggle="modal" id='pause_orders' name='pause_orders' data-rows-group-id='orders' title='Pause Orders'><i class='icon-pause'></i> Pause</button>
+                <button type="button" class="btn btn-gray" data-toggle="modal" id='delete_orders' name='delete_orders' data-rows-group-id='orders' title='Delete Orders'><i class='icon-trash'></i></button>
+                <button type="button" class="btn btn-gray" data-toggle="modal" id='play_orders' name='play_orders' data-rows-group-id='orders' title='Resume Orders'><i class='icon-play'></i></button>
+                <button type="button" class="btn btn-gray" data-toggle="modal" id='pause_orders' name='pause_orders' data-rows-group-id='orders' title='Pause Orders'><i class='icon-pause'></i></button>
+
+                <div class="btn-group">
+                <div class='controls'>
+                    <input type='text' class='input-large select-all-on-focus' id='search_keyword' name='search_keyword' value='<%=search_keyword.encode_html%>' />                
+                    <button class="btn btn-gray btn-medium btn-submit" type="submit">
+                        <i class='icon-search'></i>
+                    </button>
+                </div>
+                </div>
+
             </form>
         </div>
 	</section>
