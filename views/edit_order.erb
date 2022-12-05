@@ -14,7 +14,7 @@ positive_industries = o.search ? o.search.industries.select { |o| o.positive }.m
 positive_locations = o.search ? o.search.locations.select { |o| o.positive }.map { |l| l.value }.join(',') : ''
 positive_revenues = o.search ? o.search.revenues.select { |o| o.positive }.map { |r| r.fl_revenue.name }.join(',') : ''
 positive_headcounts = o.search ? o.search.headcounts.select { |o| o.positive }.map { |h| h.fl_headcount.name }.join(',') : ''    
-positive_engagements = o.search ? o.search.engagements.select { |o| o.positive }.map { |e| e.fl_engagement.name }.join(',') : ''
+positive_engagements = o.search ? o.search.engagements.select { |o| o.positive }.map { |e| e.value }.join(',') : ''
 # negative filter values
 negative_keywords = o.search ? o.search.keywords.select { |o| !o.positive }.map { |k| k.value }.join(',') : ''
 negative_positions = o.search ? o.search.positions.select { |o| !o.positive }.map { |p| p.value }.join(',') : ''
@@ -22,14 +22,14 @@ negative_industries = o.search ? o.search.industries.select { |o| !o.positive }.
 negative_locations = o.search ? o.search.locations.select { |o| !o.positive }.map { |l| l.value }.join(',') : ''
 negative_revenues = o.search ? o.search.revenues.select { |o| !o.positive }.map { |r| r.fl_revenue.name }.join(',') : ''
 negative_headcounts = o.search ? o.search.headcounts.select { |o| !o.positive }.map { |h| h.fl_headcount.name }.join(',') : ''
-negative_engagements = o.search ? o.search.engagements.select { |o| !o.positive }.map { |e| e.fl_engagement.name }.join(',') : ''
+negative_engagements = o.search ? o.search.engagements.select { |o| !o.positive }.map { |e| e.value }.join(',') : ''
 %>
 
 <!-- NavBar -->
 <div class="mynavbar mysticky">
 	<section class="row-fluid">	
 		<div class="span12">
-		    <%=nav3("DFY Leads", "/dfy-leads", "Orders", "/dfy-leads/orders", "New")%>
+		    <%=nav4("DFY Leads", "/dfy-leads", "Orders", "/dfy-leads/orders", o.name, "/dfy-leads/orders/#{o.name.to_s}/edit", "Edit")%>
 		</div>
 	</section>
 </div>
@@ -68,7 +68,7 @@ negative_engagements = o.search ? o.search.engagements.select { |o| !o.positive 
 
                 <div class="control-group">
                     <div class="controls">
-                        <button type="submit" class="btn btn-blue" id='create' name='create'>Create</button>
+                        <button type="submit" class="btn btn-blue" id='save' name='save'>Save</button>
                     </div>
                 </div>
             </div>
@@ -96,8 +96,8 @@ negative_engagements = o.search ? o.search.engagements.select { |o| !o.positive 
 
 <script>
     $(document).ready(function() {
-        // submit the form #edit_order when clock on the button #create
-        $('#create').click(function() {
+        // submit the form #edit_order when clock on the button #save
+        $('#save').click(function() {
             $('#edit_order').submit();
         });
 
