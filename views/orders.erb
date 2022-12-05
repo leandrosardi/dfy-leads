@@ -17,7 +17,8 @@ all = "
         coalesce(o.stat_sns_scraped_pages, 0) as stat_sns_scraped_pages,
         coalesce(o.stat_sns_scraped_leads, 0) as stat_sns_scraped_leads,
         coalesce(o.stat_sns_leads_appended, 0) as stat_sns_leads_appended,
-        coalesce(o.stat_sns_leads_verified, 0) as stat_sns_leads_verified
+        coalesce(o.stat_sns_leads_verified, 0) as stat_sns_leads_verified,
+        o.url
     from scr_order o
     left join fl_export e on e.id=o.id_export
     join \"user\" u on ( u.id_account='#{@login.user.id_account}' and u.id=o.id_user )
@@ -105,13 +106,13 @@ q = all
                 <th style="width:75px;">Created By</th>
                 <th style="width:45px;">Status</th>
                 <th style="width:45px;">Stage</th>
-                <th style="width:75px;text-align:right;">LinkedIn<br/>Results</th>
-                <th style="width:75px;text-align:right;">Scraped<br/>Results</th>
-                <th style="width:75px;text-align:right;">Appended<br/>Results</th>
-                <th style="width:75px;text-align:right;">Verified<br/>Results</th>
-                <th style="width:75px;"><!-- download --></th>
+                <th style="width:65px;text-align:right;">LinkedIn<br/>Results</th>
+                <th style="width:65px;text-align:right;">Scraped<br/>Results</th>
+                <th style="width:65px;text-align:right;">Appended<br/>Results</th>
+                <th style="width:65px;text-align:right;">Verified<br/>Results</th>
+                <th style="width:65px;"><!-- download --></th>
                 <th style="width:14px;"><!-- edit --></th>
-                <th style="width:14px;"><!-- delete --></th>
+                <th style="width:14px;"><!-- link --></th>
             </thead>
             <tbody>
                 <%
@@ -150,7 +151,19 @@ q = all
                         %>
                     </td>
                     <td class="fix" style="text-align:right;"><a title='Edit' href='/dfy-leads/orders/<%=row[:id].to_guid%>/edit'><i class='icon-pencil'></i></a></td>
-                    <td class="fix" style="text-align:right;"><a title='Delete' href='/dfy-leads/filter_delete_orders?ids=<%=row[:id].to_guid%>'><i class='icon-trash'></i></a></td>
+                    <td class="fix" style="text-align:right;">
+                        <%
+                        if !row[:url].to_s.empty?
+                        %>
+                        <a title='Search Link' href='<%=row[:url].to_s.encode_html%>' target='_window'><i class='icon-link'></i></a>
+                        <%
+                        else # if row[:url].to_s.empty?
+                        %>
+                        <i title='Search Link is Pending' class='icon-link' style='color:gray;'></i>
+                        <%
+                        end # if row[:url].to_s.empty?
+                        %>
+                    </td>
                 </tr>
                 <%
                 end
