@@ -123,7 +123,7 @@ BlackStack::Pampa.add_job({
 
   # Define the tasks table: each record is a task.
   # The tasks table must have some specific fields for handling the tasks dispatching.
-  :table => :scr_order, # Note, that we are sending a class object here
+  :table => :scr_page, # Note, that we are sending a class object here
   :field_primary_key => :id,
   :field_id => :assign_reservation_id,
   :field_time => :assign_reservation_time, 
