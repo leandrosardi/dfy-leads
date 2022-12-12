@@ -70,6 +70,10 @@ q = all
 	<section class="row-fluid">	
 		<div class="span4">
 		    <%=nav2("DFY Leads", "/dfy-leads", "Orders")%>
+            <div>
+                Scrapers Online: <span class='badge badge-blue'>102</span> 
+                <span> <a href='#' class='btn btn-link btn-small'>Becaome an Agent</a></span> 
+            </div>
 		</div>
 		<div class="span8" style='text-align:right;'>
             <form action="/dfy-leads/orders" method="get">
@@ -97,7 +101,9 @@ q = all
 <!-- Single Panel -->
 <section class="row-fluid">
 	<div class="span12 box">
-        <p><b>Records:</b> <%=from_row.to_label%> to <%=to_row.to_label%> <b>of</b> <%=total_rows.to_label%></p>
+        <p>
+            <b>Records:</b> <%=from_row.to_label%> to <%=to_row.to_label%> <b>of</b> <%=total_rows.to_label%>
+        </p>
         <table class="table table-condensed" style="table-layout: fixed; width: 100%;">
             <thead>
                 <th style="width:24px;"><input type='checkbox' class='select-all-rows' data-rows-group-id='orders' data-input-id='ids' /></th>

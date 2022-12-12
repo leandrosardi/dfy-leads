@@ -6,7 +6,7 @@ BlackStack::Extensions::add ({
     :description => 'Sales Navigator Scraping + Email Appending + Verification',
 
     # setup the url of the repository for installation and updates
-    :repo_url => 'https://github.com/dfy-leads',
+    :repo_url => 'https://github.com/leandrosardi/dfy-leads',
     :repo_branch => 'main',
 
     # define version with format <mayor>.<minor>.<revision>

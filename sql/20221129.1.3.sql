@@ -72,3 +72,10 @@ alter table scr_order add column if not exists stat_sns_leads_verified bigint nu
 
 -- the leads module will allow to filter by dfy_leads orders.
 --alter table fl_search add column if not exists id_order uuid references scr_order(id) null;
+
+-- users can install the linkedin-scraper extension on their browsers, and use it to scrape leads.
+alter table "user" add column if not exists linkedin_scraper_last_ping_time timestamp null;
+alter table "user" add column if not exists linkedin_scraper_last_ping_version varchar(500) null;
+
+-- users can share their browsers to scrape other people orders and earch money.
+alter table "user" add column if not exists linkedin_scraper_share boolean not null default false;

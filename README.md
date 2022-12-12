@@ -32,4 +32,4 @@ _(write screens workflow here, describing calls to AJAX and Filters)_
 
 ## Disclaimer
 
-The logo has been taken from [here](https://www.shareicon.net/ant-insect-animal-kingdom-animals-arthropod-737854).
+The logo has been taken from [here](https://www.shareicon.net/searching-people-magnifying-glass-stick-man-man-search-engine-712802).

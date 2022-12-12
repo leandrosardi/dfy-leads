@@ -66,9 +66,9 @@ module BlackStack
                 # it is in progress if there are pages
                 ret = STAGE_IN_PROGRESS if self.pages.count > 0
                 # it is failed if there are pages and all of them are failed
-                ret = STAGE_FAILED if self.pages.count > 0 and self.pages.where(:parse_success=>false).count > 0
+                ret = STAGE_FAILED if self.pages.count > 0 and self.pages.select { |p| p.parse_success==false }.size > 0
                 # it is completed if there are pages and all of them are completed with success
-                ret = STAGE_COMPLETED if self.pages.count > 0 and self.pages.where(:parse_success=>true).count == self.pages.count
+                ret = STAGE_COMPLETED if self.pages.count > 0 and self.pages.select { |p| p.parse_success==false }.size == self.pages.size
                 # return
                 ret
             end
