@@ -1,6 +1,6 @@
 module BlackStack
     module DfyLeads
-        class Result < Sequel::Model(:scr_result)
+        class Result < Sequel::Model(:dfyl_result)
             many_to_one :page, :class=>:'BlackStack::DfyLeads::Page', :key=>:id_page
             many_to_one :lead, :class=>:'BlackStack::Leads::Lead', :key=>:id_lead
         end # class Result

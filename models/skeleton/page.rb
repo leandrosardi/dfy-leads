@@ -1,8 +1,14 @@
 module BlackStack
     module DfyLeads
-        class Page < Sequel::Model(:scr_page)
+        class Page < BlackStack::Scraper::Page
             many_to_one :order, :class=>:'BlackStack::DfyLeads::Order', :key=>:id_order
             one_to_many :results, :class=>:'BlackStack::DfyLeads::Result', :key=>:id_page
-        end # class Page
+            
+            # get the raw HTML of the page, and generate list of results, and get the total leads of the search
+            def parse
+                # TODO: Code Me!
+            end
+            
+        end # class Order
     end # DfyLeads
 end # BlackStack
