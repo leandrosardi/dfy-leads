@@ -13,11 +13,11 @@ all = "
         u.name as user_name,
         e.filename as filename,
         coalesce(e.create_file_success,false) as create_file_success,
-        coalesce(o.stat_sns_search_leads, 0) as stat_sns_search_leads,
-        coalesce(o.stat_sns_scraped_pages, 0) as stat_sns_scraped_pages,
-        coalesce(o.stat_sns_scraped_leads, 0) as stat_sns_scraped_leads,
-        coalesce(o.stat_sns_leads_appended, 0) as stat_sns_leads_appended,
-        coalesce(o.stat_sns_leads_verified, 0) as stat_sns_leads_verified,
+        coalesce(o.dfyl_stat_search_leads, 0) as dfyl_stat_search_leads,
+        coalesce(o.dfyl_stat_scraped_pages, 0) as dfyl_stat_scraped_pages,
+        coalesce(o.dfyl_stat_scraped_leads, 0) as dfyl_stat_scraped_leads,
+        coalesce(o.dfyl_stat_leads_appended, 0) as dfyl_stat_leads_appended,
+        coalesce(o.dfyl_stat_leads_verified, 0) as dfyl_stat_leads_verified,
         o.url
     from scr_order o
     left join fl_export e on e.id=o.id_export
@@ -126,9 +126,9 @@ q = all
                 DB[q].all do |row|
                     i += 1
                     o = BlackStack::DfyLeads::Order.where(:id=>row[:id]).first               
-                    a = (row[:stat_sns_search_leads].to_i == 0 ? 0.to_f : row[:stat_sns_scraped_leads].to_f / row[:stat_sns_search_leads].to_f).round(0).to_i
-                    b = (row[:stat_sns_scraped_leads].to_i == 0 ? 0.to_f : row[:stat_sns_leads_appended].to_f / row[:stat_sns_scraped_leads].to_f).round(0).to_i
-                    c = (row[:stat_sns_leads_appended].to_i == 0 ? 0.to_f : row[:stat_sns_leads_verified].to_f / row[:stat_sns_leads_appended].to_f).round(0).to_i
+                    a = (row[:dfyl_stat_search_leads].to_i == 0 ? 0.to_f : row[:dfyl_stat_scraped_leads].to_f / row[:dfyl_stat_search_leads].to_f).round(0).to_i
+                    b = (row[:dfyl_stat_scraped_leads].to_i == 0 ? 0.to_f : row[:dfyl_stat_leads_appended].to_f / row[:dfyl_stat_scraped_leads].to_f).round(0).to_i
+                    c = (row[:dfyl_stat_leads_appended].to_i == 0 ? 0.to_f : row[:dfyl_stat_leads_verified].to_f / row[:dfyl_stat_leads_appended].to_f).round(0).to_i
                 %>
                 <tr>
                     <th><input type='checkbox' class='select-row' data-id='<%=row[:id].to_guid%>' data-rows-group-id='orders' <%=ids.include?(row[:id].to_guid) ? 'checked' : ''%> /></th>
@@ -138,10 +138,10 @@ q = all
                     <td class="fix" title="<%=o.status_name.encode_html%>"><i class='icon-circle' style='color:<%=o.status_color%>'></i></td>
                     <td class="fix" title="<%=o.stage_name.encode_html%>"><i class='icon-circle' style='color:<%=o.stage_color%>'></i></td>
 
-                    <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_search_leads].to_label%>"><%=row[:stat_sns_search_leads].to_label%><br/></td>
-                    <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_scraped_leads].to_label%>"><%=row[:stat_sns_scraped_leads].to_s%><br/><span style='color:gray;'><%=a.to_s%>%</span></td>
-                    <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_leads_appended].to_label%>"><%=row[:stat_sns_leads_appended].to_label%><br/><span style='color:gray;'><%=b.to_s%>%</span></td>
-                    <td class="fix" style="text-align:right;" title="<%=row[:stat_sns_leads_verified].to_label%>"><%=row[:stat_sns_leads_verified].to_label%><br/><span style='color:gray;'><%=c.to_s%>%</span></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_search_leads].to_label%>"><%=row[:dfyl_stat_search_leads].to_label%><br/></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_scraped_leads].to_label%>"><%=row[:dfyl_stat_scraped_leads].to_s%><br/><span style='color:gray;'><%=a.to_s%>%</span></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_leads_appended].to_label%>"><%=row[:dfyl_stat_leads_appended].to_label%><br/><span style='color:gray;'><%=b.to_s%>%</span></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_leads_verified].to_label%>"><%=row[:dfyl_stat_leads_verified].to_label%><br/><span style='color:gray;'><%=c.to_s%>%</span></td>
                     
                     <td class="fix" style="text-align:right;">
                         <%
