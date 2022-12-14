@@ -1,4 +1,13 @@
 <%
+scraper_user = BlackStack::Scraper::User.where(:id=>@login.user.id).first
+
+max_online_users_to_ask = 100
+online_users = BlackStack::Scraper::User.online_users(max_online_users_to_ask)
+s_online_users = online_users.size > max_online_users_to_ask ? "#{max_online_users_to_ask}+" : online_users.size.to_s
+
+own_users = scraper_user.online_users(max_online_users_to_ask)
+s_own_users = own_users.size > max_online_users_to_ask ? "#{max_online_users_to_ask}+" : own_users.size.to_s
+
 search_keyword = @login.user.preference('dfy-leads.orders.search_keyword', '', params[:search_keyword])
 selected_ids = @login.user.preference('dfy-leads.orders.selected_ids', '', nil)
 ids = selected_ids.split(',')
@@ -71,8 +80,21 @@ q = all
 		<div class="span4">
 		    <%=nav2("DFY Leads", "/dfy-leads", "Orders")%>
             <div>
-                Scrapers Online: <span class='badge badge-blue'>102</span> 
-                <span> <a href='#' class='btn btn-link btn-small'>Becaome an Agent</a></span> 
+                <table>
+                    <tr>
+                        <td>All Agents Online:</td>
+                        <td style='width:2px;'></td>
+                        <td><span class='badge badge-blue'><%=s_online_users%></span></td>
+                        <td style='width:2px;'></td>
+                    </tr>
+                    <tr>
+                        <td>Own Agents Online:</td>
+                        <td></td>
+                        <td><span class='badge badge-green'><%=s_own_users%></span></td>
+                        <td></td>
+                        <td><span><a href='/scraper/dashboard' target='_window' class='btn btn-link btn-small'>Become an Agent</a></span></td> 
+                    </tr>
+                </table>
             </div>
 		</div>
 		<div class="span8" style='text-align:right;'>

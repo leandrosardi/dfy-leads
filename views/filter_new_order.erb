@@ -118,6 +118,14 @@ begin
     o.url = link_or_filters == 'link' ? url : nil
     o.save
 
+    # register the first page
+    p = BlackStack::DfyLeads::Page.new()
+    p.id = guid
+    p.create_time = now
+    p.id_order = o.id
+    p.number = 1 # this column is added by dfy-leads extension
+    p.save
+
     # return 
     # on a new search, return the paginatin to the page 1.
     # don't show any success message in this case. Just the results of the search.
