@@ -1,3 +1,17 @@
+=begin
+require 'uri'
+require 'cgi'
+url = "https://github.com?page=1&tab=repositories"
+uri = URI.parse(url)
+params = CGI.parse(uri.query)
+puts params
+params.reject! { |k,v| k.downcase == 'page' }
+params['page'] = 234
+uri.query = URI.encode_www_form(params)
+puts uri.to_s
+exit(0)
+=end
+
 # MySaaS Emails - Delivery
 # Copyright (C) 2022 ExpandedVenture, LLC.
 #
@@ -29,7 +43,14 @@ require 'extensions/dfy-leads/main'
 BlackStack::Extensions.append :i2p
 BlackStack::Extensions.append :leads
 BlackStack::Extensions.append :scraper
-BlackStack::Extensions.append :dfy-leads
+BlackStack::Extensions.append :'dfy-leads'
+
+
+u = BlackStack::Scraper::User.where(:email=>'leandro.sardi@expandedventure.com').first
+puts u.why_not_available_for_assignation
+exit(0)
+
+
 
 l = BlackStack::LocalLogger.new('./pages.upload.assign.log')
 
@@ -45,43 +66,52 @@ while (true)
     # if there is no user belonging the same account than the page with active chrome extension, then get a user with an active chrome extension who is sharing its extension.
     # if I found a user, then assign the page to the user.
 
-    # get `batch_size` pages pending for upload
-    l.logs 'Getting a page pending for upload... '
-    page = BlackStack::DfyLeads::Page.pendings(1).first
-    if page.nil?
-        l.no
-    else
-        l.yes
+    begin
+        # TODO: recover abandoned pages
 
-        # get all the agents with an active chrome extension, who are sharing its chrome extension
-        l.logs 'Getting an account user with an active chrome extension... '
-        user = page.user.online_users(1).first
-        # if there is no user belonging the same account than the page with active chrome extension, then get a user with an active chrome extension who is sharing its extension.
-        if user
-            l.yes
-        else
+        # TODO: use user.available_for_assignation? to check if the user is available for assignation
+
+        # get `batch_size` pages pending for upload
+        l.logs 'Getting pending page... '
+        page = BlackStack::DfyLeads::Page.pendings(1).first
+        if page.nil?
             l.no
+        else
+            l.yes
 
-            l.logs 'Getting a public user with an active chrome extension who is sharing its chrome extension... '
-            user = BlackStack::Scraper::User.online_users(1).first 
+            # get all the agents with an active chrome extension, who are sharing its chrome extension
+            l.logs 'Getting account user... '
+            user = page.order.user.online_users(1).first
+            # if there is no user belonging the same account than the page with active chrome extension, then get a user with an active chrome extension who is sharing its extension.
             if user
                 l.yes
             else
                 l.no
-            end
-        end
 
-        # if I found a user, then assign the page to the user.
-        if user
-            l.logs 'Assigning page to user... '
-            page.assign(user)
-            l.done
-        end
-    end # if page
+                l.logs 'Getting public user... '
+                user = BlackStack::Scraper::User.online_users(1).first 
+                if user
+                    l.yes
+                else
+                    l.no
+                end
+            end
+
+            # if I found a user, then assign the page to the user.
+            if user
+                l.logs 'Assigning page to user... '
+                page.assign(user)
+                l.done
+            end
+        end # if page
+    rescue => e
+        l.logf e.message
+    end
 
     # sleep for 5 seconds
     l.logs 'Sleeping for 5 seconds... '
     sleep 5
     l.done
+    l.log ''
 
 end # while (true)
