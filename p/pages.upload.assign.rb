@@ -1,17 +1,3 @@
-=begin
-require 'uri'
-require 'cgi'
-url = "https://github.com?page=1&tab=repositories"
-uri = URI.parse(url)
-params = CGI.parse(uri.query)
-puts params
-params.reject! { |k,v| k.downcase == 'page' }
-params['page'] = 234
-uri.query = URI.encode_www_form(params)
-puts uri.to_s
-exit(0)
-=end
-
 # MySaaS Emails - Delivery
 # Copyright (C) 2022 ExpandedVenture, LLC.
 #
@@ -44,13 +30,6 @@ BlackStack::Extensions.append :i2p
 BlackStack::Extensions.append :leads
 BlackStack::Extensions.append :scraper
 BlackStack::Extensions.append :'dfy-leads'
-
-
-u = BlackStack::Scraper::User.where(:email=>'leandro.sardi@expandedventure.com').first
-puts u.why_not_available_for_assignation
-exit(0)
-
-
 
 l = BlackStack::LocalLogger.new('./pages.upload.assign.log')
 
