@@ -43,13 +43,11 @@ while (true)
     # if it is page #1, generate further pages based on # of results
     # if it is page #1, generate further pages based on # of results
     # if parsing was successful, apply earnings to the agent
-
-
+    
     begin     
         # get `batch_size` pages pending for upload
         l.logs 'Getting pending pages... '
-        #pages = BlackStack::DfyLeads::Page.where(:upload_success=>true, :parse_end_time=>nil).order(:create_time).limit(n).all
-        pages = BlackStack::DfyLeads::Page.where(:id=>'642dbed4-138c-4d6d-a486-8e7cdbb666b7').all
+        pages = BlackStack::DfyLeads::Page.where(:upload_success=>true, :parse_end_time=>nil).order(:create_time).limit(n).all
         l.logf "done (#{pages.size.to_s})"
 
         # parse pages
@@ -99,7 +97,7 @@ while (true)
                         GC.start
                     end
                 }
-                
+
                 # update the order with the total number of pages
                 l.logs "Update order stats... "
                 p.order.update_stats

@@ -23,7 +23,9 @@ module BlackStack
                 return nil if html.nil?
                 doc = Nokogiri::HTML(html)
                 # get the total number of leads
-                total_leads = doc.xpath('//div[contains(@class, "_display-count")]').first.text.strip.split(' ').first.strip.to_s
+                o = doc.xpath('//div[contains(@class, "_display-count")]').first
+                raise 'Unknown page design: Search results not found.' if o.nil?
+                total_leads = o.text.strip.split(' ').first.strip.to_s
                 factor = 1000 if total_leads.include?('K')
                 factor = 1000000 if total_leads.include?('M')
                 n = total_leads.gsub('K', '').gsub('M', '').gsub(',', '').to_i
@@ -61,6 +63,7 @@ module BlackStack
                 l.done
                 # iterate search results
                 lis = doc.xpath('//li[contains(@class, "artdeco-list__item")]')    
+                raise 'Unknown page design: List of results not found.' if lis.size == 0
                 lis.each { |li|
                     i += 1
                     doc2 = Nokogiri::HTML(li.inner_html)
