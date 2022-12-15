@@ -43,7 +43,7 @@ while (true)
     # if it is page #1, generate further pages based on # of results
     # if it is page #1, generate further pages based on # of results
     # if parsing was successful, apply earnings to the agent
-    
+
     begin     
         # get `batch_size` pages pending for upload
         l.logs 'Getting pending pages... '
@@ -79,24 +79,8 @@ while (true)
                 
                 # if not exists a result for that lead and this page, then insert records into the table `dfyl_result`
                 l.logs 'Inserting results... '
-                leads.each { |lead|
-                    l.logs "#{lead.id}... "
-                    r = BlackStack::DfyLeads::Result.where(:id_lead=>lead.id, :id_page=>p.id).first 
-                    if r
-                        l.no
-                    else
-                        r = BlackStack::DfyLeads::Result.new
-                        r.id = guid
-                        r.create_time = now
-                        r.id_lead = lead.id
-                        r.id_page = p.id
-                        r.save
-                        l.yes
-                        # release resources
-                        DB.disconnect
-                        GC.start
-                    end
-                }
+                p.order.generate_results(p, leads, l)
+                l.done
 
                 # update the order with the total number of pages
                 l.logs "Update order stats... "
@@ -105,8 +89,11 @@ while (true)
 
                 # TODO: apply earnings
 
-                # TODO: generate forther pages
-
+                # generate forther pages
+                l.logs 'Generating further pages... '
+                p.order.generate_pages(l)
+                l.done
+                
                 # TODO: split order
 
                 # flag end time
