@@ -32,6 +32,7 @@ BlackStack::Extensions.append :scraper
 BlackStack::Extensions.append :'dfy-leads'
 
 l = BlackStack::LocalLogger.new('./pages.upload.assign.log')
+n = 10000 # batch_size
 
 while (true)
 
@@ -46,10 +47,15 @@ while (true)
     # if I found a user, then assign the page to the user.
 
     begin
-        # TODO: recover abandoned pages
-
-        # TODO: use user.available_for_assignation? to check if the user is available for assignation
-
+        # relaunch abandoned pages
+        l.logs 'Relaunching abandoned pages... '
+        BlackStack::DfyLeads::Page.abandoned(n).each { |p| 
+            l.logs "Relaunching page #{p.id}... "
+            p.relaunch 
+            l.done
+        }
+        l.done
+        
         # get `batch_size` pages pending for upload
         l.logs 'Getting pending page... '
         page = BlackStack::DfyLeads::Page.pendings(1).first
