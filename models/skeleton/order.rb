@@ -40,11 +40,11 @@ module BlackStack
                 raise 'First uploaded page not found!' if p.nil?
                 l.done
                 # verify: the first page must be parsed
-                l.logs 'Verifying first page... '
+                l.logs 'Getting search leads... '
                 if self.dfyl_stat_search_leads.nil?
                     raise 'First uploaded page not parsed!' 
                 else
-                    l.logf "done (#{self.dfyl_stat_search_leads.to_s})"
+                    l.logf "done (#{self.dfyl_stat_search_leads.to_s} results)"
                 end
                 # calculate the number of pages of the search
                 l.logs "Calculating number of pages... "
