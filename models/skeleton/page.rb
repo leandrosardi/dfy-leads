@@ -3,7 +3,7 @@ module BlackStack
         class Page < BlackStack::Scraper::Page
             many_to_one :order, :class=>:'BlackStack::DfyLeads::Order', :key=>:id_order
             one_to_many :results, :class=>:'BlackStack::DfyLeads::Result', :key=>:id_page
-
+            
             # return the HTML code of the page, stored in the storage folder of the account who is owner of the page.
             # return nil if the file doesn't exist.
             def html
@@ -55,7 +55,12 @@ module BlackStack
                 doc = Nokogiri::HTML(html)
                 # get the total number of leads
                 l.logs "Getting total number of leads... "
+                begin
                 total_leads = self.number_of_search_leads
+                rescue => e
+                    l.logf e.message
+                    return leads
+                end
                 l.logf total_leads.to_s
                 # update the order with the total number of leads
                 l.logs "Update order dfyl_stat_search_leads... "
@@ -94,7 +99,12 @@ module BlackStack
                         'company' => { 'name' => company_name },
                         'id_user' => self.order.id_user,
                     }
-                    leads << BlackStack::Leads::Lead.merge(h)
+                    begin
+                        leads << BlackStack::Leads::Lead.merge(h)
+                    rescue => e
+                        l.logf e.message
+                        return leads
+                    end
                     l.done
                 }
                 # return 

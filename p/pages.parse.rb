@@ -87,22 +87,18 @@ while (true)
                 p.order.update_stats
                 l.done  
 
-                # TODO: apply earnings
-
                 # generate forther pages
                 l.logs 'Generating further pages... '
                 p.order.generate_pages(l)
                 l.done
 
                 # TODO: split order
-
+                
                 # flag end time
                 l.logs 'Flagging end time... '
                 p.parse_end_time = now
                 p.parse_success = true
                 p.save
-                l.done
-
                 l.done
             rescue => e
                 l.logf e.message
@@ -115,8 +111,8 @@ while (true)
                 p.save
                 l.done
             end
-        }
-
+            l.done
+        }        
     rescue => e
         l.logf e.message
     end
