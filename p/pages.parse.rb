@@ -64,8 +64,46 @@ while (true)
 
                 # parse: get # of search leads, get results, create leads and merge them into the database (baded on fname, lname and cname)
                 l.logs 'Parsing... '
-                p.parse(l)
+                leads = p.parse(l)
+                l.logf "done (#{leads.size.to_s})"
+
+                # save the leads
+                l.logs 'Saving leads... '
+                leads.each { |lead|
+                    l.logs "#{lead.id}... "
+                    lead.save
+                    l.done
+                    # release resources
+                    DB.disconnect
+                    GC.start
+                }
                 l.done
+                
+                # if not exists a result for that lead and this page, then insert records into the table `dfyl_result`
+                l.logs 'Inserting results... '
+                leads.each { |lead|
+                    l.logs "#{lead.id}... "
+                    r = BlackStack::DfyLeads::Result.where(:id_lead=>lead.id, :id_page=>p.id).first 
+                    if r
+                        l.no
+                    else
+                        r = BlackStack::DfyLeads::Result.new
+                        r.id = guid
+                        r.create_time = now
+                        r.id_lead = lead.id
+                        r.id_page = p.id
+                        r.save
+                        l.yes
+                        # release resources
+                        DB.disconnect
+                        GC.start
+                    end
+                }
+                
+                # update the order with the total number of pages
+                l.logs "Update order stats... "
+                p.order.update_stats
+                l.done  
 
                 # TODO: apply earnings
 
@@ -90,7 +128,6 @@ while (true)
                 p.parse_success = false
                 p.parse_error_description = e.message
                 p.save
-exit(0)
             end
         }
 

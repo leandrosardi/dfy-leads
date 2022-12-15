@@ -36,8 +36,14 @@ module BlackStack
             # create/update a record in the `fl_lead` table for each lead found in the page, using the static method `Lead.merge`.
             # create `dfyl_result` objects for each result in the page.
             # save all changes in tables `fl_lead`, `dfyl_result` and `scr_order`.
+            #
+            # Return an array of lead objects (a new one, or an existing and updated one).
+            # 
+            # The objects are not saved into the database. You have to do that after calling this method.
+            # 
             def parse(l=nil)
                 i=0
+                leads = []
                 # create logger if not passed
                 l = BlackStack::DummyLogger.new(nil) if l.nil?
                 # create the Nokogiri document
@@ -74,17 +80,22 @@ module BlackStack
                         end
                     end
                     company_name = company_name.strip.gsub('"', '') if company_name
+                    # validate: I found a lead name
+                    raise 'Lead name not found' if lead_name.nil?
+                    # validate: I found a company name
+                    raise 'Company name not found' if company_name.nil?
                     # merge lead
-                    line = []
-                    line << "\"#{lead_name}\"" if lead_name
-                    line << "\"#{company_name}\"" if company_name
-                    l.logs "#{i.to_s}, #{line.join(',')}... "
+                    l.logs "#{i.to_s}: #{lead_name} at #{company_name}... "
+                    h = {
+                        'name' => lead_name,
+                        'company' => { 'name' => company_name },
+                        'id_user' => self.order.id_user,
+                    }
+                    leads << BlackStack::Leads::Lead.merge(h)
                     l.done
-                }  
-                # update the order with the total number of pages
-                l.logs "Update order stats... "
-                o.update_stats
-                l.done  
+                }
+                # return 
+                leads  
             end # def self.parse_sales_navigator_result_pages(l=nil)
             
         end # class Order
