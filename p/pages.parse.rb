@@ -93,7 +93,7 @@ while (true)
                 l.logs 'Generating further pages... '
                 p.order.generate_pages(l)
                 l.done
-                
+
                 # TODO: split order
 
                 # flag end time
@@ -113,6 +113,7 @@ while (true)
                 p.parse_success = false
                 p.parse_error_description = e.message
                 p.save
+                l.done
             end
         }
 
