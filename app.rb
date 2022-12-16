@@ -23,6 +23,10 @@ get "/dfy-leads/plans", :auth => true, :agent => /(.*)/ do
     erb :"/extensions/dfy-leads/views/plans", :layout => :"/views/layouts/core"
 end
 
+get "/dfy-leads/leads", :auth => true, :agent => /(.*)/ do
+    erb :"/extensions/leads/views/results", :layout => :"/views/layouts/core"
+end
+
 get "/dfy-leads/orders", :auth => true, :agent => /(.*)/ do
     erb :"/extensions/dfy-leads/views/orders", :layout => :"/views/layouts/core"
 end

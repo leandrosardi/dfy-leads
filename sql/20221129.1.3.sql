@@ -22,3 +22,9 @@ alter table scr_order add column if not exists dfyl_stat_scraped_pages bigint nu
 alter table scr_order add column if not exists dfyl_stat_scraped_leads bigint null;
 alter table scr_order add column if not exists dfyl_stat_leads_appended bigint null;
 alter table scr_order add column if not exists dfyl_stat_leads_verified bigint null;
+
+-- Leads extension allows to filter by order.
+alter table fl_search add column if not exists id_order uuid references scr_order(id) null;
+
+-- Leads extension allows to filter by name.
+alter table fl_search add column if not exists lead_name varchar(500) null;

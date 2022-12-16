@@ -31,6 +31,7 @@ BlackStack::Extensions::add ({
     # what are the screens to add in the leftbar
     :leftbar_icons => [
         { :label => 'orders', :icon => :search, :screen => :orders, },
+        { :label => 'leads', :icon => :heart, :screen => :leads, },
     ],
  
     # add a folder to the storage from where user can download the exports.
