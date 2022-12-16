@@ -7,13 +7,13 @@ module BlackStack
             # return the HTML code of the page, stored in the storage folder of the account who is owner of the page.
             # return nil if the file doesn't exist.
             def html
-                filename = "#{self.id}.html".downcase
-                path = "#{self.order.user.account.storage_folder}/dfy-leads.pages"
-                f = File.open("#{path}/#{filename}", 'rb')
-                return nil if f.nil?
-                ret = f.read
-                f.close
-                ret    
+                ret = nil
+                url = "#{BlackStack::DfyLeads.html_storage_url}/clients/#{self.order.user.account.id.to_guid}/dfy-leads.pages/#{self.id.to_guid}.html"
+                `wget #{url} > /dev/null 2>&1`
+                filename = "#{self.id.to_guid}.html"
+                ret = File.read(filename)
+                `rm #{self.id.to_guid}.html`
+                ret
             end
 
             # get the raw HTML of the page, and get the total leads of the search
@@ -55,12 +55,7 @@ module BlackStack
                 doc = Nokogiri::HTML(html)
                 # get the total number of leads
                 l.logs "Getting total number of leads... "
-                begin
                 total_leads = self.number_of_search_leads
-                rescue => e
-                    l.logf e.message
-                    return leads
-                end
                 l.logf total_leads.to_s
                 # update the order with the total number of leads
                 l.logs "Update order dfyl_stat_search_leads... "
@@ -99,12 +94,7 @@ module BlackStack
                         'company' => { 'name' => company_name },
                         'id_user' => self.order.id_user,
                     }
-                    begin
-                        leads << BlackStack::Leads::Lead.merge(h)
-                    rescue => e
-                        l.logf e.message
-                        return leads
-                    end
+                    leads << BlackStack::Leads::Lead.merge(h)
                     l.done
                 }
                 # return 
