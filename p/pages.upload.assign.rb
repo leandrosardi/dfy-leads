@@ -55,7 +55,7 @@ while (true)
             l.done
         }
         l.done
-
+        
         # get `batch_size` pages pending for upload
         l.logs 'Getting pending page... '
         page = BlackStack::DfyLeads::Page.pendings(1).first

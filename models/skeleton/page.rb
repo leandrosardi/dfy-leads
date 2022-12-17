@@ -4,12 +4,16 @@ module BlackStack
             many_to_one :order, :class=>:'BlackStack::DfyLeads::Order', :key=>:id_order
             one_to_many :results, :class=>:'BlackStack::DfyLeads::Result', :key=>:id_page
             
+            # return the URL to the download HTML of this page
+            def url
+                "#{BlackStack::DfyLeads.html_storage_url}/clients/#{self.order.user.account.id.to_guid}/dfy-leads.pages/#{self.id.to_guid}.html"            
+            end 
+
             # return the HTML code of the page, stored in the storage folder of the account who is owner of the page.
             # return nil if the file doesn't exist.
             def html
                 ret = nil
-                url = "#{BlackStack::DfyLeads.html_storage_url}/clients/#{self.order.user.account.id.to_guid}/dfy-leads.pages/#{self.id.to_guid}.html"
-                `wget #{url} > /dev/null 2>&1`
+                `wget #{self.url} > /dev/null 2>&1`
                 filename = "#{self.id.to_guid}.html"
                 ret = File.read(filename)
                 `rm #{self.id.to_guid}.html`
