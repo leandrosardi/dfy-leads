@@ -18,6 +18,6 @@ begin
     redirect "/dfy-leads/orders?msg=Done." 
 rescue => e
     # return errors
-    redirect "/dfy-leads/orders/#{o.id_to_guid}/edit?err=#{CGI::escape(e.to_console[0..1000])}"
+    redirect "/dfy-leads/orders/#{o.id.to_guid}/edit?err=#{CGI::escape(e.to_console[0..1000])}"
 end
 %>
