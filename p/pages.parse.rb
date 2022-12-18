@@ -54,52 +54,56 @@ while (true)
         pages.each { |p|
             l.logs "Parsing page #{p.id}... "
             begin
-                # flag start time
-                l.logs 'Flagging start time... '
-                p.parse_start_time = now
-                p.save
-                l.done
-
-                # parse: get # of search leads, get results, create leads and merge them into the database (baded on fname, lname and cname)
-                l.logs 'Parsing... '
-                leads = p.parse(l)
-                l.logf "done (#{leads.size.to_s})"
-
-                # save the leads
-                l.logs 'Saving leads... '
-                leads.each { |lead|
-                    l.logs "#{lead.id}... "
-                    lead.save
+                if p.order.status && p.order.delete_time.nil?
+                    # flag start time
+                    l.logs 'Flagging start time... '
+                    p.parse_start_time = now
+                    p.save
                     l.done
-                    # release resources
-                    DB.disconnect
-                    GC.start
-                }
-                l.done
-                
-                # if not exists a result for that lead and this page, then insert records into the table `dfyl_result`
-                l.logs 'Inserting results... '
-                p.order.generate_results(p, leads, l)
-                l.done
 
-                # update the order with the total number of pages
-                l.logs "Update order stats... "
-                p.order.update_stats
-                l.done  
+                    # parse: get # of search leads, get results, create leads and merge them into the database (baded on fname, lname and cname)
+                    l.logs 'Parsing... '
+                    leads = p.parse(l)
+                    l.logf "done (#{leads.size.to_s})"
 
-                # generate forther pages
-                l.logs 'Generating further pages... '
-                p.order.generate_pages(l)
-                l.done
+                    # save the leads
+                    l.logs 'Saving leads... '
+                    leads.each { |lead|
+                        l.logs "#{lead.id}... "
+                        lead.save
+                        l.done
+                        # release resources
+                        DB.disconnect
+                        GC.start
+                    }
+                    l.done
+                    
+                    # if not exists a result for that lead and this page, then insert records into the table `dfyl_result`
+                    l.logs 'Inserting results... '
+                    p.order.generate_results(p, leads, l)
+                    l.done
 
-                # TODO: split order
-                
-                # flag end time
-                l.logs 'Flagging end time... '
-                p.parse_end_time = now
-                p.parse_success = true
-                p.save
-                l.done
+                    # update the order with the total number of pages
+                    l.logs "Update order stats... "
+                    p.order.update_stats
+                    l.done  
+
+                    # generate forther pages
+                    l.logs 'Generating further pages... '
+                    p.order.generate_pages(l)
+                    l.done
+
+                    # TODO: split order
+                    
+                    # flag end time
+                    l.logs 'Flagging end time... '
+                    p.parse_end_time = now
+                    p.parse_success = true
+                    p.save
+                    l.done
+                else
+                    l.logf 'Order was deleted or paused.'
+                end
             rescue => e
                 l.logf e.message
 
