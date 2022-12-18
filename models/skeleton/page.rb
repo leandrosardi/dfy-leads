@@ -88,18 +88,23 @@ module BlackStack
                     end
                     company_name = company_name.strip.gsub('"', '') if company_name
                     # validate: I found a lead name
-                    raise 'Lead name not found' if lead_name.nil?
+                    # I remove this validation because some times, SN don't show the full profile of a lead.
+                    #raise 'Lead name not found' if lead_name.nil?
                     # validate: I found a company name
-                    raise 'Company name not found' if company_name.nil?
+                    raise 'Company name not found' if lead_name && company_name.nil?
                     # merge lead
                     l.logs "#{i.to_s}: #{lead_name} at #{company_name}... "
-                    h = {
-                        'name' => lead_name,
-                        'company' => { 'name' => company_name },
-                        'id_user' => self.order.id_user,
-                    }
-                    leads << BlackStack::Leads::Lead.merge(h)
-                    l.done
+                    if lead_name.nil?
+                        l.logf "Lead name not found. Skipping."
+                    else
+                        h = {
+                            'name' => lead_name,
+                            'company' => { 'name' => company_name },
+                            'id_user' => self.order.id_user,
+                        }
+                        leads << BlackStack::Leads::Lead.merge(h)
+                        l.done
+                    end # if lead_name.nil?
                 }
                 # return 
                 leads  
