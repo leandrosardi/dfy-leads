@@ -83,7 +83,7 @@ module BlackStack
                     else
                         n2 = doc2.xpath('//div[contains(@class,"artdeco-entity-lockup__subtitle")]').first 
                         if n2
-                            company_name = n2.text.split("\n").reject { |s| s.strip.empty? }.last.strip
+                            company_name = n2.text.split("\n").reject { |s| s.strip.empty? }.last.to_s.strip
                         end
                     end
                     company_name = company_name.strip.gsub('"', '') if company_name
