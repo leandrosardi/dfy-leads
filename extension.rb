@@ -17,15 +17,20 @@ BlackStack::Extensions::add ({
 
     # what is the section to add this extension in either the top-bar, the footer, the dashboard.
     :services_section => 'Services',
+
     # show this extension as a service in the top bar?
     :show_in_top_bar => true,
+
     # show this extension as a service in the footer?
     :show_in_footer => true,
+
     # show this extension as a service in the dashboard?
     :show_in_dashboard => true,
 
+    # list dependencies
     :dependencies => [
-        #{ :extension => :content, :version => '0.0.1' },
+        { :extension => :leads, :version => '0.0.2' },
+        { :extension => :emails, :version => '0.0.2' },
     ],
 
     # what are the screens to add in the leftbar
@@ -33,11 +38,24 @@ BlackStack::Extensions::add ({
         { :label => 'orders', :icon => :search, :screen => :orders, },
         { :label => 'leads', :icon => :heart, :screen => :leads, },
     ],
- 
+
     # add a folder to the storage from where user can download the exports.
     :storage_folders => [
         { :name => 'dfy-leads.pages', },
     ],
+
+    # deployment routines
+    :deployment_routines => [{
+        :name => 'install-gems',
+        :commands => [{ 
+            # removed becuase of the issue https://github.com/leandrosardi/emails/issues/31
+            #gem install --no-document google-api-client -v 0.53.0;
+            :command => "
+                gem install --no-document appending -v 1.0;
+            ",
+            :sudo => true,
+        }],
+    }],
 })
 
 # setup the I2P product description here
