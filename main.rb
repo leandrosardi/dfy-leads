@@ -1,3 +1,6 @@
+require 'appending'
+#require_relative '../../../appending/lib/appending.rb'
+
 module BlackStack
     module DfyLeads
         @@html_storage_url = nil
