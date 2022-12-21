@@ -20,8 +20,6 @@ all = "
         o.status,
         u.id as id_user,
         u.name as user_name,
-        e.filename as filename,
-        coalesce(e.create_file_success,false) as create_file_success,
         coalesce(o.dfyl_stat_search_leads, 0) as dfyl_stat_search_leads,
         coalesce(o.dfyl_stat_scraped_pages, 0) as dfyl_stat_scraped_pages,
         coalesce(o.dfyl_stat_scraped_leads, 0) as dfyl_stat_scraped_leads,
@@ -29,7 +27,6 @@ all = "
         coalesce(o.dfyl_stat_leads_verified, 0) as dfyl_stat_leads_verified,
         o.url
     from scr_order o
-    left join fl_export e on e.id=o.id_export
     join \"user\" u on ( u.id_account='#{@login.user.id_account}' and u.id=o.id_user )
     where o.delete_time is null
 "
@@ -166,17 +163,7 @@ q = all
                     <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_leads_verified].to_label%>"><%=row[:dfyl_stat_leads_verified].to_label%><br/><span style='color:gray;'><%=c.to_s%>%</span></td>
                     
                     <td class="fix" style="text-align:right;">
-                        <%
-                        if !row[:filename].to_s.empty? && row[:create_file_success]
-                        %>
-                        <a href="/clients/<%=@login.user.id_account.to_guid%>/leads.exports/<%=row[:filename].to_s.encode_html%>.csv"><i class='icon-cloud-download'></i></a>
-                        <%
-                        else #if row[:filename]
-                        %>
-                        <i>pending</i>
-                        <%
-                        end #if row[:filename]
-                        %>
+                        <!-- TODO: add link to the results screen -->
                     </td>
                     <td class="fix" style="text-align:right;"><a title='Edit' href='/dfy-leads/orders/<%=row[:id].to_guid%>/edit'><i class='icon-pencil'></i></a></td>
                     <td class="fix" style="text-align:right;">

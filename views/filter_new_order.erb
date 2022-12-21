@@ -95,16 +95,6 @@ begin
         s.save
     end # if link_or_filters != 'link'
 
-    # create the export
-    e = BlackStack::Leads::Export.new()
-    e.id = guid
-    e.create_time = now
-    e.id_user = @login.id_user
-    e.id_search = s ? s.id : nil
-    e.allow_multiple_contacts_per_company = true
-    e.filename = "dfy-leads.#{name}"
-    e.save
-
     # register the order
     o = BlackStack::DfyLeads::Order.new()
     o.id = guid
@@ -114,7 +104,6 @@ begin
     o.status = true
     o.type = BlackStack::DfyLeads::Order::TYPE_SNS # this is the only type of scraping we support so far
     o.id_search = s ? s.id : nil
-    o.id_export = e.id
     o.url = link_or_filters == 'link' ? url : nil
     o.save
 
