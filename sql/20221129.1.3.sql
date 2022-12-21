@@ -11,7 +11,8 @@ create table if not exists dfyl_result (
 alter table scr_page add column if not exists "number" bigint not null default 0;
  
 -- use a fl_search object to save its filters.
-alter table scr_order add column if not exists id_search uuid /*not*/ null references fl_search(id);
+--alter table scr_order add column if not exists id_search uuid /*not*/ null references fl_search(id);
+alter table scr_order drop column if exists id_export;
 
 -- after processing, the same process add all the leads to an export list for automated CSV file generation.
 alter table scr_order add column if not exists id_export uuid /*not*/ null references fl_export("id");
