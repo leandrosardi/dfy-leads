@@ -87,7 +87,7 @@ while (true)
             rescue => e
                 l.logf e.message
                 #
-                l.logf 'Updating end flag... '
+                l.logs 'Updating end flag... '
                 lead.enrich_end_time = now
                 lead.enrich_success = false
                 lead.enrich_error_description = e.message
