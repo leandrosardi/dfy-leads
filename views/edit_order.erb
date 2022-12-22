@@ -26,6 +26,8 @@ negative_locations = o.search ? o.search.locations.select { |o| !o.positive }.ma
 negative_revenues = o.search ? o.search.revenues.select { |o| !o.positive }.map { |r| r.fl_revenue.name }.join(',') : ''
 negative_headcounts = o.search ? o.search.headcounts.select { |o| !o.positive }.map { |h| h.fl_headcount.name }.join(',') : ''
 negative_engagements = o.search ? o.search.engagements.select { |o| !o.positive }.map { |e| e.value }.join(',') : ''
+#
+posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : false
 %>
 
 <!-- NavBar -->
@@ -190,7 +192,7 @@ negative_engagements = o.search ? o.search.engagements.select { |o| !o.positive 
                     <div class="control-group" id='posted_in_last_30_days'>
                       <label class="control-label" for="posted_in_last_30_days">Posted in Last 30 Days</label>
                       <div class="controls">
-                        <span class='label label-<%=o.search.posted_in_last_30_days == true ? 'blue' : 'gray'%>'><%=o.search.posted_in_last_30_days == true ? 'yes' : 'no'%></span>
+                        <span class='label label-<%=posted_in_last_30_days == true ? 'blue' : 'gray'%>'><%=posted_in_last_30_days == true ? 'yes' : 'no'%></span>
                       </div>          
                     </div>
                   </div>
