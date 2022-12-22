@@ -111,7 +111,7 @@ while (true)
             if user.nil?
                 # get all the agents with an active chrome extension, who are sharing its chrome extension
                 l.logs 'Getting account user... '
-                user = page.order.user.online_users(1).first
+                user = page.order.user.available_users(1).first
 
                 # if there is no user belonging the same account than the page with active chrome extension, then get a user with an active chrome extension who is sharing its extension.
                 if user
@@ -120,7 +120,7 @@ while (true)
                     l.no
 
                     l.logs 'Getting public user... '
-                    user = BlackStack::Scraper::User.online_users(1).first 
+                    user = BlackStack::Scraper::User.available_users(1).first 
                     if user
                         l.yes
                     else
