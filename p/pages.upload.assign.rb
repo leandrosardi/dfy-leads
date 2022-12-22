@@ -55,7 +55,7 @@ while (true)
             l.done
         }
         l.done
-        
+
         # get `batch_size` pages pending for upload
         # Remember: `Page.pandings` returns pages in sequence, because of the issue https://github.com/leandrosardi/scraper/issues/24
         l.logs 'Getting pending page... '
@@ -76,25 +76,32 @@ while (true)
             else
                 l.no
                 l.logs 'Getting previous page... '
-                previous = BlackStack::Page.where(:id_order=page.order, :number=>page.number-1).first
+                previous = BlackStack::DfyLeads::Page.where(:id_order=>page.id_order, :number=>page.number-1).first
                 if previous.nil?
                     l.logf "Error: previous page not found"
-                elsif previous.upload_reservation_id.nil?
-                    l.logf "Error: previous page has no upload_reservation_id"
                 elsif previous.upload_end_time.nil?
                     l.logf "Error: previous page has no upload_end_time"
                 else
                     l.done
-                    # get the user who visited the previous page
-                    l.logs 'Getting previous page user... '
-                    candidate_user = BlackStack::Scraper::User(:email=>previous.upload_reservation_id).first
-                    if candidate_user.nil?
-                        l.logf "Error: previous page user not found"
-                    elsif !candidate_user.online?
-                        l.logf "Error: previous page user is not online"
+                    # get the latest assignation of the previous page
+                    l.logs 'Getting previous page assignation... '
+                    assignation = BlackStack::Scraper::Assignation.where(:id_page=>previous.id).order(:create_time).last
+                    if assignation.nil?
+                        l.logf "Error: previous page assignation not found"
                     else
-                        user = candidate_user
                         l.done
+                        
+                        # get the user who visited the previous page
+                        l.logs 'Getting previous page user... '
+                        candidate_user = assignation.user
+                        if candidate_user.nil?
+                            l.logf "Error: previous page user not found"
+                        elsif !candidate_user.online?
+                            l.logf "Error: previous page user is not online"
+                        else
+                            user = candidate_user
+                            l.done
+                        end
                     end
                 end
             end
