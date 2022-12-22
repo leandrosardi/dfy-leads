@@ -57,6 +57,7 @@ while (true)
         l.done
         
         # get `batch_size` pages pending for upload
+        # Remember: `Page.pandings` returns pages in sequence, because of the issue https://github.com/leandrosardi/scraper/issues/24
         l.logs 'Getting pending page... '
         page = BlackStack::DfyLeads::Page.pendings(1).first
         if page.nil?
@@ -64,22 +65,62 @@ while (true)
         else
             l.yes
 
-            # get all the agents with an active chrome extension, who are sharing its chrome extension
-            l.logs 'Getting account user... '
-            user = page.order.user.online_users(1).first
-            # if there is no user belonging the same account than the page with active chrome extension, then get a user with an active chrome extension who is sharing its extension.
-            if user
+            # user to assign this page
+            user = nil
+
+            # get the latest user who visited a page of this order
+            # reference: https://github.com/leandrosardi/scraper/issues/24
+            l.logs 'Is the first page of the order... '           
+            if page.number == 1
                 l.yes
             else
                 l.no
+                l.logs 'Getting previous page... '
+                previous = BlackStack::Page.where(:id_order=page.order, :number=>page.number-1).first
+                if previous.nil?
+                    l.logf "Error: previous page not found"
+                elsif previous.upload_reservation_id.nil?
+                    l.logf "Error: previous page has no upload_reservation_id"
+                elsif previous.upload_end_time.nil?
+                    l.logf "Error: previous page has no upload_end_time"
+                else
+                    l.done
+                    # get the user who visited the previous page
+                    l.logs 'Getting previous page user... '
+                    candidate_user = BlackStack::Scraper::User(:email=>previous.upload_reservation_id).first
+                    if candidate_user.nil?
+                        l.logf "Error: previous page user not found"
+                    elsif !candidate_user.online?
+                        l.logf "Error: previous page user is not online"
+                    else
+                        user = candidate_user
+                        l.done
+                    end
+                end
+            end
+            
+            # If I didn't find a user, then get a user beloning the same account than the page, 
+            # with active chrome extension.
+            if user.nil?
+                # get all the agents with an active chrome extension, who are sharing its chrome extension
+                l.logs 'Getting account user... '
+                user = page.order.user.online_users(1).first
 
-                l.logs 'Getting public user... '
-                user = BlackStack::Scraper::User.online_users(1).first 
+                # if there is no user belonging the same account than the page with active chrome extension, then get a user with an active chrome extension who is sharing its extension.
                 if user
                     l.yes
                 else
                     l.no
+
+                    l.logs 'Getting public user... '
+                    user = BlackStack::Scraper::User.online_users(1).first 
+                    if user
+                        l.yes
+                    else
+                        l.no
+                    end
                 end
+
             end
 
             # if I found a user, then assign the page to the user.
