@@ -82,7 +82,7 @@ while (true)
                     l.logs 'Inserting results... '
                     p.order.generate_results(p, leads, l)
                     l.done
-
+                    
                     # update the order with the total number of pages
                     l.logs "Update order stats... "
                     p.order.update_stats
@@ -93,14 +93,14 @@ while (true)
                     p.order.generate_pages(l)
                     l.done
 
-                    # TODO: split order
-                    
                     # flag end time
                     l.logs 'Flagging end time... '
                     p.parse_end_time = now
                     p.parse_success = true
                     p.save
                     l.done
+
+                    # TODO: split order                    
                 else
                     l.logf 'Order was deleted or paused.'
                 end

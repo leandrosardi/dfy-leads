@@ -64,6 +64,7 @@ module BlackStack
                 # update the order with the total number of leads
                 l.logs "Update order dfyl_stat_search_leads... "
                 DB.execute("UPDATE scr_order SET dfyl_stat_search_leads = #{total_leads} WHERE id = '#{self.id_order}'")
+                self.order.dfyl_stat_search_leads = total_leads
                 l.done
                 # iterate search results
                 lis = doc.xpath('//li[contains(@class, "artdeco-list__item")]')    

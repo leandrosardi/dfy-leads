@@ -50,13 +50,16 @@ module BlackStack
                 l.logf "done (#{n.to_s})"
                 # generating pages
                 i = 1
-                while i < n
+                j = 0
+                while i < n #&& j < 1
                     i += 1
                     l.logs "Generating page #{i.to_s}... "
                     p = BlackStack::DfyLeads::Page.where(:id_order=>self.id, :number=>i).first
                     if p
                         l.logf "already exists"
                     else
+                        j += 1
+                        # create the page
                         p = BlackStack::DfyLeads::Page.new
                         p.id = guid
                         p.create_time = now
@@ -80,6 +83,9 @@ module BlackStack
                 j = self.pages.map { |p| p.results.size }.sum
                 # update the order
                 DB.execute("UPDATE scr_order SET dfyl_stat_scraped_pages=#{i}, dfyl_stat_scraped_leads=#{j} WHERE id='#{self.id}'")
+                # 
+                self.dfyl_stat_scraped_pages = i
+                self.dfyl_stat_scraped_leads = j
             end # def update_stats
 
             # if the search of the order gets more than N resolts, then the order is split into many smaller orders
