@@ -8,7 +8,7 @@ begin
     # choose link or filters
     link_or_filters = @login.user.preference("dfy-leads.orders.new.link_or_filters", 'link', params[:link_or_filters])
     # sns url
-#    url = @login.user.preference("dfy-leads.orders.new.url", '', params[:url])
+    url = params[:url] #@login.user.preference("dfy-leads.orders.new.url", '', params[:url])
     # positive filter values
     positive_keywords = @login.user.preference('dfy-leads.orders.new.positive_keywords', '', params[:positive_keywords])
     positive_positions = @login.user.preference('dfy-leads.orders.new.positive_positions', '', params[:positive_positions])
