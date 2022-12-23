@@ -67,6 +67,7 @@ while (true)
 
             # user to assign this page
             user = nil
+            previous = nil
 
             # get the latest user who visited a page of this order
             # reference: https://github.com/leandrosardi/scraper/issues/24
@@ -79,8 +80,6 @@ while (true)
                 previous = BlackStack::DfyLeads::Page.where(:id_order=>page.id_order, :number=>page.number-1).first
                 if previous.nil?
                     l.logf "Error: previous page not found"
-                elsif previous.upload_end_time.nil?
-                    l.logf "Error: previous page has no upload_end_time"
                 else
                     l.done
                     # get the latest assignation of the previous page
@@ -97,7 +96,7 @@ while (true)
                         if candidate_user.nil?
                             l.logf "Error: previous page user not found"
                         elsif !candidate_user.online?
-                            l.logf "Error: previous page user is not online"
+                            l.logf "Error: previous page user (#{candidate_user.email}) is not online"
                         else
                             user = candidate_user
                             l.done
@@ -127,14 +126,24 @@ while (true)
                         l.no
                     end
                 end
-
             end
 
+            l.log "Found user: #{user.nil? ? 'nil' : user.email}"
+
             # if I found a user, then assign the page to the user.
-            if user
+            if user.nil?
+                l.log "No online or available user found"
+            else                
                 l.logs 'Assigning page to user... '
-                page.assign(user)
-                l.done
+                s = user.why_not_available_for_assignation
+                if s
+                    l.logf "User not available: #{s}"
+                elsif previous.upload_end_time.nil? || page.number == 1
+                    l.logf "Error: previous page has no upload_end_time"
+                else
+                    page.assign(user)
+                    l.done
+                end
             end
         end # if page
     rescue => e
