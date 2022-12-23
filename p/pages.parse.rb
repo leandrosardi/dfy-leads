@@ -82,17 +82,25 @@ while (true)
                     l.logs 'Inserting results... '
                     p.order.generate_results(p, leads, l)
                     l.done
-                    
+
                     # update the order with the total number of pages
                     l.logs "Update order stats... "
-                    p.order.update_stats
-                    l.done  
+                    if p.page_number == 1
+                        p.order.update_stats
+                        l.done  
+                    else
+                        l.logf 'skipped'
+                    end
 
                     # generate forther pages
                     l.logs 'Generating further pages... '
-                    p.order.generate_pages(l)
-                    l.done
-
+                    if p.page_number == 1
+                        p.order.generate_pages(l)
+                        l.done
+                    else
+                        l.logf 'skipped'
+                    end
+                    
                     # flag end time
                     l.logs 'Flagging end time... '
                     p.parse_end_time = now
