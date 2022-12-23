@@ -85,7 +85,7 @@ while (true)
 
                     # update the order with the total number of pages
                     l.logs "Update order stats... "
-                    if p.page_number == 1
+                    if p.number == 1
                         p.order.update_stats
                         l.done  
                     else
@@ -94,13 +94,13 @@ while (true)
 
                     # generate forther pages
                     l.logs 'Generating further pages... '
-                    if p.page_number == 1
+                    if p.number == 1
                         p.order.generate_pages(l)
                         l.done
                     else
                         l.logf 'skipped'
                     end
-                    
+
                     # flag end time
                     l.logs 'Flagging end time... '
                     p.parse_end_time = now
