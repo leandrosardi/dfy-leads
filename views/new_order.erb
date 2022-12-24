@@ -12,7 +12,7 @@ positive_keywords = @login.user.preference('dfy-leads.orders.new.positive_keywor
 positive_positions = @login.user.preference('dfy-leads.orders.new.positive_positions', '')
 positive_industries = @login.user.preference('dfy-leads.orders.new.positive_industries', '')
 positive_locations = @login.user.preference('dfy-leads.orders.new.positive_locations', '')
-positive_revenues = @login.user.preference('dfy-leads.orders.new.positive_revenues', '')
+positive_revenues = '' #@login.user.preference('dfy-leads.orders.new.positive_revenues', '')
 positive_headcounts = @login.user.preference('dfy-leads.orders.new.positive_headcounts', '')      
 positive_engagements = @login.user.preference('dfy-leads.orders.new.positive_engagements', '')
 # negative filter values
@@ -20,7 +20,7 @@ negative_keywords = @login.user.preference('dfy-leads.orders.new.negative_keywor
 negative_positions = @login.user.preference('dfy-leads.orders.new.negative_positions', '')
 negative_industries = @login.user.preference('dfy-leads.orders.new.negative_industries', '')
 negative_locations = @login.user.preference('dfy-leads.orders.new.negative_locations', '')
-negative_revenues = @login.user.preference('dfy-leads.orders.new.negative_revenues', '')
+negative_revenues = '' #@login.user.preference('dfy-leads.orders.new.negative_revenues', '')
 negative_headcounts = @login.user.preference('dfy-leads.orders.new.negative_headcounts', '')      
 negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_engagements', '')
 %>
@@ -51,7 +51,9 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
                         <input type="hidden" class="positive_positions" name="positive_positions" id='positive_positions' value="<%= positive_positions.to_s.encode_html%>" />
                         <input type="hidden" class="positive_industries" name="positive_industries" id='positive_industries' value="<%= positive_industries.to_s.encode_html%>" />
                         <input type="hidden" class="positive_locations" name="positive_locations" id='positive_locations' value="<%=positive_locations.to_s.encode_html%>" />
+                        <!--
                         <input type="hidden" class="positive_revenues" name="positive_revenues" id='positive_revenues' values="<%=positive_revenues.to_s.encode_html%>" />
+                        -->
                         <input type="hidden" class="positive_headcounts" name="positive_headcounts" id='positive_headcounts' values="<%=positive_headcounts.to_s.encode_html%>" />
                         <input type="hidden" class="positive_engagements" name="positive_engagements" id='positive_engagements' values="<%=positive_engagements.to_s.encode_html%>" />
                 
@@ -59,7 +61,9 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
                         <input type="hidden" class="negative_positions" name="negative_positions" id='negative_positions' value="<%= negative_positions.to_s.encode_html%>" />
                         <input type="hidden" class="negative_industries" name="negative_industries" id='negative_industries' value="<%= negative_industries.to_s.encode_html%>" />
                         <input type="hidden" class="negative_locations" name="negative_locations" id='negative_locations' value="<%=negative_locations.to_s.encode_html%>" />
+                        <!--
                         <input type="hidden" class="negative_revenues" name="negative_revenues" id='negative_revenues' values="<%=negative_revenues.to_s.encode_html%>" />
+                        -->
                         <input type="hidden" class="negative_headcounts" name="negative_headcounts" id='negative_headcounts' values="<%=negative_headcounts.to_s.encode_html%>" />
                         <input type="hidden" class="negative_engagements" name="negative_engagements" id='negative_engagements' values="<%=negative_engagements.to_s.encode_html%>" />
                     </div>
@@ -87,7 +91,9 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
                     <div id='positions'></div>
                     <div id='industries'></div>
                     <div id='locations'></div>
+                    <!--
                     <div id='revenues'></div>
+                    -->
                     <div id='headcounts'></div>    
                     <div id='engagements'></div>
                 </div>
@@ -157,7 +163,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
         var positions = document.getElementById('positions');
         var industries = document.getElementById('industries');
         var locations = document.getElementById('locations');
-        var revenues = document.getElementById('revenues');
+        //var revenues = document.getElementById('revenues');
         var headcounts = document.getElementById('headcounts');      
         var engagements = document.getElementById('engagements');
 
@@ -239,7 +245,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
             });
             $('.negative_locations').val(s);
         
-        
+            /*
             i = 0;
             s = '';
             filtersJs.getPositiveValues(revenues).forEach(function(value) {
@@ -248,7 +254,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
               i++;
             });
             $('.positive_revenues').val(s);
-        
+
             i = 0;
             s = '';
             filtersJs.getNegativeValues(revenues).forEach(function(value) {
@@ -257,7 +263,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
               i++;
             });
             $('.negative_revenues').val(s);
-        
+            */
 
             i = 0;
             s = '';
@@ -373,7 +379,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
               update_hidden_fields();
             },
         });
-
+        /*
         filtersJs.draw(revenues, {
             label: 'Revenues',
             allowed_positive_keywords: true, // default value: true
@@ -388,7 +394,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
               update_hidden_fields();
             },
         });
-
+        */
         filtersJs.draw(engagements, {
           label: 'Engagements',
           allowed_positive_keywords: true, // default value: true
@@ -452,19 +458,19 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
           filtersJs.addValue(locations, '<%=s%>', false);
           <%
         }
-
+        if false
         positive_revenues.split(',').each { |s|
           %>
           filtersJs.addValue(revenues, '<%=s%>', true);
           <%
         }
-
+        
         negative_revenues.split(',').each { |s|
           %>
           filtersJs.addValue(revenues, '<%=s%>', false);
           <%
         }
-
+        end
         positive_headcounts.split(',').each { |s|
           %>
           filtersJs.addValue(headcounts, '<%=s%>', true);

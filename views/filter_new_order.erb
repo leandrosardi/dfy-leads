@@ -104,7 +104,7 @@ begin
     o.status = true
     o.type = BlackStack::DfyLeads::Order::TYPE_SNS # this is the only type of scraping we support so far
     o.id_search = s ? s.id : nil
-    o.url = link_or_filters == 'link' ? url : nil
+    o.url = link_or_filters == 'link' ? url : s.sales_navigator_url
     o.save
 
     # register the first page
@@ -118,7 +118,7 @@ begin
     # return 
     # on a new search, return the paginatin to the page 1.
     # don't show any success message in this case. Just the results of the search.
-    redirect "/dfy-leads/orders?msg=Done." 
+    redirect "/dfy-leads/orders/#{o.id}/edit?msg=Done." 
 rescue => e
     # return errors
     redirect "/dfy-leads/orders/new?err=#{CGI::escape(e.to_console[0..1000])}"

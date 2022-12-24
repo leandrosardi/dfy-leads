@@ -15,7 +15,7 @@ positive_keywords = o.search ? o.search.keywords.select { |o| o.positive }.map {
 positive_positions = o.search ? o.search.positions.select { |o| o.positive }.map { |p| p.value }.join(',') : ''
 positive_industries = o.search ? o.search.industries.select { |o| o.positive }.map { |i| i.fl_industry.name }.join(',') : ''
 positive_locations = o.search ? o.search.locations.select { |o| o.positive }.map { |l| l.value }.join(',') : ''
-positive_revenues = o.search ? o.search.revenues.select { |o| o.positive }.map { |r| r.fl_revenue.name }.join(',') : ''
+#positive_revenues = o.search ? o.search.revenues.select { |o| o.positive }.map { |r| r.fl_revenue.name }.join(',') : ''
 positive_headcounts = o.search ? o.search.headcounts.select { |o| o.positive }.map { |h| h.fl_headcount.name }.join(',') : ''    
 positive_engagements = o.search ? o.search.engagements.select { |o| o.positive }.map { |e| e.value }.join(',') : ''
 # negative filter values
@@ -23,7 +23,7 @@ negative_keywords = o.search ? o.search.keywords.select { |o| !o.positive }.map 
 negative_positions = o.search ? o.search.positions.select { |o| !o.positive }.map { |p| p.value }.join(',') : ''
 negative_industries = o.search ? o.search.industries.select { |o| !o.positive }.map { |i| i.fl_industry.name }.join(',') : ''
 negative_locations = o.search ? o.search.locations.select { |o| !o.positive }.map { |l| l.value }.join(',') : ''
-negative_revenues = o.search ? o.search.revenues.select { |o| !o.positive }.map { |r| r.fl_revenue.name }.join(',') : ''
+#negative_revenues = o.search ? o.search.revenues.select { |o| !o.positive }.map { |r| r.fl_revenue.name }.join(',') : ''
 negative_headcounts = o.search ? o.search.headcounts.select { |o| !o.positive }.map { |h| h.fl_headcount.name }.join(',') : ''
 negative_engagements = o.search ? o.search.engagements.select { |o| !o.positive }.map { |e| e.value }.join(',') : ''
 #
@@ -135,6 +135,9 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       </div>          
                     </div>
                     
+                    <%
+                    if false
+                    %>
                     <div class="control-group" id='revenues'>
                       <label class="control-label" for="revenues">Revenues</label>
                       <div class="controls">
@@ -152,6 +155,9 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       %>            
                       </div>          
                     </div>
+                    <%
+                    end #if false
+                    %>
                     
                     <div class="control-group" id='headcounts'>
                       <label class="control-label" for="headcounts">Headcounts</label>
