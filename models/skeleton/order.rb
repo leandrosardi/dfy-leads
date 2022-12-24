@@ -108,6 +108,13 @@ module BlackStack
                                     o2.type = self.type
                                     o2.dfyl_id_parent = self.id
                                     o2.save
+                                    # register the first page
+                                    p2 = BlackStack::DfyLeads::Page.new()
+                                    p2.id = guid
+                                    p2.create_time = now
+                                    p2.id_order = o2.id
+                                    p2.number = 1 # this column is added by dfy-leads extension
+                                    p2.save
                                     # release resources
                                     GC.start
                                     DB.disconnect
