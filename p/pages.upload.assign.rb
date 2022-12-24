@@ -143,6 +143,8 @@ while (true)
                         l.logf "User not available: #{s}"
                     elsif page.number > 1 && previous.upload_end_time.nil?
                         l.logf "Error: previous page has no upload_end_time"
+                    elsif page.number > 1 && (previous.parse_end_time.nil? || previous.parse_end_time < previous.parse_success)
+                        l.logf "Error: previous page has no parsed successfully yet"
                     else
                         page.assign(user)
                         l.done
