@@ -47,105 +47,110 @@ while (true)
     # if I found a user, then assign the page to the user.
 
     begin
-        # relaunch abandoned pages
-        l.logs 'Relaunching abandoned pages... '
-        BlackStack::DfyLeads::Page.abandoned(n).each { |p| 
-            l.logs "Relaunching page #{p.id}... "
-            p.relaunch 
+        BlackStack::DfyLeads::Order.where(:delete_time=>nil, :status=>true).each { |o|
+        l.logs "Working order #{o.id} (#{o.name}@#{o.user.email})... "
+
+            # relaunch abandoned pages
+            l.logs 'Relaunching abandoned pages... '
+            BlackStack::DfyLeads::Page.abandoned(n).each { |p| 
+                l.logs "Relaunching page #{p.id}... "
+                p.relaunch 
+                l.done
+            }
             l.done
-        }
-        l.done
 
-        # get `batch_size` pages pending for upload
-        # Remember: `Page.pandings` returns pages in sequence, because of the issue https://github.com/leandrosardi/scraper/issues/24
-        l.logs 'Getting pending page... '
-        page = BlackStack::DfyLeads::Page.pendings(1).first
-        if page.nil?
-            l.no
-        else
-            l.yes
-
-            # user to assign this page
-            user = nil
-            previous = nil
-
-            # get the latest user who visited a page of this order
-            # reference: https://github.com/leandrosardi/scraper/issues/24
-            l.logs 'Is the first page of the order... '           
-            if page.number == 1
-                l.yes
-            else
+            # get `batch_size` pages pending for upload
+            # Remember: `Page.pandings` returns pages in sequence, because of the issue https://github.com/leandrosardi/scraper/issues/24
+            l.logs 'Getting pending page... '
+            page = o.pending_pages(1).first
+            if page.nil?
                 l.no
-                l.logs 'Getting previous page... '
-                previous = BlackStack::DfyLeads::Page.where(:id_order=>page.id_order, :number=>page.number-1).first
-                if previous.nil?
-                    l.logf "Error: previous page not found"
-                else
-                    l.done
-                    # get the latest assignation of the previous page
-                    l.logs 'Getting previous page assignation... '
-                    assignation = BlackStack::Scraper::Assignation.where(:id_page=>previous.id).order(:create_time).last
-                    if assignation.nil?
-                        l.logf "Error: previous page assignation not found"
-                    else
-                        l.done
-                        
-                        # get the user who visited the previous page
-                        l.logs 'Getting previous page user... '
-                        candidate_user = assignation.user
-                        if candidate_user.nil?
-                            l.logf "Error: previous page user not found"
-                        elsif !candidate_user.online?
-                            l.logf "Error: previous page user (#{candidate_user.email}) is not online"
-                        else
-                            user = candidate_user
-                            l.done
-                        end
-                    end
-                end
-            end
-            
-            # If I didn't find a user, then get a user beloning the same account than the page, 
-            # with active chrome extension.
-            if user.nil?
-                # get all the agents with an active chrome extension, who are sharing its chrome extension
-                l.logs 'Getting account user... '
-                user = page.order.user.available_users(1).first
+            else
+                l.yes
 
-                # if there is no user belonging the same account than the page with active chrome extension, then get a user with an active chrome extension who is sharing its extension.
-                if user
+                # user to assign this page
+                user = nil
+                previous = nil
+
+                # get the latest user who visited a page of this order
+                # reference: https://github.com/leandrosardi/scraper/issues/24
+                l.logs 'Is the first page of the order... '           
+                if page.number == 1
                     l.yes
                 else
                     l.no
+                    l.logs 'Getting previous page... '
+                    previous = BlackStack::DfyLeads::Page.where(:id_order=>page.id_order, :number=>page.number-1).first
+                    if previous.nil?
+                        l.logf "Error: previous page not found"
+                    else
+                        l.done
+                        # get the latest assignation of the previous page
+                        l.logs 'Getting previous page assignation... '
+                        assignation = BlackStack::Scraper::Assignation.where(:id_page=>previous.id).order(:create_time).last
+                        if assignation.nil?
+                            l.logf "Error: previous page assignation not found"
+                        else
+                            l.done
+                            
+                            # get the user who visited the previous page
+                            l.logs 'Getting previous page user... '
+                            candidate_user = assignation.user
+                            if candidate_user.nil?
+                                l.logf "Error: previous page user not found"
+                            elsif !candidate_user.online?
+                                l.logf "Error: previous page user (#{candidate_user.email}) is not online"
+                            else
+                                user = candidate_user
+                                l.done
+                            end
+                        end
+                    end
+                end
+                
+                # If I didn't find a user, then get a user beloning the same account than the page, 
+                # with active chrome extension.
+                if user.nil?
+                    # get all the agents with an active chrome extension, who are sharing its chrome extension
+                    l.logs 'Getting account user... '
+                    user = page.order.user.available_users(1).first
 
-                    l.logs 'Getting public user... '
-                    user = BlackStack::Scraper::User.available_users(1).first 
+                    # if there is no user belonging the same account than the page with active chrome extension, then get a user with an active chrome extension who is sharing its extension.
                     if user
                         l.yes
                     else
                         l.no
+
+                        l.logs 'Getting public user... '
+                        user = BlackStack::Scraper::User.available_users(1).first 
+                        if user
+                            l.yes
+                        else
+                            l.no
+                        end
                     end
                 end
-            end
 
-            l.log "Found user: #{user.nil? ? 'nil' : user.email}"
+                l.log "Found user: #{user.nil? ? 'nil' : user.email}"
 
-            # if I found a user, then assign the page to the user.
-            if user.nil?
-                l.log "No online or available user found"
-            else                
-                l.logs 'Assigning page to user... '
-                s = user.why_not_available_for_assignation
-                if s
-                    l.logf "User not available: #{s}"
-                elsif previous.upload_end_time.nil? || page.number == 1
-                    l.logf "Error: previous page has no upload_end_time"
-                else
-                    page.assign(user)
-                    l.done
+                # if I found a user, then assign the page to the user.
+                if user.nil?
+                    l.log "No online or available user found"
+                else                
+                    l.logs 'Assigning page to user... '
+                    s = user.why_not_available_for_assignation
+                    if s
+                        l.logf "User not available: #{s}"
+                    elsif page.number > 1 && previous.upload_end_time.nil?
+                        l.logf "Error: previous page has no upload_end_time"
+                    else
+                        page.assign(user)
+                        l.done
+                    end
                 end
-            end
-        end # if page
+            end # if page
+        l.done
+        } # each order
     rescue => e
         l.logf e.message
     end
