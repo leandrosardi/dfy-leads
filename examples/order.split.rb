@@ -33,10 +33,13 @@ BlackStack::Extensions.append :'dfy-leads'
 
 l = BlackStack::LocalLogger.new('./order.split.log')
 
-o = BlackStack::DfyLeads::Order.where(:id=>'d6de8fe0-92b4-4017-880b-4170a4395d61').first
+BlackStack::DfyLeads::Order.where(
+    :id=>['34396725-9d25-4372-b6ac-65144da17df9', '95c76e9d-9b0e-4895-80bf-87d63369d7f0']
+).all { |o|
+    l.logs "#{o.name}... "
+    o.split(l)
+    l.done
+}
 
-l.log o.name
-
-o.split(l)
 
 exit(0)
