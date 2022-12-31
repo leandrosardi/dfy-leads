@@ -1,4 +1,9 @@
 <%
+# if there is a GET parameters `number` on the URL, update the user preference regarding the page number on this screen
+# then, get user preferences regarding the page number on this screen
+page_number = @login.user.preference("dfy-leads.orders.pagination.page", 1, params[:number].nil? ? nil : params[:number].to_i)
+page_size = 2
+
 scraper_user = BlackStack::Scraper::User.where(:id=>@login.user.id).first
 
 max_online_users_to_ask = 100
@@ -29,6 +34,7 @@ all = "
     from scr_order o
     join \"user\" u on ( u.id_account='#{@login.user.id_account}' and u.id=o.id_user )
     where o.delete_time is null
+    and o.dfyl_id_parent is null -- child orders are not shown here
 "
 
 all += " 
@@ -42,13 +48,9 @@ all += "
 "
 
 # TODO: use re-utilizable function here.
-page_size = 25
 total_rows = DB[all].count
 if total_rows>0
   total_pages = (total_rows.to_f/page_size.to_f).round().to_i
-  # if there is a GET parameters `number` on the URL, update the user preference regarding the page number on this screen
-  # then, get user preferences regarding the page number on this screen
-  page_number = @login.user.preference("dfy-leads.orders.pagination.page", 1, params[:number].nil? ? nil : params[:number].to_i)
   # pagination correction to prevent glitches
   page_number = 1 if page_number < 1
   page_number = total_pages if page_number > total_pages
@@ -67,8 +69,6 @@ q = "
   LIMIT #{page_size.to_s}
   OFFSET #{((page_number.to_i - 1) * page_size.to_i).to_s}
 "
-
-q = all
 %>
 
 <!-- NavBar -->
