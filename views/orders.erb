@@ -128,11 +128,11 @@ q = "
                 <th style="width:75px;">Creation</th>
                 <th style="width:75px;">Created By</th>
                 <th style="width:45px;">Status</th>
-                <th style="width:65px;text-align:right;">Progress<br/>%</th>
+                <th style="width:65px;text-align:right;">Progress</th>
                 <th style="width:65px;text-align:right;">LinkedIn<br/>Results</th>
                 <th style="width:65px;text-align:right;">Scraped<br/>Results</th>
                 <th style="width:65px;text-align:right;">Appended<br/>Results</th>
-                <th style="width:65px;"><!-- download --></th>
+                <th style="width:65px;"><!-- view results --></th>
                 <th style="width:14px;"><!-- edit --></th>
                 <th style="width:14px;"><!-- link --></th>
             </thead>
@@ -151,7 +151,7 @@ q = "
                     <td class="fix" title="<%=row[:create_time].to_s.encode_html%>"><%=row[:create_time].to_s[0..9]%></td>
                     <td class="fix" title="<%=row[:user_name].to_s.encode_html%>"><%=row[:user_name].to_s.encode_html%></td>
                     <td class="fix" title="<%=o.status_name.encode_html%>"><i class='icon-circle' style='color:<%=o.status_color%>'></i></td>
-                    <td class="fix" title="<%=o.progress.encode_html%>"><%=o.progress.encode_html%></td>
+                    <td class="fix" style="text-align:right;" title="<%=o.progress.to_s.encode_html%>%"><%=o.progress.to_s.encode_html%>%</td>
 
                     <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_search_leads].to_label%>"><%=row[:dfyl_stat_search_leads].to_label%><br/></td>
                     <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_scraped_leads].to_label%>"><%=row[:dfyl_stat_scraped_leads].to_s%><br/><span style='color:gray;'><%=a.to_s%>%</span></td>

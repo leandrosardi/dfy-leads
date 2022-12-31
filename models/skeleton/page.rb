@@ -111,6 +111,26 @@ module BlackStack
                 leads  
             end # def self.parse_sales_navigator_result_pages(l=nil)
             
+            # if this page is not uploaded, return false
+            # if this page is not parsed, return false
+            # if any result of this page is not enriched, return false
+            # otherwise, return true
+            #
+            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
+            #
+            def completed?
+                # if this page is not uploaded, return false
+                return false unless self.upload_success
+                # if this page is not parsed, return false
+                return false unless self.parse_success
+                # if any result of this page is not enriched, return false
+                self.results.each { |r|
+                    return false unless r.lead.enrich_success
+                }
+                # otherwise, return true
+                true
+            end
+
         end # class Order
     end # DfyLeads
 end # BlackStack

@@ -1,4 +1,4 @@
-# MySaaS Emails - Delivery
+# MySaaS DFYL - Parse Pages
 # Copyright (C) 2022 ExpandedVenture, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -82,7 +82,7 @@ while (true)
                     l.logs 'Inserting results... '
                     p.order.generate_results(p, leads, l)
                     l.done
-
+=begin
                     # update the order with the total number of pages
                     l.logs "Update order stats... "
                     if p.number == 1
@@ -95,12 +95,12 @@ while (true)
                     # generate forther pages
                     l.logs 'Generating further pages... '
                     if p.number == 1
-                        p.order.generate_pages(l)
+                        p.order.paginate(l)
                         l.done
                     else
                         l.logf 'skipped'
                     end
-
+=end
                     # flag end time
                     l.logs 'Flagging end time... '
                     p.parse_end_time = now

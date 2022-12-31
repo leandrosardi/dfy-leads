@@ -151,7 +151,7 @@ module BlackStack
             end
 
             # 
-            def generate_pages(l=nil)
+            def paginate(l=nil)
                 l = BlackStack::DummyLogger.new(nil) if l.nil?
                 # get the first page
                 l.logs "Getting first uploaded page... "
@@ -194,21 +194,108 @@ module BlackStack
                 end
             end
 
-            # return number of pages uploaded, over the total number of pages of the order, including 
+            # number of leads scraped, beloning this order and all its children
             # reference: https://github.com/leandrosardi/dfy-leads/issues/58
-            def rate_of_uploaded_pages
-                0
+            def total_leads_scraped
+                q = "
+                    select count(distinct r.id_lead) as n
+                    from scr_order o 
+                    join scr_page p on o.id=p.id_order
+                    join dfyl_result r on (p.id=r.id_page)
+                    join fl_lead l on (l.id=r.id_lead)
+                    where (o.id='#{self.id}' or o.dfyl_id_parent='#{self.id}')
+                "
+                DB[q].first[:n]
             end
+
+            # number of leads scraped and enriched (with success or not), beloning this order and all its children
+            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
+            def total_leads_processed
+                q = "
+                    select count(distinct r.id_lead) as n
+                    from scr_order o 
+                    join scr_page p on o.id=p.id_order
+                    join dfyl_result r on (p.id=r.id_page)
+                    join fl_lead l on (l.id=r.id_lead and l.enrich_success=true)
+                    where (o.id='#{self.id}' or o.dfyl_id_parent='#{self.id}')
+                "
+                DB[q].first[:n]
+            end
+
+            # number of leads scraped and enriched (with success only), beloning this order and all its children
+            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
+            def total_leads_appended
+                q = "
+                    select count(distinct r.id_lead) as n
+                    from scr_order o 
+                    join scr_page p on o.id=p.id_order
+                    join dfyl_result r on (p.id=r.id_page)
+                    join fl_lead l on (l.id=r.id_lead and l.enrich_success=true)
+                    join fl_data d on (l.id=d.id_lead and d.verified=true)
+                    where (o.id='#{self.id}' or o.dfyl_id_parent='#{self.id}')
+                "
+                DB[q].first[:n]
+            end
+
+            # if this order has not been paginated, return false
+            # if this order has not been splited, return false
+            # if any page of this order is not completed, return false
+            # if any child of this order is not completed, return false
+            # otherwise, return true
+            #
+            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
+            #
+            def completed?
+                # if this order has not been paginated, return false
+                return false unless self.dfyl_pagination_success
+                # if this order has not been splited, return false
+                return false unless self.dfyl_splitting_success
+                # if any page of this order is not completed, return false
+                self.pages.each { |page|
+                    return false unless page.completed?
+                }
+                # if any child of this order is not completed, return false
+                self.children.each { |child|
+                    return false unless child.completed?
+                }
+                # otherwise, return true
+                true
+            end
+
+            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
+            def update_stats(l=nil)
+                l = BlackStack::DummyLogger.new(nil) if l.nil?
+                # dfyl_stat_children
+                l.logs 'Updating dfyl_stat_children...'
+                self.dfyl_stat_children = self.children.size
+                l.logf "done (#{self.dfyl_stat_children.to_s})"
+                # dfyl_stat_progress
+                l.logs 'Updating dfyl_stat_progress...'
+                if self.completed?
+                    self.dfyl_stat_progress = 100.to_i
+                else
+                    self.dfyl_stat_progress = (100.to_f * (self.total_leads_processed.to_f / self.dfyl_stat_search_leads.to_f)).round.to_i
+                end
+                l.logf "done (#{self.dfyl_stat_progress.to_s})"
+                # dfyl_stat_scraped_leads
+                l.logs 'Updating dfyl_stat_scraped_leads...'
+                self.dfyl_stat_scraped_leads = self.total_leads_scraped
+                l.logf "done (#{self.dfyl_stat_scraped_leads.to_s})"
+                # dfyl_stat_leads_appended
+                l.logs 'Updating dfyl_stat_leads_appended...'
+                self.dfyl_stat_leads_appended = self.total_leads_appended
+                l.logf "done (#{self.dfyl_stat_leads_appended.to_s})"
+                # update
+                l.logs 'Updating order...'
+                self.save
+                l.logf 'done'
+            end # def update_stats
 
             # reference: https://github.com/leandrosardi/dfy-leads/issues/58
             def progress()
                 0
             end # def progress
 
-            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
-            def update_stats()
-                # Code Me!
-            end # def update_stats
         end # class Order
     end # DfyLeads
 end # BlackStack
