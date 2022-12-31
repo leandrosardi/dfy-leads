@@ -194,17 +194,20 @@ module BlackStack
                 end
             end
 
-            #
+            # return number of pages uploaded, over the total number of pages of the order, including 
+            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
+            def rate_of_uploaded_pages
+                0
+            end
+
+            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
+            def progress()
+                0
+            end # def progress
+
+            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
             def update_stats()
-                # dfyl_stat_scraped_pages
-                i = self.pages.select { |p| p.parse_success }.size
-                # dfyl_stat_scraped_leads
-                j = self.pages.map { |p| p.results.size }.sum
-                # update the order
-                DB.execute("UPDATE scr_order SET dfyl_stat_scraped_pages=#{i}, dfyl_stat_scraped_leads=#{j} WHERE id='#{self.id}'")
-                # 
-                self.dfyl_stat_scraped_pages = i
-                self.dfyl_stat_scraped_leads = j
+                # Code Me!
             end # def update_stats
         end # class Order
     end # DfyLeads
