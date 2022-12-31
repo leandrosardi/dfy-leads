@@ -34,29 +34,35 @@ BlackStack::Extensions.append :'dfy-leads'
 l = BlackStack::LocalLogger.new('./order.calculate.log')
 
 while (true)
-    # find orders who have been parsed successfully, and have not splitted yet
+    # find orders who are not child, and are active, and are not deleted, and
+    # have not been calculated (dfyl_calculation_success.nil?) or have been 
+    # calculated (dfyl_calculation_end_time) 15 minutes ago.
     l.logs 'Getting pending orders... '
-    a = BlackStack::DfyLeads::Order.where(
-        :dfyl_splitting_success=>nil
-    ).all.select { |o| 
-        o.pages.select { |p| p.number == 1 && p.parse_success }.size > 0
-    }
-    l.logf "done (#{a.size.to_s})"
+    q = "
+        SELECT id 
+        FROM scr_order
+        WHERE COALESCE(dfyl_calculation_end_time, CAST('1900-01-01' AS TIMESTAMP)) < CAST('#{now()}' AS TIMESTAMP) - INTERVAL '15 minutes'
+        AND status = true
+        AND delete_time IS NULL
+        AND dfyl_id_parent IS NULL
+    "
+    l.logf "done (#{DB[q].count.to_s})"
     
-    a.each { |o|
+    DB[q].all { |r|
+        o = BlackStack::DfyLeads::Order.where(:id=>r[:id]).first
         # open the log
         l.logs "#{o.name}... "
         begin
             # update state
-            o.dfyl_splitting_start_time = now
+            o.dfyl_calculation_start_time = now
             o.save
 
             # split the order
-            o.split(l)
+            o.update_stats(l)
             
             # update state
-            o.dfyl_splitting_end_time = now
-            o.dfyl_splitting_success = true
+            o.dfyl_calculation_end_time = now
+            o.dfyl_calculation_success = true
             o.save
 
             # close the log
@@ -66,9 +72,9 @@ while (true)
             l.logs e.message
 
             # update state
-            o.dfyl_splitting_end_time = now
-            o.dfyl_splitting_success = false
-            o.dfyl_splitting_error_description = e.message
+            o.dfyl_calculation_end_time = now
+            o.dfyl_calculation_success = false
+            o.dfyl_calculation_error_description = e.message
             o.save
         end
     }
