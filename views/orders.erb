@@ -125,10 +125,12 @@ q = "
             <thead>
                 <th style="width:24px;"><input type='checkbox' class='select-all-rows' data-rows-group-id='orders' data-input-id='ids' /></th>
                 <th style="width:auto;">Name</th>
+                <!--
                 <th style="width:75px;">Creation</th>
                 <th style="width:75px;">Created By</th>
-                <th style="width:45px;">Status</th>
-                <th style="width:65px;text-align:right;">Progress</th>
+                -->
+                <th style="width:85px;">Status</th>
+                <th style="width:85px;text-align:right;">Progress</th>
                 <th style="width:95px;text-align:right;">LinkedIn<br/>Results</th>
                 <th style="width:65px;text-align:right;">Scraped<br/>Results</th>
                 <th style="width:65px;text-align:right;">Appended<br/>Results</th>
@@ -142,17 +144,28 @@ q = "
                 DB[q].all do |row|
                     i += 1
                     o = BlackStack::DfyLeads::Order.where(:id=>row[:id]).first               
-                    a = (row[:dfyl_stat_search_leads].to_i == 0 ? 0.to_f : row[:dfyl_stat_scraped_leads].to_f / row[:dfyl_stat_search_leads].to_f).round(0).to_i
-                    b = (row[:dfyl_stat_scraped_leads].to_i == 0 ? 0.to_f : row[:dfyl_stat_leads_appended].to_f / row[:dfyl_stat_scraped_leads].to_f).round(0).to_i
+                    a = (row[:dfyl_stat_search_leads].to_i == 0 ? 0.to_f : row[:dfyl_stat_scraped_leads].to_f / row[:dfyl_stat_search_leads].to_f).round().to_i
+                    b = (row[:dfyl_stat_scraped_leads].to_i == 0 ? 0.to_f : row[:dfyl_stat_leads_appended].to_f / row[:dfyl_stat_scraped_leads].to_f).round().to_i
                 %>
                 <tr>
                     <th><input type='checkbox' class='select-row' data-id='<%=row[:id].to_guid%>' data-rows-group-id='orders' <%=ids.include?(row[:id].to_guid) ? 'checked' : ''%> /></th>
                     <td class="fix" title="<%=row[:name].to_s.encode_html%>"><a href='/dfy-leads/orders/<%=row[:id].to_guid%>/edit'><%=row[:name].to_s.encode_html%></a></td>
+                    <!--
                     <td class="fix" title="<%=row[:create_time].to_s.encode_html%>"><%=row[:create_time].to_s[0..9]%></td>
                     <td class="fix" title="<%=row[:user_name].to_s.encode_html%>"><%=row[:user_name].to_s.encode_html%></td>
-                    <td class="fix" title="<%=o.status_name.encode_html%>"><i class='icon-circle' style='color:<%=o.status_color%>'></i></td>
-                    <td class="fix" style="text-align:right;" title="<%=o.progress.to_s.encode_html%>%"><%=o.progress.to_s.encode_html%>%</td>
-
+                    -->
+                    <td class="fix" title="<%=o.status_name.encode_html%>"><span class='badge badge-<%=o.status_color%>'><%=o.status_name.encode_html%></span></td>
+                    <%
+                    if o.dfyl_stat_progress == 100
+                    %>
+                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_s.encode_html%>%"><span class='badge badge-blue'>Completed <i class='icon-ok'></i></span></td>
+                    <%
+                    else
+                    %>
+                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_s.encode_html%>%"><%=o.dfyl_stat_progress.to_s.encode_html%>%</td>
+                    <%
+                    end
+                    %>
                     <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_search_leads].to_label%>"><%=row[:dfyl_stat_search_leads].to_label%><br/></td>
                     <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_scraped_leads].to_label%>"><%=row[:dfyl_stat_scraped_leads].to_s%><br/><span style='color:gray;'><%=a.to_s%>%</span></td>
                     <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_leads_appended].to_label%>"><%=row[:dfyl_stat_leads_appended].to_label%><br/><span style='color:gray;'><%=b.to_s%>%</span></td>

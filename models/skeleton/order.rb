@@ -274,7 +274,9 @@ module BlackStack
                 if self.completed?
                     self.dfyl_stat_progress = 100.to_i
                 else
-                    self.dfyl_stat_progress = (100.to_f * (self.total_leads_processed.to_f / self.dfyl_stat_search_leads.to_f)).round.to_i
+                    a = self.total_leads_processed.to_i
+                    b = self.dfyl_stat_search_leads.to_i
+                    self.dfyl_stat_progress = b == 0 ? 100.to_i : (100.to_f * (a.to_f / b.to_f)).round.to_i
                 end
                 l.logf "done (#{self.dfyl_stat_progress.to_s})"
                 # dfyl_stat_scraped_leads
@@ -290,12 +292,7 @@ module BlackStack
                 self.save
                 l.logf 'done'
             end # def update_stats
-
-            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
-            def progress()
-                0
-            end # def progress
-
+            
         end # class Order
     end # DfyLeads
 end # BlackStack
