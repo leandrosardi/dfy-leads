@@ -2,6 +2,7 @@
 begin
     ids = params[:ids].split(/,/).reject { |id| !id.to_s.guid? }
     DB.execute("UPDATE scr_order SET status=false, delete_time='#{now()}' WHERE id IN ('#{ids.join("','")}')")
+    DB.execute("UPDATE scr_order SET status=false, delete_time='#{now()}' WHERE dfyl_id_parent IN ('#{ids.join("','")}')")
     # return 
     # on a new search, return the paginatin to the page 1.
     # don't show any success message in this case. Just the results of the search.
