@@ -68,3 +68,10 @@ end
 get "/dfy-leads/filter_play_orders", :auth => true, :agent => /(.*)/ do
     erb :"/extensions/dfy-leads/views/filter_play_orders"
 end
+
+post "/dfy-leads/filter_view_results", :auth => true, :agent => /(.*)/ do
+    erb :"/extensions/dfy-leads/views/filter_view_results"
+end
+get "/dfy-leads/filter_view_results", :auth => true, :agent => /(.*)/ do
+    erb :"/extensions/dfy-leads/views/filter_view_results"
+end

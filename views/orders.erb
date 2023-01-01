@@ -134,7 +134,7 @@ q = "
                 <th style="width:95px;text-align:right;">LinkedIn<br/>Results</th>
                 <th style="width:65px;text-align:right;">Scraped<br/>Results</th>
                 <th style="width:65px;text-align:right;">Appended<br/>Results</th>
-                <th style="width:65px;"><!-- view results --></th>
+                <th style="width:95px;"><!-- view results --></th>
                 <th style="width:14px;"><!-- edit --></th>
                 <th style="width:14px;"><!-- link --></th>
             </thead>
@@ -167,11 +167,11 @@ q = "
                     end
                     %>
                     <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_search_leads].to_label%>"><%=row[:dfyl_stat_search_leads].to_label%><br/></td>
-                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_scraped_leads].to_label%>"><%=row[:dfyl_stat_scraped_leads].to_s%><br/><span style='color:gray;'><%=a.to_s%>%</span></td>
-                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_leads_appended].to_label%>"><%=row[:dfyl_stat_leads_appended].to_label%><br/><span style='color:gray;'><%=b.to_s%>%</span></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_scraped_leads].to_label%>"><a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>' title='View Results'><%=row[:dfyl_stat_scraped_leads].to_s%></a><br/><span style='color:gray;'><%=a.to_s%>%</span></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_leads_appended].to_label%>"><a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>&verified_only=yes' title='View Results'><%=row[:dfyl_stat_leads_appended].to_label%></a><br/><span style='color:gray;'><%=b.to_s%>%</span></td>
                     
                     <td class="fix" style="text-align:right;">
-                        <!-- TODO: add link to the results screen -->
+                        <a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>' title='View Results'>View Results</a>
                     </td>
                     <td class="fix" style="text-align:right;"><a title='Edit' href='/dfy-leads/orders/<%=row[:id].to_guid%>/edit'><i class='icon-pencil'></i></a></td>
                     <td class="fix" style="text-align:right;">

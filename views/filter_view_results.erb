@@ -1,0 +1,22 @@
+<%
+begin
+    # load parameters: the order id, and the verified_only
+    id = params[:oid]
+    verified_only = params[:verified_only].nil? ? false : true
+    # build hash decriptor of a new fl_search, with the order id as a filter
+    o = BlackStack::Leads::Search.new({
+        'name' => 'dfy-leads-orders',
+        'id_user' => @login.id_user,
+        'id_order' => id,
+        'saved' => true,
+        'verified_only' => verified_only,
+    })
+    # save the search
+    o.save
+    # redirect to the leads/results screen to target this search
+    redirect "/leads/results/#{o.id.to_guid}" 
+rescue => e
+    # return errors
+    redirect "/dfy-leads/orders?err=#{CGI::escape(e.to_console[0..1000])}"
+end
+%>
