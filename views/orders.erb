@@ -156,13 +156,13 @@ q = "
                     -->
                     <td class="fix" title="<%=o.status_name.encode_html%>"><span class='badge badge-<%=o.status_color%>'><%=o.status_name.encode_html%></span></td>
                     <%
-                    if o.dfyl_stat_progress == 100
+                    if o.dfyl_stat_progress.to_i == 100
                     %>
-                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_s.encode_html%>%"><span class='badge badge-blue'>Completed <i class='icon-ok'></i></span></td>
+                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%"><span class='badge badge-blue'>Completed <i class='icon-ok'></i></span></td>
                     <%
                     else
                     %>
-                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_s.encode_html%>%"><%=o.dfyl_stat_progress.to_s.encode_html%>%</td>
+                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%"><%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%</td>
                     <%
                     end
                     %>
