@@ -4,14 +4,14 @@ account = BlackStack::Leads::Account.where(:id=>@login.user.id_account).first
 # getting the user preferences
 name = @login.user.preference("dfy-leads.orders.new.name", '')
 # choose link or filters
-link_or_filters = @login.user.preference("dfy-leads.orders.new.link_or_filters", 'link')
+link_or_filters = @login.user.preference("dfy-leads.orders.new.link_or_filters", 'filters')
 # sns url
 url = @login.user.preference("dfy-leads.orders.new.url", '')
 # positive filter values
 positive_keywords = @login.user.preference('dfy-leads.orders.new.positive_keywords', '')
 positive_positions = @login.user.preference('dfy-leads.orders.new.positive_positions', '')
 positive_industries = @login.user.preference('dfy-leads.orders.new.positive_industries', '')
-positive_locations = @login.user.preference('dfy-leads.orders.new.positive_locations', '')
+positive_locations = @login.user.preference('dfy-leads.orders.new.positive_locations', 'United States')
 positive_revenues = '' #@login.user.preference('dfy-leads.orders.new.positive_revenues', '')
 positive_headcounts = @login.user.preference('dfy-leads.orders.new.positive_headcounts', '')      
 positive_engagements = @login.user.preference('dfy-leads.orders.new.positive_engagements', '')
