@@ -1,4 +1,4 @@
-# MySaaS Emails - Delivery
+# MySaaS DFYL - Assign pages to Agents for Upload
 # Copyright (C) 2022 ExpandedVenture, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,7 @@ BlackStack::Extensions.append :leads
 BlackStack::Extensions.append :scraper
 BlackStack::Extensions.append :'dfy-leads'
 
-l = BlackStack::LocalLogger.new('./pages.upload.assign.log')
+l = BlackStack::LocalLogger.new('./pages.assign.log')
 n = 100 # batch_size
 
 while (true)
@@ -100,6 +100,8 @@ while (true)
                                 l.logf "Error: previous page user not found"
                             elsif !candidate_user.online?
                                 l.logf "Error: previous page user (#{candidate_user.email}) is not online"
+#                            elsif !candidate_user.enabled?
+#                                l.logf "Error: previous page user (#{candidate_user.email}) is not enabled"
                             else
                                 user = candidate_user
                                 l.done
