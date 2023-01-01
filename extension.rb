@@ -37,6 +37,7 @@ BlackStack::Extensions::add ({
     :leftbar_icons => [
         { :label => 'orders', :icon => :search, :screen => :orders, },
         { :label => 'leads', :icon => :heart, :screen => :leads, },
+        { :label => 'exports', :icon => :'cloud-download', :screen => :exports, },
     ],
 
     # add a folder to the storage from where user can download the exports.
