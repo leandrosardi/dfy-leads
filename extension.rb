@@ -58,37 +58,7 @@ BlackStack::Extensions::add ({
         }],
     }],
 })
-
-# setup the I2P product description here
-BlackStack::I2P::add_services([
-    { 
-        :code=>'dfy-leads', 
-        :name=>'DFY Leads', 
-        :unit_name=>'dfy-records', 
-        :consumption=>BlackStack::I2P::CONSUMPTION_BY_TIME, 
-        # formal description to show in the list of products
-        :description=>'Sales Navigator Scraping + Email Appending + Verification.',
-        # persuasive description to show in the sales letter
-        :title=>'DFY Leads At 1 Cent Per Record.',
-        # larger persuasive description to show in the sales letter
-        :summary=>'You push an order with your target parameters. We do all the work. You get the results.',
-        :thumbnail=>CS_HOME_WEBSITE+'/dfy-leads/images/logo.png',
-        :return_path=>CS_HOME_WEBSITE+'/dfy-leads/order/new',
-        # what is the life time of this product or service?
-        :credits_expiration_period => 'month',
-        :credits_expiration_units => 1,
-        # free tier configuration
-        :free_tier=>{
-            # add 10 records per month, for free
-            :credits=>50,
-            :period=>'month',
-            :units=>1,
-        },
-        # most popular plan configuratioon
-        :most_popular_plan => 'dfy-leads.batman',
-    },
-])
-
+=begin
 # defining Pampa jobs
 BlackStack::Pampa.add_job({
   :name => 'dfy-leads.page.parse',
@@ -158,6 +128,36 @@ BlackStack::Pampa.add_job({
     # TODO: Code Me!
   end
 })
+=end
+# setup the I2P product description here
+BlackStack::I2P::add_services([
+    { 
+        :code=>'dfy-leads', 
+        :name=>'DFY Leads', 
+        :unit_name=>'dfy-records', 
+        :consumption=>BlackStack::I2P::CONSUMPTION_BY_TIME, 
+        # formal description to show in the list of products
+        :description=>'Sales Navigator Scraping + Email Appending + Verification.',
+        # persuasive description to show in the sales letter
+        :title=>'DFY Leads At 1 Cent Per Record.',
+        # larger persuasive description to show in the sales letter
+        :summary=>'You push an order with your target parameters. We do all the work. You get the results.',
+        :thumbnail=>CS_HOME_WEBSITE+'/dfy-leads/images/logo.png',
+        :return_path=>CS_HOME_WEBSITE+'/dfy-leads/order/new',
+        # what is the life time of this product or service?
+        :credits_expiration_period => 'month',
+        :credits_expiration_units => 1,
+        # free tier configuration
+        :free_tier=>{
+            # add 10 records per month, for free
+            :credits=>50,
+            :period=>'month',
+            :units=>1,
+        },
+        # most popular plan configuratioon
+        :most_popular_plan => 'dfy-leads.batman',
+    },
+])
 
 # setup the I2P plans descriptors here
 BlackStack::I2P::add_plans([
