@@ -171,7 +171,7 @@ q = "
                     <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_leads_appended].to_label%>"><a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>&verified_only=yes' title='View Results'><%=row[:dfyl_stat_leads_appended].to_label%></a><br/><span style='color:gray;'><%=b.to_s%>%</span></td>
                     
                     <td class="fix" style="text-align:right;">
-                        <a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>' title='View Results'>View Results</a>
+                        <a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>&verified_only=yes' title='View Results'>View Results</a>
                     </td>
                     <td class="fix" style="text-align:right;"><a title='Edit' href='/dfy-leads/orders/<%=row[:id].to_guid%>/edit'><i class='icon-pencil'></i></a></td>
                     <td class="fix" style="text-align:right;">
