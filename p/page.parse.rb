@@ -31,7 +31,7 @@ BlackStack::Extensions.append :leads
 BlackStack::Extensions.append :scraper
 BlackStack::Extensions.append :'dfy-leads'
 
-l = BlackStack::LocalLogger.new('./pages.parse.log')
+l = BlackStack::LocalLogger.new('./page.parse.log')
 n = 100 # batch_size
 
 while (true)

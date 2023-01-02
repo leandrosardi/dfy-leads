@@ -31,7 +31,7 @@ BlackStack::Extensions.append :leads
 BlackStack::Extensions.append :scraper
 BlackStack::Extensions.append :'dfy-leads'
 
-l = BlackStack::LocalLogger.new('./leads.enrich.log')
+l = BlackStack::LocalLogger.new('./lead.enrich.log')
 n = 25 # batch_size
 
 puts 
