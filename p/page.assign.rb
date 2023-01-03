@@ -116,7 +116,7 @@ while (true)
                     # get all the agents with an active chrome extension, who are sharing its chrome extension
                     l.logs 'Getting account user... '
                     user = page.order.user.available_users(1).first
-
+#binding.pry
                     # if there is no user belonging the same account than the page with active chrome extension, then get a user with an active chrome extension who is sharing its extension.
                     if user
                         l.yes
@@ -143,10 +143,10 @@ while (true)
                     s = user.why_not_available_for_assignation
                     if s
                         l.logf "User not available: #{s}"
-                    elsif page.number > 1 && previous.upload_end_time.nil?
-                        l.logf "Error: previous page has no upload_end_time"
-                    elsif page.number > 1 && (previous.parse_end_time.nil? || !previous.parse_success)
-                        l.logf "Error: previous page has no parsed successfully yet"
+                    #elsif page.number > 1 && previous.upload_end_time.nil?
+                    #    l.logf "Error: previous page has no upload_end_time"
+                    #elsif page.number > 1 && (previous.parse_end_time.nil? || !previous.parse_success)
+                    #    l.logf "Error: previous page has no parsed successfully yet"
                     else
                         page.assign(user)
                         l.done
