@@ -58,7 +58,7 @@ BlackStack::Extensions::add ({
         }],
     }],
 })
-=begin
+
 # defining Pampa jobs
 BlackStack::Pampa.add_job({
   :name => 'dfy-leads.page.parse',
@@ -70,7 +70,7 @@ BlackStack::Pampa.add_job({
   # Maximum number of minutes that a task should take to process.
   # If a tasks didn't finish X minutes after it started, it is restarted and assigned to another worker.
   # Default: 15
-  :max_job_duration_minutes => 15,  
+  :max_job_duration_minutes => 60,  
   
   # Maximum number of times that a task can be restarted.
   # Default: 3
@@ -94,41 +94,6 @@ BlackStack::Pampa.add_job({
   end
 })
 
-# defining Pampa jobs
-BlackStack::Pampa.add_job({
-  :name => 'dfy-leads.order.assign',
-
-  # Minimum number of tasks that a worker must have in queue.
-  # Default: 5
-  :queue_size => 1, 
-  
-  # Maximum number of minutes that a task should take to process.
-  # If a tasks didn't finish X minutes after it started, it is restarted and assigned to another worker.
-  # Default: 15
-  :max_job_duration_minutes => 120,  
-  
-  # Maximum number of times that a task can be restarted.
-  # Default: 3
-  :max_try_times => 3,
-
-  # Define the tasks table: each record is a task.
-  # The tasks table must have some specific fields for handling the tasks dispatching.
-  :table => :scr_page, # Note, that we are sending a class object here
-  :field_primary_key => :id,
-  :field_id => :upload_reservation_id,
-  :field_time => :upload_reservation_time, 
-  :field_times => :upload_reservation_times,
-  :field_start_time => :upload_start_time,
-  :field_end_time => :upload_end_time,
-  :field_success => :upload_success,
-  :field_error_description => :upload_error_description,
-
-  # Function to execute for each task.
-  :processing_function => Proc.new do |task, l, job, worker, *args|
-    # TODO: Code Me!
-  end
-})
-=end
 # setup the I2P product description here
 BlackStack::I2P::add_services([
     { 
