@@ -75,8 +75,8 @@ while (true)
                     l.logs 'Creating leads... '
                     a.each { |h|
                         # look for verified emails
-                        l.logs "Appending #{h['name']} @ #{h['company']}... "
-                        emails = BlackStack::Appending.find_verified_emails_with_full_name(h['name'], h['company'])
+                        l.logs "Appending #{h['name']} @ #{h['company']['name']}... "
+                        emails = BlackStack::Appending.find_verified_emails_with_full_name(h['name'], h['company']['name'])
                         l.logf "done (#{emails.size.to_s})"
                         # add verified emails to the lead
                         if emails.size > 0
