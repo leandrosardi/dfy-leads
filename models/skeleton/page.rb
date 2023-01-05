@@ -97,6 +97,7 @@ module BlackStack
                             'name' => lead_name,
                             'company' => { 'name' => company_name },
                             'id_user' => self.order.id_user,
+                            'datas' => [],
                         }
                         leads << h
                         l.done
