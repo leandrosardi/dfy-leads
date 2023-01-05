@@ -61,46 +61,56 @@ while (true)
                     p.save
                     l.done
 
-                    # parse: get # of search leads, get results, create leads and merge them into the database (baded on fname, lname and cname)
+                    # declare array of leads
+                    l.logs 'Declaring array of leads... '
+                    leads = []
+                    l.done
+
+                    # parse: get array of result descriptors
                     l.logs 'Parsing... '
-                    leads = p.parse(l)
-                    l.logf "done (#{leads.size.to_s})"
+                    a = p.parse(l)
+                    l.logf "done (#{a.size.to_s})"
 
                     # save the leads
-                    l.logs 'Saving leads... '
-                    leads.each { |lead|
-                        l.logs "#{lead.id}... "
-                        lead.save
-                        l.done
+                    l.logs 'Creating leads... '
+                    a.each { |h|
+                        # look for verified emails
+                        l.logs "Appending #{h[:name]} @ #{h[:company]}... "
+                        emails = BlackStack::Appending.find_verified_emails_with_full_name(h[:name], h[:company])
+                        l.logf "done (#{emails.size.to_s})"
+                        # add verified emails to the lead
+                        if emails.size > 0
+                            # open the log
+                            l.logs "Merging lead with database... "
+                            # adding the emails to the hash descriptor of the lead
+                            emails.uniq.each { |email|
+                                h['datas'] << { 'type'=>BlackStack::Leads::Data::TYPE_EMAIL, 'value'=>email, 'verified'=>true }
+                            }
+                            # merging the lead with the database
+                            lead = BlackStack::Leads::Lead.merge(h)
+                            # flag the lead as apready enriched
+                            # this ugly code is because of the issue https://github.com/leandrosardi/dfy-leads/issues/71
+                            lead.enrich_start_time = now
+                            lead.enrich_end_time = now
+                            lead.enrich_success = true
+                            # save the lead
+                            lead.save
+                            # add the lead to the array
+                            leads << lead
+                            # close the log
+                            l.done
+                        end
                         # release resources
                         DB.disconnect
                         GC.start
                     }
-                    l.done
-                    
+                    l.logf "done (#{leads.size.to_s})"
+
                     # if not exists a result for that lead and this page, then insert records into the table `dfyl_result`
                     l.logs 'Inserting results... '
                     p.order.generate_results(p, leads, l)
                     l.done
-=begin
-                    # update the order with the total number of pages
-                    l.logs "Update order stats... "
-                    if p.number == 1
-                        p.order.update_stats
-                        l.done  
-                    else
-                        l.logf 'skipped'
-                    end
 
-                    # generate forther pages
-                    l.logs 'Generating further pages... '
-                    if p.number == 1
-                        p.order.paginate(l)
-                        l.done
-                    else
-                        l.logf 'skipped'
-                    end
-=end
                     # flag end time
                     l.logs 'Flagging end time... '
                     p.parse_end_time = now

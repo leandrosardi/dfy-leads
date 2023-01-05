@@ -37,15 +37,10 @@ module BlackStack
                 n
             end
 
-            # get the raw HTML of the page, and generate list of results, and get the total leads of the search
-            # update the order of the page with the number of results of the search.
-            # create/update a record in the `fl_lead` table for each lead found in the page, using the static method `Lead.merge`.
-            # create `dfyl_result` objects for each result in the page.
-            # save all changes in tables `fl_lead`, `dfyl_result` and `scr_order`.
+            # Get the raw HTML of the page, and generate list of result descriptors, and get the total leads of the search
+            # Update the order of the page with the number of results of the search.
             #
-            # Return an array of lead objects (a new one, or an existing and updated one).
-            # 
-            # The objects are not saved into the database. You have to do that after calling this method.
+            # Return an array of result descriptors.
             # 
             def parse(l=nil)
                 i=0
@@ -103,7 +98,7 @@ module BlackStack
                             'company' => { 'name' => company_name },
                             'id_user' => self.order.id_user,
                         }
-                        leads << BlackStack::Leads::Lead.merge(h)
+                        leads << h
                         l.done
                     end # if lead_name.nil?
                 }

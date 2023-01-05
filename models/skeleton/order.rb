@@ -281,7 +281,7 @@ module BlackStack
                 l.logf "done (#{self.dfyl_stat_progress.to_s})"
                 # dfyl_stat_scraped_leads
                 l.logs 'Updating dfyl_stat_scraped_leads...'
-                self.dfyl_stat_scraped_leads = self.total_leads_scraped
+                self.dfyl_stat_scraped_leads = self.pages.select { |page| page.parse_success }.size * LEADS_PER_PAGE
                 l.logf "done (#{self.dfyl_stat_scraped_leads.to_s})"
                 # dfyl_stat_leads_appended
                 l.logs 'Updating dfyl_stat_leads_appended...'
