@@ -79,7 +79,7 @@ while (true)
         end
     }
 
-    # sleep
+    # sleep 15 minutes
     l.logs 'Sleeping... '
     sleep(60*15)
     l.logf 'done'
