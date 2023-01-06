@@ -75,7 +75,7 @@ while (true)
 
     # sleep
     l.logs 'Sleeping... '
-    sleep(60)
+    sleep(60*15) # reduce the frequency in order to reduce CRDB spending
     l.logf 'done'
 
 end # while (true)

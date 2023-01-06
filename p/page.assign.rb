@@ -160,8 +160,8 @@ while (true)
     end
 
     # sleep for 5 seconds
-    l.logs 'Sleeping for 5 seconds... '
-    sleep 5
+    l.logs 'Sleeping for 60 seconds... '
+    sleep 60 # reducing CRDB spendings
     l.done
     l.log ''
 
