@@ -47,7 +47,7 @@ while (true)
     begin     
         # get `batch_size` pages pending for upload
         l.logs 'Getting pending pages... '
-        pages = BlackStack::DfyLeads::Page.where(:upload_success=>true, :parse_end_time=>nil).order(:create_time).limit(n).all
+        pages = BlackStack::DfyLeads::Page.select(:id).where(:upload_success=>true, :parse_end_time=>nil).order(:create_time).limit(n).all
         l.logf "done (#{pages.size.to_s})"
 
         # parse pages

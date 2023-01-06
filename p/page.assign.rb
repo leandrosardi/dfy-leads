@@ -47,17 +47,18 @@ while (true)
     # if I found a user, then assign the page to the user.
 
     begin
+        # relaunch abandoned pages
+        l.logs 'Relaunching abandoned pages... '
+        BlackStack::DfyLeads::Page.abandoned(n).each { |p| 
+            l.logs "Relaunching page #{p.id}... "
+            p.relaunch 
+            l.done
+        }
+        l.done
+
+        # get active orders
         BlackStack::DfyLeads::Order.where(:delete_time=>nil, :status=>true).each { |o|
         l.logs "Working order #{o.id} (#{o.name}@#{o.user.email})... "
-
-            # relaunch abandoned pages
-            l.logs 'Relaunching abandoned pages... '
-            BlackStack::DfyLeads::Page.abandoned(n).each { |p| 
-                l.logs "Relaunching page #{p.id}... "
-                p.relaunch 
-                l.done
-            }
-            l.done
 
             # get `batch_size` pages pending for upload
             # Remember: `Page.pandings` returns pages in sequence, because of the issue https://github.com/leandrosardi/scraper/issues/24
@@ -80,7 +81,7 @@ while (true)
                 else
                     l.no
                     l.logs 'Getting previous page... '
-                    previous = BlackStack::DfyLeads::Page.where(:id_order=>page.id_order, :number=>page.number-1).first
+                    previous = BlackStack::DfyLeads::Page.select(:id, :number, :id_order).where(:id_order=>page.id_order, :number=>page.number-1).first
                     if previous.nil?
                         l.logf "Error: previous page not found"
                     else

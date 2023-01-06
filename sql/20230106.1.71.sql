@@ -39,3 +39,17 @@ create index IX_dfyl_result__id_page on dfyl_result(id_page);
 create index IX_fl_lead__enrich_success__id on fl_lead(enrich_success, id);
 
 create index IX_fl_data__verified__id_lead on fl_data(verified, id_lead);
+
+create index IX_scr_page__id_order__upload_success__number on scr_page(id_order, upload_success, number);
+
+create index IX_scr_page__upload_end_time__upload_reservation_time__upload_reservation_id_desc on scr_page(upload_end_time, upload_reservation_time, upload_reservation_id desc);
+
+create index IX_scr_assignation__id_page__create_time_desc on scr_assignation(id_page, create_time desc);
+
+create index IX_scr_assignation__id_user__create_time on scr_assignation(id_user, create_time);
+
+create index IX_user__id_account__scraper_last_ping_time on "user"(id_account, scraper_last_ping_time);
+
+create index IX_user__scraper_share__scraper_last_ping_time on "user"(scraper_share, scraper_last_ping_time);
+
+create index IX_scr_page__upload_reservation_id__upload_end_time on scr_page(upload_reservation_id, upload_end_time);

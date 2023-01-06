@@ -155,7 +155,7 @@ module BlackStack
                 l = BlackStack::DummyLogger.new(nil) if l.nil?
                 # get the first page
                 l.logs "Getting first uploaded page... "
-                p = BlackStack::DfyLeads::Page.where(:id_order=>self.id, :upload_success=>true, :number=>1).first
+                p = BlackStack::DfyLeads::Page.select(:id).where(:id_order=>self.id, :upload_success=>true, :number=>1).first
                 raise 'First uploaded page not found!' if p.nil?
                 l.done
                 # verify: the first page must be parsed
@@ -173,7 +173,7 @@ module BlackStack
                 while i < n #&& j < 1
                     i += 1
                     l.logs "Generating page #{i.to_s}... "
-                    p = BlackStack::DfyLeads::Page.where(:id_order=>self.id, :number=>i).first
+                    p = BlackStack::DfyLeads::Page.select(:id).where(:id_order=>self.id, :number=>i).first
                     if p
                         l.logf "already exists"
                     else

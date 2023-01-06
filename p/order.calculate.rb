@@ -60,6 +60,40 @@ while (true)
             # split the order
             o.update_stats(l)
             
+            # generate pages
+            if o.pages.select { |p| p.number == 1 && p.parse_success }.size > 0
+                if o.dfyl_pagination_success.nil?
+                    begin
+                        l.logs 'Paginating... '
+                        o.paginate(l)
+                        o.dfyl_pagination_success = true
+                        o.save
+                        l.done
+                    rescue => e
+                        l.logs e.message
+                        o.dfyl_pagination_success = false
+                        o.dfyl_pagination_error_description = e.message
+                        o.save
+                    end     
+                end # paginate? 
+
+                if o.dfyl_splitting_success.nil?
+                    begin
+                        l.logs 'Splitting... '
+                        o.split(l)
+                        o.dfyl_splitting_success = true
+                        o.save
+                        l.done
+                    rescue => e
+                        l.logs e.message
+                        o.dfyl_splitting_success = false
+                        o.dfyl_splitting_error_description = e.message
+                        o.save
+                    end
+                end # split?
+
+            end # first page parsed?
+
             # update state
             o.dfyl_calculation_end_time = now
             o.dfyl_calculation_success = true
