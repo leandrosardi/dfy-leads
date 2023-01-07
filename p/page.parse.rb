@@ -78,8 +78,9 @@ while (true)
                         # retry up to 5 times the call to our api
                         # reference: https://github.com/leandrosardi/dfy-leads/issues/75
                         try = 0
-                        emails = nil
-                        while try<5 && emails.nil?
+                        max_tries = 3
+                        emails = []
+                        while try<max_tries && emails.nil?
                             begin
                                 try += 1
                                 l.logs "Appending try #{try.to_s}: #{h['name']} @ #{h['company']['name']}... "
@@ -87,6 +88,10 @@ while (true)
                                 l.logf "done (#{emails.size.to_s})"
                             rescue => e
                                 l.logf e.message
+                                
+                                l.logs "Sleeping for 5 seconds... "
+                                sleep 5
+                                l.done
                             end # begin
                         end # while
 
