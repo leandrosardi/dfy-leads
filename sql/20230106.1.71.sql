@@ -53,3 +53,4 @@ create index IX_user__id_account__scraper_last_ping_time on "user"(id_account, s
 create index IX_user__scraper_share__scraper_last_ping_time on "user"(scraper_share, scraper_last_ping_time);
 
 create index IX_scr_page__upload_reservation_id__upload_end_time on scr_page(upload_reservation_id, upload_end_time);
+
