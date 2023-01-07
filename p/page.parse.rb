@@ -79,12 +79,14 @@ while (true)
                         # reference: https://github.com/leandrosardi/dfy-leads/issues/75
                         try = 0
                         max_tries = 3
+                        success = false
                         emails = []
-                        while try<max_tries && emails.nil?
+                        while try<max_tries && !success
                             begin
                                 try += 1
                                 l.logs "Appending try #{try.to_s}: #{h['name']} @ #{h['company']['name']}... "
                                 emails = BlackStack::Appending.find_verified_emails_with_full_name(h['name'], h['company']['name'])
+                                success = true
                                 l.logf "done (#{emails.size.to_s})"
                             rescue => e
                                 l.logf e.message
