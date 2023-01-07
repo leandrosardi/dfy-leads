@@ -117,7 +117,6 @@ while (true)
                     # get all the agents with an active chrome extension, who are sharing its chrome extension
                     l.logs 'Getting account user... '
                     user = page.order.user.available_users(1).first
-#binding.pry
                     # if there is no user belonging the same account than the page with active chrome extension, then get a user with an active chrome extension who is sharing its extension.
                     if user
                         l.yes
