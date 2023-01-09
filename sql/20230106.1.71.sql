@@ -28,3 +28,12 @@ create index if not exists IX_user__scraper_share__scraper_last_ping_time on "us
 
 create index if not exists IX_scr_page__upload_reservation_id__upload_end_time on scr_page(upload_reservation_id, upload_end_time);
 
+create index if not exists IX_scr_order__status__url__id on scr_order(status, url, id);
+
+create index if not exists IX_scr_page__id_order__upload_reservation_id__upload_success__upload_reservation_times on scr_page(id_order, upload_reservation_id, upload_success, upload_reservation_time);
+
+create index if not exists IX_scr_page__upload_end_time__upload_reservation_time__upload_reservation_id on scr_page(upload_end_time, upload_reservation_time, upload_reservation_id);
+
+create index if not exists IX_scr_page__id_order__number on scr_page(id_order, number);
+
+create index if not exists IX_scr_assignation__id_page__create_time_desc on scr_assignation(id_page, create_time desc);
