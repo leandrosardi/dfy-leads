@@ -88,7 +88,7 @@ while (true)
                         l.done
                         # get the latest assignation of the previous page
                         l.logs 'Getting previous page assignation... '
-                        assignation = BlackStack::Scraper::Assignation.where(:id_page=>previous.id).reverse(:create_time)
+                        assignation = BlackStack::Scraper::Assignation.where(:id_page=>previous.id).reverse(:create_time).first
                         if assignation.nil?
                             l.logf "Error: previous page assignation not found"
                         else

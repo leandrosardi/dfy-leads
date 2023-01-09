@@ -37,3 +37,9 @@ create index if not exists IX_scr_page__upload_end_time__upload_reservation_time
 create index if not exists IX_scr_page__id_order__number on scr_page(id_order, number);
 
 create index if not exists IX_scr_assignation__id_page__create_time_desc on scr_assignation(id_page, create_time desc);
+
+create index if not exists IX_scr_assignation__id_user__create_time_desc on scr_assignation(id_user, create_time desc);
+
+create index if not exists IX_scr_page__upload_reservation_id__upload_end_time on scr_page(upload_reservation_id, upload_end_time);
+
+create index if not exists IX_scr_assignation__id_user__id_page__year__month__day__hour__minute__second on scr_assignation(id_user, id_page, year, month, day, hour, minute, second);
