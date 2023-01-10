@@ -167,8 +167,8 @@ q = "
                     end
                     %>
                     <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_search_leads].to_label%>"><%=row[:dfyl_stat_search_leads].to_label%><br/></td>
-                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_scraped_leads].to_label%>"><a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>' title='View Results'><%=row[:dfyl_stat_scraped_leads].to_s%></a><br/><span style='color:gray;'><%=a.to_s%>%</span></td>
-                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_leads_appended].to_label%>"><a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>&verified_only=yes' title='View Results'><%=row[:dfyl_stat_leads_appended].to_label%></a><br/><span style='color:gray;'><%=b.to_s%>%</span></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_scraped_leads].to_label%>"><a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>' title='View Results'><%=row[:dfyl_stat_scraped_leads].to_i.to_label%></a><br/><span style='color:gray;'><%=a.to_s%>%</span></td>
+                    <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_leads_appended].to_label%>"><a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>&verified_only=yes' title='View Results'><%=row[:dfyl_stat_leads_appended].to_i.to_label%></a><br/><span style='color:gray;'><%=b.to_s%>%</span></td>
                     
                     <td class="fix" style="text-align:right;">
                         <a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>&verified_only=yes' title='View Results'>View Results</a>
