@@ -74,43 +74,24 @@ q = "
 	<section class="row-fluid">	
 		<div class="span4">
 		    <%=nav2("DFY Leads", "/dfy-leads", "Orders")%>
-            <div>
-                <table>
-                    <tr>
-                        <td>All Agents Online:</td>
-                        <td style='width:2px;'></td>
-                        <td><span class='badge badge-blue'><%=s_online_users%></span></td>
-                        <td style='width:2px;'></td>
-                    </tr>
-                    <tr>
-                        <td>Own Agents Online:</td>
-                        <td></td>
-                        <td><span class='badge badge-green'><%=s_own_users%></span></td>
-                        <td></td>
-                        <td><span><a href='/scraper/dashboard' target='_window' class='btn btn-link btn-small'>Become an Agent</a></span></td> 
-                    </tr>
-                </table>
-            </div>
 		</div>
 		<div class="span8" style='text-align:right;'>
-            <form action="/dfy-leads/orders" method="get">
-                <input type='hidden' name='ids' id='ids' value='' />
-                
-                <a class='btn btn-blue' href='/dfy-leads/orders/new' title='Plance an Order'><i class='icon-plus'></i> Place an Order</a>
-                <button type="button" class="btn btn-gray" data-toggle="modal" id='delete_orders' name='delete_orders' data-rows-group-id='orders' title='Delete Orders'><i class='icon-trash'></i></button>
-                <button type="button" class="btn btn-gray" data-toggle="modal" id='play_orders' name='play_orders' data-rows-group-id='orders' title='Resume Orders'><i class='icon-play'></i></button>
-                <button type="button" class="btn btn-gray" data-toggle="modal" id='pause_orders' name='pause_orders' data-rows-group-id='orders' title='Pause Orders'><i class='icon-pause'></i></button>
-
-                <div class="btn-group">
-                <div class='controls'>
-                    <input type='text' class='input-large select-all-on-focus' id='search_keyword' name='search_keyword' value='<%=search_keyword.encode_html%>' />                
+            <input type='hidden' name='ids' id='ids' value='' />
+            <div class='pull-right'>
+                <form action="/dfy-leads/orders" method="get">
+                    <div class='span8'>
+                        <input type='text' class='input-large select-all-on-focus' id='search_keyword' name='search_keyword' value='<%=search_keyword.encode_html%>' />                
+                    </div>
                     <button class="btn btn-gray btn-medium btn-submit" type="submit">
                         <i class='icon-search'></i>
                     </button>
-                </div>
-                </div>
+                </form>
+            </div>
 
-            </form>
+            <a class='btn btn-blue' href='/dfy-leads/orders/new' title='Plance an Order'><i class='icon-plus'></i> Place an Order</a>
+            <button type="button" class="btn btn-gray" data-toggle="modal" id='delete_orders' name='delete_orders' data-rows-group-id='orders' title='Delete Orders'><i class='icon-trash'></i></button>
+            <button type="button" class="btn btn-gray" data-toggle="modal" id='play_orders' name='play_orders' data-rows-group-id='orders' title='Resume Orders'><i class='icon-play'></i></button>
+            <button type="button" class="btn btn-gray" data-toggle="modal" id='pause_orders' name='pause_orders' data-rows-group-id='orders' title='Pause Orders'><i class='icon-pause'></i></button>
         </div>
 	</section>
 </div>
@@ -162,7 +143,7 @@ q = "
                     <%
                     else
                     %>
-                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%"><%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%</td>
+                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%"><span class='label label-black'><%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%</span></td>
                     <%
                     end
                     %>
@@ -206,6 +187,26 @@ q = "
             </tbody>
         </table>
         <div class="pagination"></div>
+
+        <div>
+            <table>
+                <tr>
+                    <td>All Agents Online:</td>
+                    <td style='width:2px;'></td>
+                    <td><span class='badge badge-blue'><%=s_online_users%></span></td>
+                    <td style='width:2px;'></td>
+                </tr>
+                <tr>
+                    <td>Own Agents Online:</td>
+                    <td></td>
+                    <td><span class='badge badge-green'><%=s_own_users%></span></td>
+                    <td></td>
+                    <td><span><a href='/scraper/dashboard' target='_window' class='btn btn-link btn-small'>Become an Agent</a></span></td> 
+                </tr>
+            </table>
+        </div>
+
+
     </div>
 </section>
 
