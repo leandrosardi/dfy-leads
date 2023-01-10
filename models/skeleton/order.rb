@@ -7,7 +7,7 @@ module BlackStack
             
             LEADS_PER_PAGE = 25
             MAX_NUMBER_OF_PAGES = 100
-
+            
             # Return array of child orders
             def children
                 BlackStack::DfyLeads::Order.where(:dfyl_id_parent=>self.id).all

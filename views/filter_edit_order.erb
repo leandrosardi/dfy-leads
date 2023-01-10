@@ -8,10 +8,10 @@ begin
     name = @login.user.preference("dfy-leads.orders.new.name", '', params[:name])
     # sns url
     # disabled: string cannot be longer than 500 chars
-    url = params[:url] #@login.user.preference("dfy-leads.orders.new.url", '', params[:url])
+    url = params[:url] 
     # update
     o.name = name.to_s.strip
-    o.url = url.to_s.strip
+    o.url = url.to_s.strip if @login.whois.account.sysowner?
     o.save
     # return 
     # on a new search, return the paginatin to the page 1.
