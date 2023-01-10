@@ -41,7 +41,7 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
 
 <section class="row-fluid">
     <div class="span12 box">
-        <div class='span6'>
+          <div class='span6'>
             <div class="form-horizontal">
                 <form action="/dfy-leads/filter_edit_order" method="post" id='edit_order' name='edit_order'>
                     <input type="hidden" name="oid" value="<%=oid%>">
@@ -209,7 +209,95 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                     </div>
                 </div>
             </div>
-        </div>
+          </div>
+
+          <div class='span6'>
+              <div class='row-fluid'>
+                  <!-- header -->
+                  
+                  <div class='span9'>
+                      <%
+                      if o.dfyl_id_parent
+                      %>
+                      <a href='#'><i class='icon-chevron-left'></i> Back to Parent</a>
+                      <%
+                      end
+                      %>
+                  </div>
+
+                  <div class='span2'>
+                      <%
+                      if o.status
+                      %>
+                      <span class='badge badge-green'>Running</span>
+                      <%
+                      else #if o.status
+                      %>
+                      <span class='badge badge-red'>Paused</span>
+                      <%
+                      end #if o.status
+                      %>
+                  </div>
+
+                  <div class='span1'>
+                      <a title='Replicate Search on LinkedIn' href='<%=o.url.to_s.encode_html%>' target='_window'><i class='icon-linkedin'></i></a>
+                  </div>
+              </div>
+
+              <%
+              a = o.dfyl_stat_search_leads.to_i == 0 ? 0.to_i : (100.to_f * o.dfyl_stat_scraped_leads.to_f / o.dfyl_stat_search_leads.to_f).round.to_i
+              b = o.dfyl_stat_scraped_leads.to_i == 0 ? 0.to_i : (100.to_f * o.dfyl_stat_leads_appended.to_f / o.dfyl_stat_scraped_leads.to_f).round.to_i
+              %>
+              <div class='widget-pie-charts'>
+                <div class='box no-border non-collapsible'>
+                  <div class="span3 pie-chart">
+                    <div id="easy-pie-chart-1" data-percent="43" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
+                      <button class='btn btn-large btn-gray disabled'><%=o.dfyl_stat_search_leads.to_label%></button>
+                    </div>
+                    <div class="caption">
+                      <a title='Replicate Search on LinkedIn' href='<%=o.url.to_s.encode_html%>' target='_window'>Search Scope</a>
+                    </div>
+                  </div>
+  
+                  <div class="span3 pie-chart">
+                    <div id="easy-pie-chart-2" data-percent="58" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
+                      <%
+                      if o.dfyl_stat_progress.to_i == 100
+                      %>
+                      <button class='btn btn-large btn-green disabled'>Completed <i class='icon-ok'></i></button>
+                      <%
+                      else
+                      %>
+                      <button class='btn btn-large btn-black disabled'><%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%</button>
+                      <%
+                      end
+                      %>
+                    </div>
+                    <div class="caption">
+                      Progress
+                    </div>
+                  </div>
+                  
+                  <div class="span3 pie-chart">
+                    <div id="easy-pie-chart-3" data-percent="43" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
+                      <button class='btn btn-large btn-orange disabled'><%=o.dfyl_stat_scraped_leads.to_label%></button>
+                    </div>
+                    <div class="caption">
+                      <a href='/dfy-leads/filter_view_results?oid=<%=o.id.to_guid%>' title='View Results'><%=a.to_s%>% Scraped</a>
+                    </div>
+                  </div>
+        
+                  <div class="span3 pie-chart">
+                    <div id="easy-pie-chart-4" data-percent="91" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
+                      <button class='btn btn-large btn-green disabled'><%=o.dfyl_stat_leads_appended.to_label%></button>
+                    </div>
+                    <div class="caption">
+                      <a href='/dfy-leads/filter_view_results?oid=<%=o.id.to_guid%>&verified_only=yes' title='View Results'><%=b.to_s%>% Appended</a>
+                    </div>
+                  </div>        
+                </div>   
+              </div>
+          </div>
     </div>
 </section>
 

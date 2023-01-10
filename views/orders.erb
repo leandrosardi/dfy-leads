@@ -112,7 +112,7 @@ q = "
                 -->
                 <th style="width:85px;">Status</th>
                 <th style="width:85px;text-align:right;">Progress</th>
-                <th style="width:95px;text-align:right;">LinkedIn<br/>Results</th>
+                <th style="width:95px;text-align:right;">Search<br/>Scope</th>
                 <th style="width:65px;text-align:right;">Scraped<br/>Results</th>
                 <th style="width:65px;text-align:right;">Appended<br/>Results</th>
                 <th style="width:95px;"><!-- view results --></th>
@@ -152,14 +152,14 @@ q = "
                     <td class="fix" style="text-align:right;" title="<%=row[:dfyl_stat_leads_appended].to_label%>"><a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>&verified_only=yes' title='View Results'><%=row[:dfyl_stat_leads_appended].to_i.to_label%></a><br/><span style='color:gray;'><%=b.to_s%>%</span></td>
                     
                     <td class="fix" style="text-align:right;">
-                        <a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>&verified_only=yes' title='View Results'>View Results</a>
+                        <a href='/dfy-leads/filter_view_results?oid=<%=row[:id].to_guid%>&verified_only=yes' title='View Results on <%=APP_NAME.to_s%>'>View Results</a>
                     </td>
                     <td class="fix" style="text-align:right;"><a title='Edit' href='/dfy-leads/orders/<%=row[:id].to_guid%>/edit'><i class='icon-pencil'></i></a></td>
                     <td class="fix" style="text-align:right;">
                         <%
                         if !row[:url].to_s.empty?
                         %>
-                        <a title='Search Link' href='<%=row[:url].to_s.encode_html%>' target='_window'><i class='icon-link'></i></a>
+                        <a title='Replicate Search on LinkedIn' href='<%=row[:url].to_s.encode_html%>' target='_window'><i class='icon-linkedin'></i></a>
                         <%
                         else # if row[:url].to_s.empty?
                         %>
