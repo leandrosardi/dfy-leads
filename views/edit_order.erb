@@ -188,16 +188,24 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       <label class="control-label" for="keywords">Keywords</label>
                       <div class="controls">
                       <%
+                      i = 0
                       positive_keywords.split(',').each { |s|
+                        i += 1
                         %>
                         <span class='label label-blue'><%=s.encode_html%></span>
                         <%
                       }
                       negative_keywords.split(',').each { |s|
+                        i += 1
                         %>
                         <span class='label label-red'><%=s.encode_html%></span>
                         <%
                       }
+                      if i == 0
+                      %>
+                      <span style='color:gray;'>None</span>
+                      <%
+                      end
                       %>  
                       </div>          
                     </div>
@@ -206,16 +214,24 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       <label class="control-label" for="positions">Positions</label>
                       <div class="controls">
                       <%
+                      i = 0
                       positive_positions.split(',').each { |s|
+                        i += 1
                         %>
                         <span class='label label-blue'><%=s.encode_html%></span>
                         <%
                       }
                       negative_positions.split(',').each { |s|
+                        i += 1
                         %>
                         <span class='label label-red'><%=s.encode_html%></span>
                         <%
                       }
+                      if i == 0
+                      %>
+                      <span style='color:gray;'>None</span>
+                      <%
+                      end
                       %>            
                       </div>          
                     </div>
@@ -224,16 +240,24 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       <label class="control-label" for="industries">Industries</label>
                       <div class="controls">
                       <%
+                      i = 0
                       positive_industries.split(',').each { |s|
+                        i += 1
                         %>
                         <span class='label label-blue'><%=s.encode_html%></span>
                         <%
                       }
                       negative_industries.split(',').each { |s|
+                        i += 1
                         %>
                         <span class='label label-red'><%=s.encode_html%></span>
                         <%
                       }
+                      if i == 0
+                      %>
+                      <span style='color:gray;'>None</span>
+                      <%
+                      end
                       %>            
                       </div>          
                     </div>
@@ -242,16 +266,24 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       <label class="control-label" for="locations">Locations</label>
                       <div class="controls">
                       <%
+                      i = 0
                       positive_locations.split(',').each { |s|
+                        i += 1
                         %>
                         <span class='label label-blue'><%=s.encode_html%></span>
                         <%
                       }
                       negative_locations.split(',').each { |s|
+                        i += 1
                         %>
                         <span class='label label-red'><%=s.encode_html%></span>
                         <%
                       }
+                      if i == 0
+                      %>
+                      <span style='color:gray;'>None</span>
+                      <%
+                      end
                       %>            
                       </div>          
                     </div>
@@ -263,16 +295,24 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       <label class="control-label" for="revenues">Revenues</label>
                       <div class="controls">
                       <%
+                      i = 0
                       positive_revenues.split(',').each { |s|
+                        i += 1
                         %>
                         <span class='label label-blue'><%=s.encode_html%></span>
                         <%
                       }
                       negative_revenues.split(',').each { |s|
+                        i += 1
                         %>
                         <span class='label label-red'><%=s.encode_html%></span>
                         <%
                       }
+                      if i == 0
+                      %>
+                      <span style='color:gray;'>None</span>
+                      <%
+                      end
                       %>            
                       </div>          
                     </div>
@@ -284,6 +324,7 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       <label class="control-label" for="headcounts">Headcounts</label>
                       <div class="controls">
                       <%
+                      i = 0
                       positive_headcounts.split(',').each { |s|
                         %>
                         <span class='label label-blue'><%=s.encode_html%></span>
@@ -294,6 +335,11 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                         <span class='label label-red'><%=s.encode_html%></span>
                         <%
                       }
+                      if i == 0
+                      %>
+                      <span style='color:gray;'>None</span>
+                      <%
+                      end
                       %>            
                       </div>          
                     </div>    
@@ -302,6 +348,7 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       <label class="control-label" for="engagements">Engagements</label>
                       <div class="controls">
                       <%
+                      i = 0
                       positive_engagements.split(',').each { |s|
                         %>
                         <span class='label label-blue'><%=s.encode_html%></span>
@@ -312,16 +359,14 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                         <span class='label label-red'><%=s.encode_html%></span>
                         <%
                       }
+                      if i == 0
+                      %>
+                      <span style='color:gray;'>None</span>
+                      <%
+                      end
                       %>            
                       </div>          
-                    </div>
-
-                    <div class="control-group" id='posted_in_last_30_days'>
-                      <label class="control-label" for="posted_in_last_30_days">Posted in Last 30 Days</label>
-                      <div class="controls">
-                        <span class='label label-<%=posted_in_last_30_days == true ? 'blue' : 'gray'%>'><%=posted_in_last_30_days == true ? 'yes' : 'no'%></span>
-                      </div>          
-                    </div>
+                    </div>                    
                   </div>
             </div> <!-- end of span4 -->
 
