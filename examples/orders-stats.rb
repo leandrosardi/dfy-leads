@@ -13,7 +13,7 @@ require 'extensions/dfy-leads/lib/skeletons'
 l = BlackStack::LocalLogger.new('./orders-stats.log')
 
 # get all orders
-BlackStack::DfyLeads::Order.all { |o|
+BlackStack::DfyLeads::Order.where(:dfyl_id_parent=>nil).order(:name).all { |o|
     l.logs "order #{o.name} (#{o.id})..."
     o.update_stats
     l.done

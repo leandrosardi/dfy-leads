@@ -203,20 +203,7 @@ module BlackStack
                     join scr_page p on o.id=p.id_order
                     where (o.id='#{self.id}' or o.dfyl_id_parent='#{self.id}')
                     and p.upload_success=true
-                "
-                DB[q].first[:n]
-            end
-
-            # number of leads scraped and enriched (with success or not), beloning this order and all its children
-            # reference: https://github.com/leandrosardi/dfy-leads/issues/58
-            def total_leads_processed
-                q = "
-                    select count(distinct r.id_lead) as n
-                    from scr_order o 
-                    join scr_page p on o.id=p.id_order
-                    join dfyl_result r on (p.id=r.id_page)
-                    join fl_lead l on (l.id=r.id_lead and l.enrich_success=true)
-                    where (o.id='#{self.id}' or o.dfyl_id_parent='#{self.id}')
+                    and p.parse_success=true
                 "
                 DB[q].first[:n]
             end
@@ -228,10 +215,12 @@ module BlackStack
                     select count(distinct r.id_lead) as n
                     from scr_order o 
                     join scr_page p on o.id=p.id_order
-                    join dfyl_result r on (p.id=r.id_page)
+                    join dfyl_result r on p.id=r.id_page
                     join fl_lead l on (l.id=r.id_lead and l.enrich_success=true)
                     join fl_data d on (l.id=d.id_lead and d.verified=true)
                     where (o.id='#{self.id}' or o.dfyl_id_parent='#{self.id}')
+                    and p.upload_success=true
+                    and p.parse_success=true
                 "
                 DB[q].first[:n]
             end
@@ -264,6 +253,8 @@ module BlackStack
             # reference: https://github.com/leandrosardi/dfy-leads/issues/58
             def update_stats(l=nil)
                 l = BlackStack::DummyLogger.new(nil) if l.nil?
+                # get total number of leads scraped
+                leads_scraped = self.total_leads_scraped
                 # dfyl_stat_children
                 l.logs 'Updating dfyl_stat_children...'
                 self.dfyl_stat_children = self.children.size
@@ -273,7 +264,7 @@ module BlackStack
                 if self.completed?
                     self.dfyl_stat_progress = 100.to_i
                 else
-                    a = self.total_leads_processed.to_i
+                    a = leads_scraped.to_i
                     b = self.dfyl_stat_search_leads
                     if b.nil?
                         self.dfyl_stat_progress = nil
@@ -285,7 +276,7 @@ module BlackStack
                 l.logf "done (#{self.dfyl_stat_progress.to_s})"
                 # dfyl_stat_scraped_leads
                 l.logs 'Updating dfyl_stat_scraped_leads...'
-                self.dfyl_stat_scraped_leads = self.total_leads_scraped
+                self.dfyl_stat_scraped_leads = leads_scraped
                 l.logf "done (#{self.dfyl_stat_scraped_leads.to_s})"
                 # dfyl_stat_leads_appended
                 l.logs 'Updating dfyl_stat_leads_appended...'
