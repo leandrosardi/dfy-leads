@@ -215,17 +215,21 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
               <div class='row-fluid'>
                   <!-- header -->
                   
-                  <div class='span9'>
+                  <div class='span6'>
                       <%
                       if o.dfyl_id_parent
                       %>
                       <a href='#'><i class='icon-chevron-left'></i> Back to Parent</a>
                       <%
+                      else
+                      %>
+                      <span style='color:gray;'><i class='icon-chevron-left'></i> No Parent</span>
+                      <%
                       end
                       %>
                   </div>
 
-                  <div class='span2'>
+                  <div class='span2' style='text-align:center;'>
                       <%
                       if o.status
                       %>
@@ -239,9 +243,14 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       %>
                   </div>
 
-                  <div class='span1'>
+                  <div class='span3' style='text-align:center;'>
+                    <a href='/dfy-leads/filter_view_results?oid=<%=o.id.to_guid%>&verified_only=yes' title='View Results on <%=APP_NAME.to_s%>'>View Results</a>
+                  </div>
+
+                  <div class='span1' style='text-align:center;'>
                       <a title='Replicate Search on LinkedIn' href='<%=o.url.to_s.encode_html%>' target='_window'><i class='icon-linkedin'></i></a>
                   </div>
+
               </div>
 
               <%
@@ -283,7 +292,7 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       <button class='btn btn-large btn-orange disabled'><%=o.dfyl_stat_scraped_leads.to_label%></button>
                     </div>
                     <div class="caption">
-                      <a href='/dfy-leads/filter_view_results?oid=<%=o.id.to_guid%>' title='View Results'><%=a.to_s%>% Scraped</a>
+                      <%=a.to_s%>% Scraped
                     </div>
                   </div>
         
