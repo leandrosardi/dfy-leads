@@ -34,96 +34,139 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
 	</section>
 </div>
 
-<section class="row-fluid">
-    <div class="span12 box">
-        <div class='span6'>
-            <div class="form-horizontal">
-                <form action="/dfy-leads/filter_new_order" method="post" id='new_order' name='new_order'>
-                    <div class="control-group">
-                        <label class="control-label" for="name">Name</label>
-                        <div class="controls">
-                            <input type="text" id="name" name='name' class='input-block-level selected' placeholder="Write a descriptive name for your order." value='<%=name.to_s.encode_html%>' />
-                        </div>
-                    </div>
-                    
-                    <div class="control-group">
-                        <input type="hidden" class="positive_keywords" name="positive_keywords" id='positive_keywords' value="<%= positive_keywords.to_s.encode_html%>" />
-                        <input type="hidden" class="positive_positions" name="positive_positions" id='positive_positions' value="<%= positive_positions.to_s.encode_html%>" />
-                        <input type="hidden" class="positive_industries" name="positive_industries" id='positive_industries' value="<%= positive_industries.to_s.encode_html%>" />
-                        <input type="hidden" class="positive_locations" name="positive_locations" id='positive_locations' value="<%=positive_locations.to_s.encode_html%>" />
-                        <!--
-                        <input type="hidden" class="positive_revenues" name="positive_revenues" id='positive_revenues' values="<%=positive_revenues.to_s.encode_html%>" />
-                        -->
-                        <input type="hidden" class="positive_headcounts" name="positive_headcounts" id='positive_headcounts' values="<%=positive_headcounts.to_s.encode_html%>" />
-                        <input type="hidden" class="positive_engagements" name="positive_engagements" id='positive_engagements' values="<%=positive_engagements.to_s.encode_html%>" />
-                
-                        <input type="hidden" class="negative_keywords" name="negative_keywords" id='negative_keywords' value="<%= negative_keywords.to_s.encode_html%>" />
-                        <input type="hidden" class="negative_positions" name="negative_positions" id='negative_positions' value="<%= negative_positions.to_s.encode_html%>" />
-                        <input type="hidden" class="negative_industries" name="negative_industries" id='negative_industries' value="<%= negative_industries.to_s.encode_html%>" />
-                        <input type="hidden" class="negative_locations" name="negative_locations" id='negative_locations' value="<%=negative_locations.to_s.encode_html%>" />
-                        <!--
-                        <input type="hidden" class="negative_revenues" name="negative_revenues" id='negative_revenues' values="<%=negative_revenues.to_s.encode_html%>" />
-                        -->
-                        <input type="hidden" class="negative_headcounts" name="negative_headcounts" id='negative_headcounts' values="<%=negative_headcounts.to_s.encode_html%>" />
-                        <input type="hidden" class="negative_engagements" name="negative_engagements" id='negative_engagements' values="<%=negative_engagements.to_s.encode_html%>" />
-                    </div>
+<section class="row-fluid box">
+      <div class="form-horizontal">
+        <form action="/dfy-leads/filter_new_order" method="post" id='new_order' name='new_order'>
 
-                    <div class="control-group">
-                        <label class="control-label" for="link_or_filters">How You Define<br/>Your Target?</label>
-                        <div class="controls">
-                          <select id="link_or_filters" name="link_or_filters" class='input-block-level selected'>
-                            <option value="link" <%=link_or_filters == 'link' ? 'selected' : ''%>>Link</option>
-                            <option value="filters" <%=link_or_filters == 'filters' ? 'selected' : ''%>>Filters</option>
-                          </select>
-                        </div>
-                    </div>
-                
-                    <div class="control-group" id='link' name='link'>
-                        <label class="control-label" for="name">Sales Navigator<br/>Search URL</label>
-                        <div class="controls">
-                            <input type="text" id="url" name='url' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=url.to_s.encode_html%>' />
-                        </div>
-                    </div>
-                </form>
-
-                <div id='filters' name='filters'>        
-                    <div id='keywords'></div>
-                    <div id='positions'></div>
-                    <div id='industries'></div>
-                    <div id='locations'></div>
-                    <!--
-                    <div id='revenues'></div>
-                    -->
-                    <div id='headcounts'></div>    
-                    <div id='engagements'></div>
-                </div>
-
+            <div class="row-fluid">
+              <div class='span6'>
                 <div class="control-group">
+                    <label class="control-label" for="name">Name</label>
                     <div class="controls">
-                        <button type="submit" class="btn btn-blue" id='create' name='create'>Create</button>
+                        <input type="text" id="name" name='name' class='input-block-level selected' placeholder="Write a descriptive name for your order." value='<%=name.to_s.encode_html%>' />
                     </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="control-group">
+                    <input type="hidden" class="positive_keywords" name="positive_keywords" id='positive_keywords' value="<%= positive_keywords.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_positions" name="positive_positions" id='positive_positions' value="<%= positive_positions.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_industries" name="positive_industries" id='positive_industries' value="<%= positive_industries.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_locations" name="positive_locations" id='positive_locations' value="<%=positive_locations.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_headcounts" name="positive_headcounts" id='positive_headcounts' values="<%=positive_headcounts.to_s.encode_html%>" />
+                    <input type="hidden" class="positive_engagements" name="positive_engagements" id='positive_engagements' values="<%=positive_engagements.to_s.encode_html%>" />
+            
+                    <input type="hidden" class="negative_keywords" name="negative_keywords" id='negative_keywords' value="<%= negative_keywords.to_s.encode_html%>" />
+                    <input type="hidden" class="negative_positions" name="negative_positions" id='negative_positions' value="<%= negative_positions.to_s.encode_html%>" />
+                    <input type="hidden" class="negative_industries" name="negative_industries" id='negative_industries' value="<%= negative_industries.to_s.encode_html%>" />
+                    <input type="hidden" class="negative_locations" name="negative_locations" id='negative_locations' value="<%=negative_locations.to_s.encode_html%>" />
+                    <input type="hidden" class="negative_headcounts" name="negative_headcounts" id='negative_headcounts' values="<%=negative_headcounts.to_s.encode_html%>" />
+                    <input type="hidden" class="negative_engagements" name="negative_engagements" id='negative_engagements' values="<%=negative_engagements.to_s.encode_html%>" />
                 </div>
             </div>
-        </div>
 
-        <div class='span6'>
-            <h3>Benefits of Using DFY-Leads</h3>
-            <br/>
-            <h4>
-              <i class='icon-ok' style='color:green;'></i> DFY Leads not only allows you <br/> 
-              to create your own leads,... <br/>
-            </h4>
-            <i>(not shared and burned by others)</i><br/>
-            <br/>
-            <h4>
-            <i class='icon-ok' style='color:green;'></i> But also to find them by recent <br/>
-              engagement keyowords.
-            </h4>
-            <i>for improve your personalizaton and increase your conversion.</i><br/>
-            <br/>
-        </div>
+            <div class="row-fluid">
+              <div class='span6'>
+                <div class="control-group">
+                    <label class="control-label" for="link_or_filters">How You Define<br/>Your Target?</label>
+                    <div class="controls">
+                      <select id="link_or_filters" name="link_or_filters" class='input-block-level selected'>
+                        <option value="link" <%=link_or_filters == 'link' ? 'selected' : ''%>>Link</option>
+                        <option value="filters" <%=link_or_filters == 'filters' ? 'selected' : ''%>>Filters</option>
+                      </select>
+                    </div>
+                </div>
+              </div>
+              <div class='span6 box'>
+                <b>Link of Filters?</b> Choose <b>Filters</b> if you don't have Sales Navigator.<br/>
+                If you have Sales Navigator, choose <b>Link</b> and paste the search URL.
+              </div>
+            </div>
 
-    </div>
+            <div class="row-fluid">
+              <div class='span6'>                
+                <div class="control-group" id='link' name='link'>
+                    <label class="control-label" for="name">Sales Navigator<br/>Search URL</label>
+                    <div class="controls">
+                        <input type="text" id="url" name='url' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=url.to_s.encode_html%>' />
+                    </div>
+                </div>
+              </div>
+            </div>
+        </form>
+      </div>
+
+        <div id='filters' name='filters'>
+          <div class='row-fluid'>
+            <div class='span6'>
+              <div id='keywords'></div>
+            </div>
+            <div class='span6 box'>
+              <b>Keywords:</b> Words in the Linkedin profile of the leads.<br/>
+              Example: <span class='label label-blue'>I help</span>, <span class='label label-blue'>consulting</span>
+            </div>
+          </div>
+
+          <div class='row-fluid'>
+            <div class='span6'>
+              <div id='positions'></div>
+            </div>
+            <div class='span6 box'>
+              <b>Positions:</b> Roles in his/her current job.<br/>
+              Example: <span class='label label-blue'>CEO</span>, <span class='label label-blue'>Founder</span>.
+            </div>
+          </div>
+
+          <div class='row-fluid'>
+            <div class='span6'>
+              <div id='industries'></div>
+            </div>
+            <div class='span6 box'>
+              <b>Industries:</b> Niches of the company where he/she is working.<br/>
+              Example: <span class='label label-blue'>Financial Services</span>, <span class='label label-blue'>Restaurants</span>.
+            </div>
+          </div>
+
+          <div class='row-fluid'>
+            <div class='span6'>
+              <div id='locations'></div>
+            </div>
+            <div class='span6 box'>
+              <b>Locations:</b> Where the leads are living.<br/>
+              Example: <span class='label label-blue'>United States</span>, <span class='label label-blue'>Canada</span>.
+            </div>
+          </div>
+
+          <div class='row-fluid'>
+            <div class='span6'>
+              <div id='headcounts'></div>
+            </div>
+            <div class='span6 box'>
+              <b>Headcount:</b> How many employees do the companies have.<br/>
+              Example: <span class='label label-blue'>1-10</span>, <span class='label label-blue'>11-50</span>.
+            </div>
+          </div>
+
+          <div class='row-fluid'>
+            <div class='span6'>
+              <div id='engagements'></div>
+            </div>
+            <div class='span6 box'>
+              <b>Engagement:</b> Keywords posted by leads in their timelines, at some point in the past.<br/>
+              Example: <span class='label label-blue'>join my Facebook group</span>.
+            </div>
+          </div>
+        </div> <!-- end of #filters -->
+
+        <div class='row-fluid'>
+          <div class="control-group">
+              <div class="controls">
+                  <button type="submit" class="btn btn-blue" id='create' name='create'>Create</button>
+              </div>
+          </div>
+        </div>
 </section>
 
 <script>
@@ -163,7 +206,6 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
         var positions = document.getElementById('positions');
         var industries = document.getElementById('industries');
         var locations = document.getElementById('locations');
-        //var revenues = document.getElementById('revenues');
         var headcounts = document.getElementById('headcounts');      
         var engagements = document.getElementById('engagements');
 
@@ -458,19 +500,7 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
           filtersJs.addValue(locations, '<%=s%>', false);
           <%
         }
-        if false
-        positive_revenues.split(',').each { |s|
-          %>
-          filtersJs.addValue(revenues, '<%=s%>', true);
-          <%
-        }
-        
-        negative_revenues.split(',').each { |s|
-          %>
-          filtersJs.addValue(revenues, '<%=s%>', false);
-          <%
-        }
-        end
+
         positive_headcounts.split(',').each { |s|
           %>
           filtersJs.addValue(headcounts, '<%=s%>', true);
@@ -494,6 +524,6 @@ negative_engagements = @login.user.preference('dfy-leads.orders.new.negative_eng
           filtersJs.addValue(engagements, '<%=s%>', false);
           <%
         }
-        %>
+      %>
     });
 </script>
