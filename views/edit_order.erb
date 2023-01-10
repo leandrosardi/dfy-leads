@@ -374,6 +374,13 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
               <!-- pages -->
               <div class='row-fluid'>
                 <h3>Pages</h3>
+
+                <div class='alert alert-warning'>
+                  <b>Hint:</b><br/>
+                  <br/>
+                  LinkedIn shows up to <%=BlackStack::DfyLeads::Order::MAX_NUMBER_OF_PAGES%> pages, with up to <%=BlackStack::DfyLeads::Order::LEADS_PER_PAGE%> results each one.
+                </div>
+
                 <table class='table-condensed'>
                   <thead>
                     <th>Page #</th>
@@ -458,6 +465,15 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
               <!-- children -->
               <div class='row-fluid'>
                 <h3>Children</h3>
+
+                <div class='alert alert-warning'>
+                  <b>Hint:</b><br/>
+                  <br/>
+                  <b>Children Orders</b> are a subset of the original order.<br/>
+                  <br/>
+                  When the number of results of the original order than the <%=(BlackStack::DfyLeads::Order::LEADS_PER_PAGE*BlackStack::DfyLeads::Order::MAX_NUMBER_OF_PAGES).to_label%> results shown by Linkedin, we split it into multiple children orders.
+                </div>
+
                 <table class='table-condensed' style='table-layout: fixed; width: 100%;'>
                   <thead>
                     <th style='width:auto;text-align:left;'>Order</th>
