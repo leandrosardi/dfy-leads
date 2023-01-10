@@ -144,8 +144,8 @@ q = "
                 DB[q].all do |row|
                     i += 1
                     o = BlackStack::DfyLeads::Order.where(:id=>row[:id]).first               
-                    a = (row[:dfyl_stat_search_leads].to_i == 0 ? 0.to_f : row[:dfyl_stat_scraped_leads].to_f / row[:dfyl_stat_search_leads].to_f).round().to_i
-                    b = (row[:dfyl_stat_scraped_leads].to_i == 0 ? 0.to_f : row[:dfyl_stat_leads_appended].to_f / row[:dfyl_stat_scraped_leads].to_f).round().to_i
+                    a = o.dfyl_stat_search_leads.to_i == 0 ? 0.to_i : (100.to_f * o.dfyl_stat_scraped_leads.to_f / o.dfyl_stat_search_leads.to_f).round.to_i
+                    b = o.dfyl_stat_scraped_leads.to_i == 0 ? 0.to_i : (100.to_f * o.dfyl_stat_leads_appended.to_f / o.dfyl_stat_scraped_leads.to_f).round.to_i
                 %>
                 <tr>
                     <th><input type='checkbox' class='select-row' data-id='<%=row[:id].to_guid%>' data-rows-group-id='orders' <%=ids.include?(row[:id].to_guid) ? 'checked' : ''%> /></th>
@@ -162,7 +162,7 @@ q = "
                     <%
                     else
                     %>
-                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%"><%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%</td>
+                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%"><%=(100.to_f * o.dfyl_stat_progress.to_f).round.to_i.to_s.encode_html%>%</td>
                     <%
                     end
                     %>
