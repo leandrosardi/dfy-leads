@@ -471,7 +471,7 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                   <br/>
                   <b>Children Orders</b> are a subset of the original order.<br/>
                   <br/>
-                  When the number of results of the original order than the <%=(BlackStack::DfyLeads::Order::LEADS_PER_PAGE*BlackStack::DfyLeads::Order::MAX_NUMBER_OF_PAGES).to_label%> results shown by Linkedin, we split it into multiple children orders.
+                  When the number of results of the original order is higher than the <%=(BlackStack::DfyLeads::Order::LEADS_PER_PAGE*BlackStack::DfyLeads::Order::MAX_NUMBER_OF_PAGES).to_label%> results shown by Linkedin, we split it into multiple children orders.
                 </div>
 
                 <table class='table-condensed' style='table-layout: fixed; width: 100%;'>
