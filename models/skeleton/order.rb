@@ -198,12 +198,11 @@ module BlackStack
             # reference: https://github.com/leandrosardi/dfy-leads/issues/58
             def total_leads_scraped
                 q = "
-                    select count(distinct r.id_lead) as n
+                    select count(distinct p.id)*#{LEADS_PER_PAGE} as n
                     from scr_order o 
                     join scr_page p on o.id=p.id_order
-                    join dfyl_result r on (p.id=r.id_page)
-                    join fl_lead l on (l.id=r.id_lead)
                     where (o.id='#{self.id}' or o.dfyl_id_parent='#{self.id}')
+                    and p.upload_success=true
                 "
                 DB[q].first[:n]
             end
@@ -286,7 +285,7 @@ module BlackStack
                 l.logf "done (#{self.dfyl_stat_progress.to_s})"
                 # dfyl_stat_scraped_leads
                 l.logs 'Updating dfyl_stat_scraped_leads...'
-                self.dfyl_stat_scraped_leads = self.pages.select { |page| page.parse_success }.size * LEADS_PER_PAGE
+                self.dfyl_stat_scraped_leads = self.total_leads_scraped
                 l.logf "done (#{self.dfyl_stat_scraped_leads.to_s})"
                 # dfyl_stat_leads_appended
                 l.logs 'Updating dfyl_stat_leads_appended...'

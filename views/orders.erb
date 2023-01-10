@@ -162,7 +162,7 @@ q = "
                     <%
                     else
                     %>
-                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%"><%=(100.to_f * o.dfyl_stat_progress.to_f).round.to_i.to_s.encode_html%>%</td>
+                    <td class="fix" style="text-align:right;" title="<%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%"><%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%</td>
                     <%
                     end
                     %>
