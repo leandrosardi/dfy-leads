@@ -41,27 +41,148 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
 
 <section class="row-fluid">
     <div class="span12 box">
-          <div class='span6'>
+      <div class='span6'>
             <div class="form-horizontal">
+                <h4>Order Details</h4>
+
                 <form action="/dfy-leads/filter_edit_order" method="post" id='edit_order' name='edit_order'>
                     <input type="hidden" name="oid" value="<%=oid%>">
 
                     <div class="control-group">
                         <label class="control-label" for="name">Name</label>
                         <div class="controls">
-                            <input type="text" id="name" name='name' class='input-block-level selected' placeholder="Write a descriptive name for your order." value='<%=name.to_s.encode_html%>' />
+                            <input type="text" id="name" name='name' class='input-block-level selected' placeholder="Write a descriptive name for your order." value='<%=name.to_s.encode_html%>' <%=o.dfyl_id_parent.nil? ? '' : 'disabled'%> />
                         </div>
                     </div>
                     
                     <div class="control-group" id='link' name='link'>
                         <label class="control-label" for="name">Sales Navigator<br/>Search URL</label>
                         <div class="controls">
-                            <input type="text" id="url" name='url' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=url.to_s.encode_html%>' <%=real_account.sysowner? ? '' : 'disabled'%> />
+                            <input type="text" id="url" name='url' class='input-block-level' placeholder="Paste Sales Navitator Search Link here." value='<%=url.to_s.encode_html%>' <%=real_account.sysowner? && o.dfyl_id_parent.nil? ? '' : 'disabled'%> />
+                            <!--
                             <p class=''>SysOwner only can edit this field.</p>
+                            -->
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-blue <%=o.dfyl_id_parent.nil? ? '' : 'disabled'%>" id='save' name='save'>Save</button>
+                            <%
+                            if !o.dfyl_id_parent.nil?
+                            %>
+                            <p class=''>Child orders cannot be edited.</p>
+                            <%
+                            end # if o.dfyl_id_parent.nil?
+                            %>
                         </div>
                     </div>
                 </form>
+            </div>
+      </div> <!-- span6 -->
 
+      <div class='span6'>
+        <!-- header -->
+        <div class='row-fluid'>                  
+            <div class='span6'>
+                <%
+                if o.dfyl_id_parent
+                %>
+                <a href='/dfy-leads/orders/<%=o.dfyl_id_parent%>/edit'><i class='icon-chevron-left'></i> Back to Parent</a>
+                <%
+                else
+                %>
+                <span style='color:gray;'><i class='icon-chevron-left'></i> No Parent</span>
+                <%
+                end
+                %>
+            </div>
+
+            <div class='span2' style='text-align:center;'>
+                <%
+                if o.status
+                %>
+                <span class='badge badge-green'>Running</span>
+                <%
+                else #if o.status
+                %>
+                <span class='badge badge-red'>Paused</span>
+                <%
+                end #if o.status
+                %>
+            </div>
+
+            <div class='span3' style='text-align:center;'>
+              <a href='/dfy-leads/filter_view_results?oid=<%=o.id.to_guid%>&verified_only=yes' title='View Results on <%=APP_NAME.to_s%>'>View Results</a>
+            </div>
+
+            <div class='span1' style='text-align:center;'>
+                <a title='Replicate Search on LinkedIn' href='<%=o.url.to_s.encode_html%>' target='_window'><i class='icon-linkedin'></i></a>
+            </div>
+        </div> <!-- row-fluid -->
+
+        <!-- STATS -->
+        <%
+        a = o.dfyl_stat_search_leads.to_i == 0 ? 0.to_i : (100.to_f * o.dfyl_stat_scraped_leads.to_f / o.dfyl_stat_search_leads.to_f).round.to_i
+        b = o.dfyl_stat_scraped_leads.to_i == 0 ? 0.to_i : (100.to_f * o.dfyl_stat_leads_appended.to_f / o.dfyl_stat_scraped_leads.to_f).round.to_i
+        %>
+        <div class='widget-pie-charts'>
+          <div class='box no-border non-collapsible'>
+            <div class="span3 pie-chart">
+              <div id="easy-pie-chart-1" data-percent="43" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
+                <button class='btn btn-large btn-gray disabled'><%=o.dfyl_stat_search_leads.to_i.to_label%></button>
+              </div>
+              <div class="caption">
+                <a title='Replicate Search on LinkedIn' href='<%=o.url.to_s.encode_html%>' target='_window'>Search Scope</a>
+              </div>
+            </div>
+
+            <div class="span3 pie-chart">
+              <div id="easy-pie-chart-2" data-percent="58" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
+                <%
+                if o.dfyl_stat_progress.to_i == 100
+                %>
+                <button class='btn btn-large btn-green disabled'>Completed <i class='icon-ok'></i></button>
+                <%
+                else
+                %>
+                <button class='btn btn-large btn-black disabled'><%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%</button>
+                <%
+                end
+                %>
+              </div>
+              <div class="caption">
+                Progress
+              </div>
+            </div>
+            
+            <div class="span3 pie-chart">
+              <div id="easy-pie-chart-3" data-percent="43" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
+                <button class='btn btn-large btn-orange disabled'><%=o.dfyl_stat_scraped_leads.to_i.to_label%></button>
+              </div>
+              <div class="caption">
+                <%=a.to_s%>% Scraped
+              </div>
+            </div>
+
+            <div class="span3 pie-chart">
+              <div id="easy-pie-chart-4" data-percent="91" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
+                <button class='btn btn-large btn-green disabled'><%=o.dfyl_stat_leads_appended.to_i.to_label%></button>
+              </div>
+              <div class="caption">
+                <a href='/dfy-leads/filter_view_results?oid=<%=o.id.to_guid%>&verified_only=yes' title='View Results'><%=b.to_s%>% Appended</a>
+              </div>
+            </div>        
+          </div>   
+        </div>
+      </div> <!-- span6 -->
+    </div> <!-- span12 -->
+</section>
+
+<section class="row-fluid">
+    <div class="span12 box">
+          <div class="span3">
+                <h3>Filters</h3>
                 <div id='filters' name='filters'>        
                     <div class="control-group" id='keywords'>
                       <label class="control-label" for="keywords">Keywords</label>
@@ -202,119 +323,133 @@ posted_in_last_30_days = o.search ? o.search.posted_in_last_30_days==true : fals
                       </div>          
                     </div>
                   </div>
+            </div> <!-- end of span4 -->
 
-                <div class="control-group">
-                    <div class="controls">
-                        <button type="submit" class="btn btn-blue" id='save' name='save'>Save</button>
-                    </div>
-                </div>
-            </div>
-          </div>
-
-          <div class='span6'>
+            <div class="span4">
+              <!-- pages -->
               <div class='row-fluid'>
-                  <!-- header -->
-                  
-                  <div class='span6'>
-                      <%
-                      if o.dfyl_id_parent
-                      %>
-                      <a href='#'><i class='icon-chevron-left'></i> Back to Parent</a>
-                      <%
-                      else
-                      %>
-                      <span style='color:gray;'><i class='icon-chevron-left'></i> No Parent</span>
-                      <%
-                      end
-                      %>
-                  </div>
+                <h3>Pages</h3>
+                <table class='table-condensed'>
+                  <thead>
+                    <th>Page #</th>
+                    <th>Uploaded</th>
+                    <th>Parsed</th>
+                    <th>Preview</th>
+                  </thead>
+                <%
+                i = 0
+                o.pages.sort_by { |p| p.number }.each { |p|
+                  i += 1
+                  %>
+                  <tr>
+                      <td>
+                        <span>Page #<%=p.number.to_s%></span>
+                      </td>
 
-                  <div class='span2' style='text-align:center;'>
-                      <%
-                      if o.status
-                      %>
-                      <span class='badge badge-green'>Running</span>
-                      <%
-                      else #if o.status
-                      %>
-                      <span class='badge badge-red'>Paused</span>
-                      <%
-                      end #if o.status
-                      %>
-                  </div>
+                      <td>
+                        <%
+                        if p.upload_success.nil?
+                        %>
+                        <span style='color:gray'>pending</span>
+                        <%
+                        elsif p.upload_success
+                        %>
+                        <span style='color:green'>yes</span>
+                        <%
+                        else
+                        %>
+                        <span style='color:red'>failed</span>
+                        <%
+                        end
+                        %>
+                      </td>
 
-                  <div class='span3' style='text-align:center;'>
-                    <a href='/dfy-leads/filter_view_results?oid=<%=o.id.to_guid%>&verified_only=yes' title='View Results on <%=APP_NAME.to_s%>'>View Results</a>
-                  </div>
+                      <td>
+                        <%
+                        if p.parse_success.nil?
+                        %>
+                        <span style='color:gray'>pending</span>
+                        <%
+                        elsif p.parse_success
+                        %>
+                        <span style='color:green'>yes</span>
+                        <%
+                        else
+                        %>
+                        <span style='color:red'>failed</span>
+                        <%
+                        end
+                        %>
+                      </td>
 
-                  <div class='span1' style='text-align:center;'>
-                      <a title='Replicate Search on LinkedIn' href='<%=o.url.to_s.encode_html%>' target='_window'><i class='icon-linkedin'></i></a>
-                  </div>
+                      <td>
+                        <%
+                        if p.upload_success
+                        %>
+                        <a class='btn btn-link btn-mini' target='_window' href='<%=p.url%>' title='View Raw HTML Scraped'>preview</a>
+                        <%
+                        end
+                        %>
+                      </td>
+                  </tr>
+                  <%
+                }
 
+                if i==0
+                  %>
+                  <tr>
+                    <td colspan='10'>
+                      <span style='color:gray;'>No pages found</span>
+                    </td>
+                  </tr>
+                  <%
+                end
+                %>
+                </table>
               </div>
+            </div> <!-- end of span5 -->
 
-              <%
-              a = o.dfyl_stat_search_leads.to_i == 0 ? 0.to_i : (100.to_f * o.dfyl_stat_scraped_leads.to_f / o.dfyl_stat_search_leads.to_f).round.to_i
-              b = o.dfyl_stat_scraped_leads.to_i == 0 ? 0.to_i : (100.to_f * o.dfyl_stat_leads_appended.to_f / o.dfyl_stat_scraped_leads.to_f).round.to_i
-              %>
-              <div class='widget-pie-charts'>
-                <div class='box no-border non-collapsible'>
-                  <div class="span3 pie-chart">
-                    <div id="easy-pie-chart-1" data-percent="43" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
-                      <button class='btn btn-large btn-gray disabled'><%=o.dfyl_stat_search_leads.to_label%></button>
-                    </div>
-                    <div class="caption">
-                      <a title='Replicate Search on LinkedIn' href='<%=o.url.to_s.encode_html%>' target='_window'>Search Scope</a>
-                    </div>
-                  </div>
-  
-                  <div class="span3 pie-chart">
-                    <div id="easy-pie-chart-2" data-percent="58" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
-                      <%
-                      if o.dfyl_stat_progress.to_i == 100
-                      %>
-                      <button class='btn btn-large btn-green disabled'>Completed <i class='icon-ok'></i></button>
-                      <%
-                      else
-                      %>
-                      <button class='btn btn-large btn-black disabled'><%=o.dfyl_stat_progress.to_i.to_s.encode_html%>%</button>
-                      <%
-                      end
-                      %>
-                    </div>
-                    <div class="caption">
-                      Progress
-                    </div>
-                  </div>
-                  
-                  <div class="span3 pie-chart">
-                    <div id="easy-pie-chart-3" data-percent="43" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
-                      <button class='btn btn-large btn-orange disabled'><%=o.dfyl_stat_scraped_leads.to_label%></button>
-                    </div>
-                    <div class="caption">
-                      <%=a.to_s%>% Scraped
-                    </div>
-                  </div>
-        
-                  <div class="span3 pie-chart">
-                    <div id="easy-pie-chart-4" data-percent="91" class="easyPieChart" style="width: 100px; height: 100px; line-height: 100px;">
-                      <button class='btn btn-large btn-green disabled'><%=o.dfyl_stat_leads_appended.to_label%></button>
-                    </div>
-                    <div class="caption">
-                      <a href='/dfy-leads/filter_view_results?oid=<%=o.id.to_guid%>&verified_only=yes' title='View Results'><%=b.to_s%>% Appended</a>
-                    </div>
-                  </div>        
-                </div>   
+            <div class="span5">
+              <!-- children -->
+              <div class='row-fluid'>
+                <h3>Children</h3>
+                <table class='table-condensed' style='table-layout: fixed; width: 100%;'>
+                  <thead>
+                    <th style='width:auto;text-align:left;'>Order</th>
+                    <th style='width:36px;text-align:right;'>Progress</th>
+                  </thead>
+                <%
+                i = 0
+                o.children.sort_by { |c| c.name }.each { |c|
+                  i += 1
+                  %>
+                  <tr>
+                      <td class='fix' title='<%=c.name.encode_html%>'>
+                        <a href='/dfy-leads/orders/<%=c.id.to_guid%>/edit'><%=c.name.encode_html%></a>
+                      </td>
+
+                      <td>
+                        <span><%=c.dfyl_stat_progress.to_i%>%</span>
+                      </td>
+                  </tr>
+                  <%
+                }
+
+                if i==0
+                  %>
+                  <tr>
+                    <td>
+                      <span style='color:gray;'>No children found</span>
+                    </td>
+                    <td></td>
+                  </tr>
+                  <%
+                end
+                %>
+                </table>
               </div>
-          </div>
-    </div>
+            </div> <!-- end of span4 -->
+
+          </div> <!-- end of span12 -->
+    </div> <!-- end of span12 -->
 </section>
-
-<script>
-    $(document).ready(function() {
-        // submit the form #edit_order when clock on the button #save
-        $('#save').click(function() {
-            $('#edit_order').submit();
-        });
-    });
-</script>
