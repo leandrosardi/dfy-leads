@@ -5,23 +5,6 @@ end
 get "/dfy-leads/", :agent => /(.*)/ do
     redirect2 "/dfy-leads/orders", params
 end
-get "/dfy-leads/login", :agent => /(.*)/ do
-    redirect2 "/login", params
-end
-
-# public screens (signup/landing page)
-get "/dfy-leads/signup", :agent => /(.*)/ do
-    erb :"/extensions/dfy-leads/views/signup", :layout => :"/views/layouts/public"
-end
-
-# internal app screens
-get "/dfy-leads/offer", :auth => true, :agent => /(.*)/ do
-    erb :"/extensions/dfy-leads/views/offer", :layout => :"/views/layouts/core"
-end
-
-get "/dfy-leads/plans", :auth => true, :agent => /(.*)/ do
-    erb :"/extensions/dfy-leads/views/plans", :layout => :"/views/layouts/core"
-end
 
 get "/dfy-leads/leads", :auth => true, :agent => /(.*)/ do
     erb :"/extensions/leads/views/results", :layout => :"/views/layouts/core"
